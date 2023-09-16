@@ -1,0 +1,182 @@
+React Research
+Nathan Coxson
+9/16/2023
+
+How it works:
+    React uses a virtual DOM rather than manipulating the browser DOM directly. This lets
+    it avoid having to rerender the entire page when a change is made and it can instead 
+    makes individual changes to the virtual DOM.
+
+Setup:
+    Using Node and npm, you can install create-react-app and use it in the target
+    directory to create a default React application automatically.
+
+    Create:
+        npx create-react-app <directory>
+
+    Run:
+        npm start
+
+Setup Root:
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<p>Hello</p>);
+
+    createRoot() sets the root of the React application. You need to provide it with a root div
+    in the index.html file so that React knows where to inject the virtual DOM elements in your page.
+    The render function tells React to render some element to the root.
+
+    The root doesn't have to be a div and it doesn't have to have the id of root, this is just default behavior
+    provided by create-react-app.
+
+JSX:
+    JSX allows you to write HTML inside of JavaScript files so that you can write your HTML
+    for React to render.
+
+    You can insert expressions into the JSX HTML using {} and placing some expression into it.
+
+        <!--This will display an h1 tag with whatever the value of your variable is inside of it.-->
+        <h1> {myVariable} </h1>
+
+    To write multiple lines you need to place JSX in parentheses, and there must be one top level element, 
+    usually a div.
+
+Components:
+    Reusable bits of code in React. It is recommended to split them into their own files and export them
+    from there so that they can be imported into the top level component.
+
+    Class Components:
+        // Render function tells React what to render in place of the component.
+        class Car extends React.Component {
+            // Constructor is called when component is initialized.
+            // Props must be passed to constructor if you have one as well as super.
+            constructor(props) {
+                super(props);
+                this.state = {key: value};
+            }
+
+            // Access props using this.props if you don't have a constructor.
+            let color = this.props.color;
+
+            render() {
+                return (
+                    <div>
+                        <p>Hello</p>
+                    </div>
+                )
+            }
+        }
+
+    Function Components:
+        // Return takes the place of the render function and React will render the JSX that is returned.
+        function Car(props) {
+            return (
+                <div>
+                    <p>Hello</p>
+                </div>
+            )
+        }
+
+Props:
+    Props are passed into components and can be accessed from inside of that component.
+
+    // Passing the color prop to Car which can be accessed in that components props object.
+    root.render(<Car color="red"/>);
+
+React Router:
+    Install:
+
+        npm i react-router-dom
+
+    Create src/pages/ and place React pages in here so you can create routes to them.
+
+    Assume you have the pages: Layout.js, Home.js, Blogs.js, Contact.js, and NoPage.js
+
+    import ReactDOM from "react-dom/client";
+    import { BrowserRouter, Routes, Route } from "react-router-dom";
+    // import pages here
+
+    export default function App() {
+        return {
+            <BroswerRouter>
+                <Routes>
+                    <Route path="/" element={<Layout />}>
+                        <Route index element={<Home />} />
+                        <Route path="blogs" element={<Blogs />} />
+                        <Route path="contact" element={<Contact />} />
+                        <Route path="*" element={<NoPage />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        }
+    }
+
+    Use <Link to="/">Home</Link> to create links to internal pages rather than using <a href="">
+    Use <Outlet /> at the bottom of your layout to render the current selected route.
+
+Hooks:
+    useState():
+
+        const [state, setState] = useState(<default value>);
+
+        Allows you to use state variables in a component. The callback setter function is used
+        to set the state variables later on.
+    
+    useEffect():
+
+        useEffect(() => {
+
+            return <cleanup function>;
+        }, [<optional dependency list>]);
+
+        Runs on every render by default. If you provide a dependency list it will only run when dependencies change.
+        If you provide an empty list, then it only runs on the first render.
+        You should return a cleanup function if you have something like a timeout started in the effect to prevent leaks.
+
+    useContext():
+
+        const UserContext = createContext();
+
+        function Component1() {
+            const [user, setUser] = useState('Name');
+            return (
+                <UserContext.Provider value={user}>
+                    <h1>{`Hello ${user}`}</h1>
+                    <Component2 user={user}/>
+                </UserContext.Provider>
+            );
+        }
+
+        function Component2() {
+            const user = useContext(UserContext);
+
+            return (
+                <div>
+                </div>
+            );
+        }
+
+        useContext allows all components in the tree to access the same state that is passed down from the
+        top component that is wrapped by the context.Provider tags.
+
+        This can be useful if you need to pass state down multiple components but not every intermediate component needs that state.
+        Using context allows you to access that state at component 5 without having to pass it as a prop in every component before that.
+
+    useRef():
+        Allows you to persist values between renders. You can store mutable values that don't cause re-renders when updated or
+        use it to access a DOM element directly.
+
+        const count = useRef(0);
+        // useRef returns an object called current where count.current equals 0
+        // This value will now persist between re-renders even if you change the value.
+
+    useReducer():
+        Similar to useState. You provide t with a reducer function that contains custom state logic and the initialState which
+        is usually an object.
+
+    useCallback():
+        Returns a memorized callback function. It is used to isolate resource intensive functions so that they aren't run 
+        automatically on every re-render. The hook only runs when one of its dependencies updates.
+
+    useMemo():
+        Returns a memorized value so that it doesn't need to be recalculated. Only runs when a dependency updates.
