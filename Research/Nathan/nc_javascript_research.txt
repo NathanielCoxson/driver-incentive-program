@@ -1,0 +1,117 @@
+JavaScript Research
+Nathan Coxson
+9/16/2023
+
+Output:
+    innerHTML:
+        You can change inner HTML of a DOM element using:
+
+            document.getElementById(id).innerHTML = "Some value";
+    
+    document.write():
+        Write the output of some code passed into the function:
+
+            // Would write 11 into the DOM
+            document.write(5 + 6);
+
+    window.alert():
+        Displays an alert window in the browser:
+
+            // Shows an alert window with 11 written in it
+            window.alert(5 + 6);
+
+    console.log():
+        Browser console output:
+
+            // Writes 11 to the browser's console
+            console.log(5 + 6);
+
+Variables:
+    Variable types are dynamic and can be changed.
+
+    const: 
+        constant value that cannot be changed
+    
+    let: 
+        modifiable variable with block scope
+
+    var:
+        modifiable variable with function scope
+    
+String methods:
+    length - length property
+    slice(start, end) - slices a String
+    replace(a, b) - replaces first a with b in a String
+    replaceAll(a, b) - replaces all a with b in a String
+    toUpperCase() - convert to uppercase
+    toLowerCase() - convert to lowercase
+    concat(a, b) - concatenates a and b
+    trim() - removes whitespace on both ends, there is also trimStart() and trimEnd()
+    padStart(num, string) and padEnd(num, string) - pads a string at start or end with given string
+    charAt(i) - returns character at index i, there is also charCodeAt(i) that returns UTF-16 code
+    split(delimiter) - returns an array after splitting the string along the given delimiter 
+    indexOf() and lastIndexOf() - return index of first occurences of a string from start or end
+    search() - cannot take a start parameter like indexOf() but is able to take regex as a parameter
+    match() - returns an array of matches to the given search parameter
+    includes() - true if string includes parameter
+    startsWith() and endsWith() - true if string starts or ends with given parameter
+
+Array Methods:
+    length - length property
+    toString() - converts array to comma separated string of values
+    join() - converts array to string with values connected by given string
+    pop() - pops last element in an array and returns it
+    push() - pushes value to the end of an array 
+    shift() - removes first element and shifts the rest the to left (left pop)
+    unshift() - adds to beginning of the array and shifts the rest to the right (left push)
+    concat() - concatenate two arrays
+    flat() - flattens a multi-dimensional array
+    splice(start, num_removed, e1, e2, ...) - splices a value into the array at some position, can be used to remove elements
+    slice() - slices part of an array into a new one without deleting from the source array
+    sort(compare_function) - sorts array based on compare function or alphabetically if one is not given
+    reverse() - reverses the elements in an array
+    forEach() - runs given function for each element in the array
+    map() - creates new array by performing given function at each array element
+    filter() - creates new array with array elements that pass the filter
+    reduce() - runs function on each array element until the array is reduced to a single value
+    every() - checks if every element passes a filter
+    some() - checks if at least one element passes a filter
+    indexOf() - returns index of the first matching element, also see lastIndexOf()
+    find() - returns value of first element that passes the test function
+    from() - returns an array from any iterable object like a string or any object with a length property
+
+Spread operator:
+    Spreads the elements of an array or object
+
+    let a = [1, 2, 3]
+    let b = [...a, 4, 5, 6] 
+    // b is [1, 2, 3, 4, 5, 6]
+
+Set: collection of unique values
+
+Map: collection that holds key-value pairs and remembers the insertion order
+
+Modules:
+    Named Exports:
+        In-line individual export:
+
+            export const name = 'Nate';
+        
+        Multiple exports at end of file:
+            export {name, age};
+        
+    Default Exports:
+        Can only have on default export at the end of the file:
+
+            const obj = {
+                ...
+            };
+
+            export default obj;
+        
+    Import:
+        Import named exports:
+            import { name, age } from "./person.js";
+
+        Import default exports:
+            import obj from "./obj.js";
