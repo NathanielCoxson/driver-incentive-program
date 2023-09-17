@@ -1,0 +1,51 @@
+AWS Research
+Nathan Coxson
+9/17/2023
+
+Video Notes:
+    AWS Services:
+        Compute, Storage, and Network Security,
+        Blockchain, Machine learning, Artificial intelligence,
+        Robot development, Video production, Orbital satellites
+
+    EC2 - Elastic Compute Cloud:
+        Virtual cloud server modules offered by AWS.
+
+    AWS charges you only for the resources you are currently using.
+    You can easily scale your resources on AWS at any time, but you can easily
+    scale back if you no longer need certain resources.
+
+How to Use:
+    First you need to have a account to login with.
+
+    The dashboard gives an overview of services you have actively running
+    as well as the costs associated with them.
+
+    You need to select the services you want and go through the setup process to start 
+    using it.
+
+    Make sure that you are using us-east-1 as the server location.
+
+EC2 and RDS:
+    You can search for services in the top right.
+
+    EC2s are servers that you can set up and run. For our purposes, they can be used
+    to host our web app in the cloud and be publicly accessible through their IP.
+
+    RDS are database servers that you can use to host the database.
+
+    You need to have a VPC (virtual private cloud) set up for each of these.
+
+    In order to connect to either the EC2 or the database server, you have to set the
+    inbound/outbound rules apporiately. In order to access the public IP of an EC2 you need
+    to enable HTTP/HTTPS inbound protocols from all sources.
+
+    The public IP of an EC2 can change, so you need to enable an elastic ip on the left-hand side
+    under "Elastic IPs".
+
+    The RDS can be any of several database systems, for our project we are using SQL Server.
+
+    With EC2 running the web server, we can connect to the RDS to run queries on the database for
+    the web app to function.
+
+    EC2 has several OS options, Linux or Ubuntu would be preferable, and for hardware the free tier is good.
