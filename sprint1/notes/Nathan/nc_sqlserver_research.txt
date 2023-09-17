@@ -1,0 +1,49 @@
+SQL Server
+Nathan Coxson
+9/16/2023
+
+Setup:
+
+    Install locally from Microsoft SQL Server website.
+    Go through the install wizard and follow instructions for installation.
+    You can also install SMSS which is a desktop manager for the server that gives you a desktop interface
+    to interact with the server instead of using CLI.
+
+Many of the commands that you use in SQL are the same when working with SQL Server.
+
+SQL Server Specific Functions:
+
+    String:
+        ASCII - returns ASCII value
+        CONCAT - adds two or more strings
+        TRIM - removes leading and trailing spaces from a string
+
+    Math/Numeric:
+        ABS - absolute value
+        AVG - average of an expressions
+        CEILING/FLOOR - ciel or floor a number
+        EXP - returns e raised to the power of a specified number
+        POWER - returns a number raised to the power of another number
+        ROUND - rounds a number to a specified number of decimal places
+        SQRT - returns square of a number
+    
+    Date:
+        CURRENT TIMESTAMP - returns current date and TIMESTAMP
+        DATEADD - adds time/date interval to a date and the returns the date
+        DATEDIFF - returns difference between two dates
+        DATEFROMPARTS - returns a date from parts (year, month, and day values)
+        DATENAME - returns specified part of a date (as string)
+        DATEPART - returns a specified part of a date (as integer)
+        DAY - returns day of the month for a specified date
+        GETDATE - returns current database system date and time
+        GETUTCDATE - returns database system UTC date and time
+        ISDATE - checks expression and returns 1 if it is a valid date, otherwise 0
+        MONTH - returns the month for a date (1 to 12)
+        SYSDATETIME - returns the date and time of the SQL Server
+        YEAR - returns the year part for a specified date
+
+    Advanced:
+        CAST - converts a value of any time into a specified datatype
+        COALESCE - returns first non-null value in a list
+        IIF - returns a value if a condition is true, or another value if a condition is value
+        NULLIF - returns null if two expressions are equal
