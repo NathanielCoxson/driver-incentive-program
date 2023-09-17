@@ -1,0 +1,74 @@
+SQL
+Nathan Coxson
+9/16/2023
+
+Create Login:
+
+    Create login yourloginname with password='yourpassword'
+
+Create Database:
+
+    Create database <yourdatabasename>
+
+Select Database:
+
+    Use <yourdatabasename>
+
+Create User:
+
+    Create user <username> for login <loginname>
+
+Permissions:
+
+    Use <databasename>
+    Grant <permission name> on <object name> to <username\principle>
+
+Select:
+
+    SELECT column1, column2, ...
+    FROM table_name;
+
+Where Clause:
+
+    SELECT * FROM table_name WHERE condition;
+
+Insert:
+
+    INSERT INTO table_name (col1, col2, ...) 
+    VALUES (val1, val2, ...);
+
+Update:
+
+    UPDATE table_name
+    SET col1 = val1, ...
+    WHERE condition;
+
+Delete:
+
+    DELETE FROM table_name WHERE condition;
+
+Aggregate Functions:
+    MIN and MAX - return min and max values respecitvely
+    COUNT - return number of rows
+    SUM - return sum of numeric column
+    AVG - return average of numeric column
+
+Like:
+
+    LIKE operator is used in a WHERE clause to search for patterns.
+    % is a wildcard
+    _ is a single character
+
+Rlike:
+
+    Similar to like but uses regular expressions to search by.
+
+Joins:
+
+    Inner join - table1 and table2
+    Left join - table1 and table2 plus everything else in table1
+    Right join - table1 and table2 plus everything in table2
+    
+Group By:
+
+    Combines rows that have the same values into summary rows.
