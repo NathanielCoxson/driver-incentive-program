@@ -1,0 +1,86 @@
+Node Research
+Nathan Coxson
+9/17/2023
+
+Video Notes:
+
+    Node is a runtime that allows you to run JavaScript on a server.
+
+    JavaScript was originally only usable on a browser and could not be run on 
+    servers, so Node is needed to run JS code there.
+
+    This means you can write a full-stack application with only JS.
+
+    Installation:
+
+        View current installed version:
+            
+            If this command gives an error you need to install.
+            
+            node -v
+
+        NVM:
+
+            Node version manager used to install any node version.
+
+            nvm install x.y.z
+
+            nvm use x.y.z
+
+    REPL - Read Eval Print Loop:
+
+        Type node in command line and then you can write commands in CLI.
+
+    Run JS File:
+
+        node file.js
+
+        If you name the file index.js then you can run node . because index is the default entry point.
+
+    FS:
+
+        File system that allows you to read, write, create, and delete files.
+
+    Promises:
+
+        Async and non-blocking.
+
+        async functions allow you to use await to block on a promise to wait for it to resolve or reject.
+
+    Modules:
+
+        Import using import or require.
+
+            const module = require('./myModule.js');
+            import module from './myModule.js';    
+    
+Research:
+
+    Use NVM to install which can be accessed here: https://github.com/nvm-sh/nvm
+
+    Differences between Node and Browser:
+        
+        You don't have access to browser objects like document and window.
+
+        You can use both require and import while browser's can only use import.
+
+    NPM - node package manager:
+
+        Standard package manager for Node.
+
+        Allows you to download popular packages into your project.
+
+        Install flags:
+             --save-dev installs and adds package to entry file devDependencies
+             --no-save installs but does not add the entry to package.json file dependencies
+             --save-optional installs and adds the entry to the package.json file optionalDependencies
+             --no-optional will prevent optional dependencies from being installed
+
+             devDependencies are only used for development while dependencies are bundled with the app in production.
+             
+        Running tasks:
+        
+            npm run <task-name>
+
+            Where tasks are defined in the package.json under scripts like:
+                "start": "node lib/server-production"
