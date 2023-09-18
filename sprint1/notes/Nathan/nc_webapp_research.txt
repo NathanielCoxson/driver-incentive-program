@@ -1,0 +1,21 @@
+Web Apps
+Nathan Coxson
+9/17/2023
+
+Video Notes:
+
+    Main Skills:
+        HTML - structures pages
+        CSS - styles the HTML pages
+        JavaScript - used to make pages functional
+
+    Basic web development involves writing HTML files to fill the page with 
+    content and then linking CSS files where you write styles for the elements
+    in your HTML. 
+
+    The HTML elements that you create are placed in the DOM (document object model) which
+    is the way that the browser organizes and interprets the page content so that it can
+    be displayed to the user. JavaScript can be used to interact with the DOM so that you
+    can manipulate HTML elements in real time as the user interacts with the page. One way 
+    that you can utilize JS is by handling events that occur in the browser. JS allows you 
+    to interact with the browser through a variety of events to add functionality to the page.
