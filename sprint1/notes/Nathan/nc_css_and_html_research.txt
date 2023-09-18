@@ -1,0 +1,107 @@
+CSS and HTML
+Nathan Coxson
+9/17/2023
+
+HTML:
+
+    Basic File Structure:
+
+    <!DOCTYPE html>
+    <html>
+
+    </html>
+
+    <head>: tag that includes header information for the page
+
+        Includes things like links and title for the page.
+    
+    <body>: tag that contains the content on the page.
+
+    Text Tags:
+
+        h1, h2, h3, ...: 
+
+            Header tags that have different relative sizing with h1 being the largest.
+
+        p:
+
+            Paragraph tag that is used for most normal sized text on the page.
+
+    Divs:
+
+        <div> tags are used to wrap elements and group them together.
+
+    Forms:
+
+        <form> tag wraps the form which can hold many different inputs.
+
+        Inputs each have name and value attributes so that they can be accessed
+        when the form is submitted.
+
+    Links:
+
+        <a> tag with an href attribute is used for a link.
+
+    There are a variety of other useful tags like img, ul, etc., that are used for other things as well.
+
+CSS:
+
+    CSS is used to style the elements in the HTML file.
+
+    Styles can be written in-line with the elements, in a style tag within the HTML file, or imported
+    from a CSS file using a link tag in the HTML file.
+
+    Basic syntax for a style rule in CSS:
+
+        p {
+            font-size: 10px;
+            color: black;
+            font-weight: bold;
+            ...
+        }
+
+    Selectors:
+
+        Elements can be selected by writing the element like: p
+
+        Classes can be selected by prepending a . like: .className
+
+        Id can be selected by prepending a # like: #idName
+        
+        Keep in mind that each element can only have one ID but multiple classes.
+        Classes should be used over other selectors where possible.
+
+        Combining selectors:
+
+            .class1.class2 will select elements with both classes
+            
+            .class1 .class2 will select all elements with class2 that have an ancestor with class1
+
+            .class1, .class2 will apply the styles to both class1 and class2 without having to write duplicate styles
+    
+    There are many differnet styling options for each element that you can edit.
+
+    Sizing:
+
+        Many elements can be sized using different units.
+
+        Pixels can be used as a unit using px after a number.
+
+        There are several relative units that can be used which make it easier to
+        keep the sizing of elements consistent throughout the page.
+
+            Examples: rem, em, % can be used for some elements, etc.
+    
+    Box-Model:
+
+        Each element in HTML has a box that it is contained in.
+
+        Moving from the inside out you have the content box, padding box, border box, and margin box.
+
+    Flex-Box:
+
+        Flex box is a display method that is useful for div elements.
+
+        It allows you to easily position and partition a div so that the elements within are layed out properly.
+
+        For example you can easily center the content, set the spacing between elements, etc.
