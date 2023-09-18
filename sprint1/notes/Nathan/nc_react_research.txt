@@ -180,3 +180,47 @@ Hooks:
 
     useMemo():
         Returns a memorized value so that it doesn't need to be recalculated. Only runs when a dependency updates.
+
+Video Notes:
+    Create react app:
+
+        https://create-react-app.dev/docs/getting-started/
+
+        npx create-react-app my-app
+
+        Sets up project structure for you.
+
+    Project Structure:
+
+        public - folder that contains public files including index.html.
+        src - the folder where you write most of the code including all of your components.
+
+    Components:
+
+        Function components are the recommended type instead of using class components.
+
+    Fragment:
+        
+        Instead of using wrapper divs for every component's return statement, you can just use empty tags <></> around 
+        the JSX and React will infer this to be a Fragment tag and will not place extra wrapper divs in the DOM.
+
+    Conditional Rendering:
+
+        Ternary operator:
+
+            // Renders either the p tag or nothing based on the conditional.
+            {items.length === 0 ? <p>Hello</p> : null}
+
+            // You can also move the statement outside of the JSX and make things cleaner
+            const message = items.length === 0 ? <p>Hello</p> : null;
+            // This now render the same way.
+            {message}
+
+            // Moving the logic to a function can allow you to pass parameters in JSX as well.
+            const getMessage = () => items.length === 0 ? <p>Hello</p> : null;
+            {getMessage()}
+
+        &&:
+
+            // Using and can do the same thing as above with ternary operator.
+            {items.length === 0 && <p>Empty</p>}
