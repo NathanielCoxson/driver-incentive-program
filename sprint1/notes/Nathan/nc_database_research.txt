@@ -1,0 +1,37 @@
+Relational Databases
+Nathan Coxson
+9/17/2023
+
+The key advantage of relational databases is being able to relate tables using shared keys.
+
+Table1 may have an id key for a user while Table2 may have an id key with the same values, so you can
+relate the records of Table1 with Table2 on their similar keys.
+
+Tables:
+
+    Tables should only have one primary key that makes records uniquely identifiable.
+
+    Attributes should contain only one value and the data type should be the same for the entire column.
+
+    Foreign keys can be defined so that tables can reference one another.
+
+Relationships:
+
+    Entity relationsihps can be 1-1, 1-many, or many-many.
+
+    Many-many relationships need to be avoided in the database because they can lead to anomalies and should
+    instead be represented using two 1-many relationships by adding a third relational table the each instance
+    where the two entities are related.
+
+
+Normalization:
+
+    It is important to ensure that the database design conforms to a specific level of normalization to prevent
+    data anomalies like insert, delete, and update anomalies.
+
+    An example of a data anomaly would if you update one record but there are other records that need to be changed.
+    You may only update the one record which would leave the other ones incorrect. This is avoided by normalizing the table.
+
+    There are several forms of normalization: 1NF, 2NF, 3NF, BCNF, 4NF, and 5NF. Without going into detail the main idea
+    is that there shouldn't be duplicated records in the table. If things are being duplicated then there is redundancy and you 
+    probably need to create another table.
