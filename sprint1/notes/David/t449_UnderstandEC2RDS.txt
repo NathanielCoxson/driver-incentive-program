@@ -1,0 +1,18 @@
+EC2
+Used for flexible cloud computing done on Amazon Servers
+Leased per computational hour according to the resources allocated to the server
+Facilitates the scaling up and down of computing
+Setup:
+Choose an OS (Ubuntu, Linux, etc.)
+Choose application server
+Choose applications
+Determine instance type and hardware configurations
+Specify security settings
+Connecting:
+Can ssh in with IP address
+Can assign an IP in settings
+Can connect using AWS browser terminal
+RDS
+Provides capacity for running relational databases on Amazon server
+Supports various database engines (MySQL, MS SQLS, etc.)
+Amazon Aurora is a proprietary relational database promoted by Amazon for its integration and speed
