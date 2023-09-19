@@ -1,0 +1,9 @@
+AWS Services
+Cloud computing
+Storage
+Network security
+Machine Learning
+AI
+Client-Server Model
+EC2 Instance: Elastic Cloud Compute, used for cloud computing
+User issues usage for the EC2, and is charged for the computational hours
