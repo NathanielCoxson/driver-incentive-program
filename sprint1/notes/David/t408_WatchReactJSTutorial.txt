@@ -1,0 +1,8 @@
+Intro to React
+A highly influential, ubiquitous web development framework
+Functionality
+Reduces down to functions that return HTML elements
+Can maintain an internal state of a module by using useState, “import {useState} from ‘react’ “, which lets the user interact with a running variable (for example, the number of times they’ve clicked a button)
+Why to Use It
+Lots of open source support
+If you need it, there’s probably a library for it
