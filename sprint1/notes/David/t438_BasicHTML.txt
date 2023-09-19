@@ -1,0 +1,10 @@
+Getting Started with HTML
+index.html often represents the homepage of websites, so it’s a good starting point
+<!DOCTYPE html>: A common preamble to HTML files, which lets browsers know that it’s an HTML file
+<html>: Tag for defining the entire HTML page
+CSS Basics
+<style>: Used for defining style rules in CSS
+Can reference other page elements within the tab body
+Example: img { width: 100px; border-radius: 10px; } gives all image elements a width of 100 pixels and a border radius of 10 pixels
+Can use class attribute to give an element a type of identifier to have different subtypes of elements
+Example: <p class=”main”> lets you reference p.main, which specifies a certain subtype of paragraph elements
