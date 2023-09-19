@@ -1,0 +1,17 @@
+Getting Started
+React is a frontend framework for writing code directly in HTML
+Node.js gives you the environment to create your own webpage in localhost:3000
+Can run the page directly from your directory, which will launch in your browser
+ES6 Classes
+Can define a class using class {}
+Inside a class body, you can define functions, including a constructor() which is called on initialization
+ES6 Destructuring
+Instead of individually assigning elements from an array, can assign using [var1, var2, var3] = listname, which will assign the corresponding elements from listname
+If you want to skip elements, simply skip the variable so that there’s nothing between the commas
+ES6 Spread Operator
+Can use …listname to quickly copy out all elements from a list
+Can be used in conjunction with destructuring
+Render HTML
+createRoot(element) takes an HTML element where the React component will be displayed
+Commonly use getElementID(elementName) to get a reference to the ID, but elementName should be listed in index.html
+render(toRender) displays the component in the element specified by createRoot()
