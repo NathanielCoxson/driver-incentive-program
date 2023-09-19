@@ -1,0 +1,8 @@
+Intro to NodeJS
+An open source JS environment
+Works well handling concurrent connections and I/O operations without blocking
+Coding in NodeJS
+createServer() method creates a new HTTP server and returns it
+Can pass a function as an argument, allowing you to run JS code to generate HTML elements, thus creating a webpage
+The returned HTTP server object can call listen(), which lets you listen on a specified port and hostname and run code via a function in response
+When the server request is received, a request object (has request details) and a response object (used to return data to the caller) are returned, and can be used
