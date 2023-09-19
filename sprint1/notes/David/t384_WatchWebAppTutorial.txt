@@ -1,0 +1,23 @@
+Web Designer vs Developer
+Designer simply designs web elements
+Developer implements web page functionality
+Web Dev File Types
+HTML: The web page itself
+Javascript: Puts content together for the web page, determines function
+CSS: Cascading Style Sheet, determines the style of the web page
+Writing HTML
+Tags: Core of HTML
+Example: <header> (opening tag), body </html> (closing tag)
+<head>: Head tag
+<body>: Body tag, what the user interacts sees and interacts with
+<title>: Title tag, used to specify the name of the webpage on the tab in the browser
+<strong>: Bold tag, all text inside makes them bold
+<em>: Italics tag, same as above but makes italicized
+<a>: Hyperlink tag, can set an href attribute with a web address, and will make the text in the tag a link to the address
+<img>: Image tag, can set a src attribute with a web or file address of an image
+<br>: Line break tag, used to declare a new line with your page elements
+<ul>: Unordered list tag, a list styled as a bulleted list
+<ol>: Ordered list tag, a list styled as a numbered list
+<li>: Line item, an element in a list
+<p>: Paragraph tag, used to make distinct blocks of text, creating line breaks above and below by default
+<h1,2,3>: Header text tag, 1 is biggest, 3 is smallest
