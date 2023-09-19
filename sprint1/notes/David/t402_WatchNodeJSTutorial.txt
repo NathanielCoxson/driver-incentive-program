@@ -1,0 +1,21 @@
+What is Node.js?
+A runtime that lets you run JS on a server instead of the browser, which can be faster
+How Node.js Works
+Visit a web address that points to your server, which sends a request to your server
+Your server sends back a response in form of an HTML page, which is displayed in your browser
+JS Features
+Console.log(message) lets you print to the console log
+global lets you assign global variables
+Example: global.pi = 3.1415
+Events
+process.on(‘eventname’, function(){}) executes the specified inline function whenever the given event occurs from the process
+Can specify specific event triggers using the EventEmitter() class, where you can specify event triggers on custom events using emit(message)
+File System
+Functions with Sync use blocking to ensure completion of the task
+Used by file reads
+Keyword async can be used to specify functions that have blocking in them
+Keyword await can ensure that blocking takes place, and that code execution is halted until the blocking function is done
+Modules
+Can import modules using “const moduleName = require(‘module_filepath’)”
+Can export as a module from a .js file using “module.exports = { export1: value}”, where export1 is a key-value pair
+See details about express in video and in documentation
