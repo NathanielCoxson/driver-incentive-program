@@ -1,0 +1,8 @@
+Table Design
+We have distinct tables, where each row represents a specific type of entity, and the columns represent an attribute of a given entity
+Important to have a primary key, which is an attribute that is unique to every row in a table
+Connecting Tables
+Establish relationships between tables on similar elements between the two
+Can be done by creating a foreign key in a table, or by setting up an associative table that lists how the attributes of two different tables are related, and then making a relationship between each table and the associative table
+Relationship Types
+Can have 1:1, 1:M, or M:N relationships, which specifies how many records from one table is related to how many records from the other table
