@@ -1,0 +1,8 @@
+EC2 - Elastic Cloud computing
+
+Provides virtual computing server with easy access to computing resources.
+
+
+RDS - Relational Database Service
+
+Provides a way to easily run and manage relational databases on the cloud.

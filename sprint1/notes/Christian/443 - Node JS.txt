@@ -1,0 +1,7 @@
+NodeJS allows you to create, customise, and manage servers for running javascript.
+
+It's open source and free :)
+
+NodeJS utilizes modules (like JS libraries) to add functionality.
+
+The http module in incredibly important as it allows you to create http servers for web apps. 

@@ -1,0 +1,3 @@
+Watched https://www.youtube.com/watch?v=TlB_eWDSMt4
+
+Learned Node can be used for creating APIs as well as serve web app files. 

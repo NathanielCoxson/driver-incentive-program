@@ -1,0 +1,3 @@
+AWS (Amazon Web Services)
+
+Platform for cloud computing. Provides access to various computing services (EC2, RDS, Lambda, etc...). 

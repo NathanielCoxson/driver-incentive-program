@@ -1,0 +1,14 @@
+React is a library for javascript that provides frameworks for creating dynamic webpages and interfaces.
+
+To create an app you can use a package manager and NodeJS to setup and create react applications. 
+
+Create a react app:
+- npx create-react-app <name of app>
+
+Run the app:
+- navigate to the react app directory
+- npm start
+
+The app should run on localhost:3000
+
+React is incredibly useful in creating single page applications as it can modify several display elements easily. 

@@ -1,0 +1,11 @@
+SQL (Structured Query Language)
+
+Used to query databases and access and/or modify data.
+
+There are several key words that are SQL recognizes (SELECT, INSERT, PROJECT, DIVIDE, etc...)
+
+SELECT is a very important keyword. It is used in conjunction with the FROM keyword to retrieve/access/select data in a specified database.
+
+SELECT <desired data> FROM <database name>
+
+Microsoft SQL is an RDBMS (relational database management service). This is essentially the program that allows us to interact with and manage our databases. 
