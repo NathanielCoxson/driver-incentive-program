@@ -1,0 +1,20 @@
+What is CSS?
+A styling language used for changing the presentation of HTML elements
+CSS Syntax
+selector { property1: value; property2: value;}
+Selector: defines the element we are modifying
+Properties are key-value pairs, specified by the element type
+CSS Selectors
+Elements: Defines all elements as that specified
+Class: Allows you to define subtypes of elements, defined by attribute class=”classname”
+An element can have multiple classes
+Selected by elementName.className
+ID: Similar to class, but is specific to an element instance, defined by id=”id-name”
+An element can have only one ID
+Selected by #id-name
+Can combine multiple selectors at once
+Example: #id.class1.class2 selects an element with the ID name “id”, and with both the class1 and class2 classes
+Can specify ancestors (nested elements) using the notation: ancestor child (separated by a space), which selects all child elements that are nested within an ancestor element
+Can give the same properties to separate elements by splitting them with commas
+Loading CSS Styles
+Can be done inline using style=CSS (bad), can be done in a style element using <style> (only applies within file, cannot be reused elsewhere), or can be done in an external CSS using <line rel=”stylesheet” href=”filename” /> (the best option)
