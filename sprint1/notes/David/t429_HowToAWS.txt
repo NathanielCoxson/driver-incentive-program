@@ -1,0 +1,10 @@
+Use services tab as a navigation hub
+Use search bar at the top to find specific services by name
+EC2: Elastic Cloud Compute, main hub for creating and managing EC2 instances
+Manage security details for existing instances
+Connect to instances
+Start up, shut down, delete, or otherwise manipulate instance states
+RDS: Relational Database service, nexus for creating and managing relational databases hosted in AWS
+Monitor database resource usage
+Look at activity logs
+Create/maintain backups
