@@ -1,0 +1,41 @@
+Introduction
+Use document to reference the current file
+Use .getElementByID(id) to access the element with the specified id
+Element must have an id specified by id=”id name”
+Use “.innerHTML = new HTML” to set the HTML of the given element
+Can set .src to different images for an img tag element
+.style lets you modify style elements
+.fontsize lets you change the font size
+.display lets you enable/disable whether you can see the element
+Where To
+All script coding has to take place in a script body
+Opened with <script>, closed with </script>
+Define functions using: function functionName(){}
+Must be defined in a script body, but otherwise can be nested anywhere else (in a body or header, for example)
+Can be written in an external .js file, which can help performance and reusability
+If using an external file, set the src attribute of a script body = the file name (can just open and close the script with no body necessary)
+Need to declare multiple script bodies with each a different src to use different files
+Output
+Can write directly to the HTML screen using document.write(output)
+Do NOT call this after the HTML page has been loaded, or else the screen will be overwritten
+Should generally only be used for testing purposes
+Use window.alert(output) to print output in a browser alert tab
+Use console.log(output) to print to the debugger console log
+window.print() will not print output per se, but will call the browser’s native page print function to print the HTML page
+Statements
+All statements must be inside a script body, and must end with a semicolon
+Use keyword “var” to initialize a variable, or “let” to initialize multiple variables, or “const” to initialize constants
+let is more versatile, but var must be used for old browsers
+Comments
+Single line comments with //
+Multiline comments with /* */
+Objects
+Can declare an object on the fly by assigning = {attribute1: value, attribute2: value… }
+Attribute can be variables or functions
+Access object properties with objectVar.property or objectVar[property]
+Within an object body, can refer to the object using keyword “this”
+For example, access the object’s name attribute in an object method with this.name
+Events
+In an HTML element, you can reference a variety of events (like clicking a button, when the page loads, when you hover over with the mouse) and use = to assign a change in response to the event
+Conditionals and Loops
+If statements and loops (for, while) similar to C statements, but with JavaScript assignment
