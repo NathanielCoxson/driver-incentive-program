@@ -1,0 +1,9 @@
+Uses T-SQL(transaction SQL) to add more functionality to basic SQL
+Supports making subqueries
+Use TRANSACTION and ROLLBACK as a sort of “try-catch” statement, since you can go back to a defined transaction point and undo any changes since then
+Trigger types
+Logon triggers: Happens whenever a user session begins
+DDL Triggers: Happens when you create/alter/drop tables, or alter privileges
+DML Triggers: Happens when you insert/delete/update records in a table
+See following link for example of connecting to Node.js:  https://learn.microsoft.com/en-us/sql/connect/node-js/step-3-proof-of-concept-connecting-to-sql-using-node-js?view=sql-server-ver16
+Can set an application role for security purposes in our project
