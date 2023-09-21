@@ -8,4 +8,10 @@
     - *TID (Transaction ID)
     - 
 
-- 
+- About
+    - *RID (Release ID)
+    - TeamNumber
+    - VersionNumber
+    - ReleaseDate
+    - ProductName
+    - ProductDiscription
