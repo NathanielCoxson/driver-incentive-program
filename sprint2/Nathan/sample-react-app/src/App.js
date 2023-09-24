@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import tigerPaw from './tigerPaw.png'
 import './App.css';
 
