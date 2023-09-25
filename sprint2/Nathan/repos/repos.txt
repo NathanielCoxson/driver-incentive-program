@@ -1,0 +1,37 @@
+Main commands for using Git:
+
+To add files to staging area use:
+
+git add <files>
+
+To view files in staging area use:
+
+git status
+
+To make a commit use:
+
+git commit -m <commit message>
+
+To pull remote changes:
+
+git pull
+
+To push local changes:
+
+git push
+
+To branch use:
+
+git checkout -b <branch name>
+
+To move to existing branch use:
+
+git checkout <branch name>
+
+To delete a branch use:
+
+git branch -d <branch name>
+
+To merge a branch, start on the branch you want to merge into and use:
+
+git merge <second branch name>
