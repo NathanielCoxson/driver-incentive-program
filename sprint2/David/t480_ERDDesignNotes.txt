@@ -1,17 +1,72 @@
+* = Primary Key
+& = Foreign Key
+
 - Applications
+    - *AID (Application ID)
+    - &UID (User ID)
+    - &SID (Sponsor ID)
+    - ApplicationDate (Date/time)
+    - ApplicationStatus ("Accept"/"Reject"/"Pending")
+    - Reason (String)
 
 - PWChanges (Password Changes)
+    - *PWCID (Password Change ID)
+    - &UID (User ID)
+    - PWCDate (Date/time)
+    - ChangeType (String)
 
 - Logins
+    - *LID (Login ID)
+    - LoginDate (Date/time)
+    - Username (String)
+    - Success (String, true or false)
 
 - Transactions
     - *TID (Transaction ID)
-    - 
+    - &UID (User ID)
+    - &SID (Sponsor ID)
+    - TransactionDate (Date/time)
+    - TransactionAmount (Int)
+    - Reason (String)
 
-- About
+- Releases
     - *RID (Release ID)
-    - TeamNumber
-    - VersionNumber
-    - ReleaseDate
-    - ProductName
-    - ProductDiscription
+    - TeamNumber (Int)
+    - VersionNumber (Int)
+    - ReleaseDate (Date)
+    - ProductName (String)
+    - ProductDescription (String)
+
+- Sponsors
+    - *SID (Sponsor ID)
+    - SponsorName
+
+- Orders
+    - *OID (Order ID)
+    - &UID (User ID)
+    - ShippingAddress (String)
+    - BillingAddress (String)
+    - OrderDate (Date/time)
+    - ArrivalDate (Date)
+
+- Order Lines
+    - *OLID (Order Line ID)
+    - &OID (Order ID)
+    - OrderLineNumber (Int)
+    - ItemCost (Float)
+    - ItemName (String)
+    - ItemDescription (String)
+
+- Catalogs
+    - *CID (Catalog ID)
+    - &SID (Sponsor ID)
+    - Rules (String)
+    - ConversionRate (Float)
+
+- Users
+    - *UID (User ID)
+    - &SID (Sponsor ID)
+    - Name (String)
+    - Role ("Driver"/"Sponsor"/"Admin")
+    - Username (String)
+    - Password (String)
