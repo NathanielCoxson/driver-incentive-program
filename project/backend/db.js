@@ -30,7 +30,6 @@ module.exports = {
         const pool = await poolPromise;
         const result = await pool.request()
             .query('SELECT TOP 1 * FROM Releases ORDER BY ReleaseDate DESC');
-        console.log(result.recordset[0]);
-        pool.close();
+        return result.recordset[0];
     },
 }
