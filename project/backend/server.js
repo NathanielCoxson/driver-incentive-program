@@ -7,6 +7,7 @@ require('dotenv').config;
 
 // Router imports
 const indexRouter = require('./routes/index');
+const aboutRouter = require('./routes/about');
 
 const port = process.env.PORT || '3001';
 const app = express();
@@ -16,7 +17,8 @@ const app = express();
 app.use(cors());
 
 // Use routers here
-app.use("/", indexRouter);
+app.use('/', indexRouter);
+app.use('/about', aboutRouter);
 
 // Starts the server listening on the defined port.
 app.listen(port, () => {
