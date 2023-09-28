@@ -8,8 +8,8 @@ const config = {
     authentication: {
         type: 'default',
         options: {
-            userName: "team01admin",
-            password: "FIFO-admin-01&",
+            userName: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
         }
     }
 }
