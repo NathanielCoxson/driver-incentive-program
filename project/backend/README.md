@@ -6,12 +6,12 @@ Install required modules to run the server.
 ## Running the Server
 Run the server locally using:
 
-### `node server.js`
+### `node server.js`\
 
 To run the server on EC2 you need to daemonize the server
 so that it is a process running in the background on the machine.\
 This prevents the server from stopping when no one is logged into the machine.\
-This is accomplished using the node package PM2: https://www.npmjs.com/package/pm2\
+This is accomplished using the node package PM2: https://www.npmjs.com/package/pm2
 
 Start the server as a process:
 
