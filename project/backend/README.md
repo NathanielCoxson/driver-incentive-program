@@ -3,6 +3,23 @@ Install required modules to run the server.
 
 ### `npm install`
 
+If you are running the server locally, you need to\
+make sure that the EC2 instance allows inbound traffic from\
+your local ip.\
+You will also need to create a .env file with the\
+following environment variables defined:
+
+### `DB_USER`
+    Database username
+### `DB_PWD`
+    Database password
+### `DB_NAME`
+    Name of database to use
+### `DB_SERVER_NAME`
+    RDS server endpoint
+### `PORT(optional)`
+    Port to use for the server, defaults to 3000
+
 ## Running the Server
 Run the server locally using:
 
