@@ -16,10 +16,11 @@ const app = express();
 // DB import
 const db = require('./db');
 
-// Enables CORS (cross-origin resource sharing) between fronend and backend
+// Enables CORS (cross-origin resource sharing) between frontend and backend
 // since they are on different ports.
 app.use(cors());
 
+// Middleware to log requests to the console
 app.use(morgan('tiny'));
 
 // Use routers here

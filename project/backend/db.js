@@ -26,6 +26,18 @@ const poolPromise = new sql.ConnectionPool(sqlConfig)
     .catch(err => console.log(err));
 
 module.exports = {
+    /**
+     * Returns the most recent entry in the Releases table as an object of the form:
+     * {
+     *  RID: <unique identifier from dbms>
+     *  TeamNumber: 1
+     *  VersionNumber: 3,
+     *  ReleaseDate: 2023-09-25T22:45:44.567Z,
+     *  ProductName: "Team01 Good Driver Incentive Program",
+     *  ProductDescription: "Team01: FIFO Good Driver Incentive Program for Sprint 3",
+     * }
+     * @returns Object
+     */
     getLatestRelease: async () => {
         const pool = await poolPromise;
         const result = await pool.request()
