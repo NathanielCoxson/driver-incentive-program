@@ -6,7 +6,7 @@ Install required modules to run the server.
 ## Running the Server
 Run the server locally using:
 
-### `node server.js`\
+### `node server.js`
 
 To run the server on EC2 you need to daemonize the server
 so that it is a process running in the background on the machine.\
