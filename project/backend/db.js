@@ -25,6 +25,8 @@ const poolPromise = new sql.ConnectionPool(sqlConfig)
     })
     .catch(err => console.log(err));
 
+// Write query functions here so that they are 
+// exported as part of the db module.
 module.exports = {
     /**
      * Returns the most recent entry in the Releases table as an object of the form:
@@ -39,7 +41,9 @@ module.exports = {
      * @returns Object
      */
     getLatestRelease: async () => {
+        // Await the pool connection here
         const pool = await poolPromise;
+        // After connection, make requests
         const result = await pool.request()
             .query('SELECT TOP 1 * FROM Releases ORDER BY ReleaseDate DESC');
         return result.recordset[0];
