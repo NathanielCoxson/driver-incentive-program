@@ -1,0 +1,29 @@
+Easiest way to get a route:
+    --> app.get('<path>', (<req>,<res>,<next>))
+    --> E.g.: app.get('/', (req,res,next))
+
+
+const express = requrie("express")
+const app = express()
+
+app.get('/',(req,res) => {
+    console.log('Here')
+    res.send("Hi")
+    res.sendStatus(500).json({message: "Error"})
+})
+
+app.listen(3000)
+
+
+const express = requrie("express")
+const app = express()
+
+app.set("view engine", )
+
+app.get('/',(req,res) => {
+    console.log('Here')
+    res.render("index")
+
+})
+
+app.listen(3000)
