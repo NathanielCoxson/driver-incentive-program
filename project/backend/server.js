@@ -1,6 +1,6 @@
 // Main Express server file
 
-// Imports
+// Dependency imports
 require('dotenv').config({path: "./.env"});
 const express = require('express');
 const cors = require('cors');
@@ -10,16 +10,15 @@ const morgan = require('morgan');
 const indexRouter = require('./routes/index');
 const aboutRouter = require('./routes/about');
 
-const port = process.env.PORT || '3000';
-const app = express();
-
 // DB import
 const db = require('./db');
 
+// App configuration
+const port = process.env.PORT || '3000';
+const app = express();
 // Enables CORS (cross-origin resource sharing) between frontend and backend
 // since they are on different ports.
 app.use(cors());
-
 // Middleware to log requests to the console
 app.use(morgan('tiny'));
 
@@ -27,8 +26,10 @@ app.use(morgan('tiny'));
 app.use('/', indexRouter);
 app.use('/about', aboutRouter);
 
-// Starts the server listening on the defined port number.
+// Start the server listening on the defined port number.
 app.listen(port, () => {
+    // Attach db to app.locals object to be used
+    // in route files.
     app.locals.db = db;
     console.log(`Listening on port ${port}`);
 });
