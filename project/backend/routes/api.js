@@ -5,7 +5,7 @@ const router = express.Router();
 /**
  * 
  */
-router.get('/', async (req, res) => {
+router.get('/about', async (req, res) => {
     try {
         // Make db request
         const info = await req.app.locals.db.getLatestRelease();

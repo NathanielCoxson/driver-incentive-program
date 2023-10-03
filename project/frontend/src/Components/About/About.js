@@ -1,48 +1,43 @@
-// Function to make the HTTP request
-async function fetchData() {
-    // URL of the API endpoint
-    const apiUrl = "http://34.225.199.196:3000/about";
-
-    // Make the GET request
-    fetch(apiUrl)
-    .then((response) => response.json())
-    .then((data) => {
-        // Handle the JSON response data here
-        displayData(data);
-    })
-    .catch((error) => {
-        console.error("Error fetching data:", error);
-    });
-}
-
-// Function to display the JSON data
-function displayData(data) {
-    // Assuming you have an element with the id "aboutData" to display the data
-    const aboutDataElement = document.getElementById("aboutData");
-
-    // Construct the HTML to display the JSON data
-    const html = `
-    <div style="text-align: center;">
-        <!-- <p><strong>RID:</strong> ${data.RID}</p> -->
-        <p><strong>Team Number:</strong> ${data.TeamNumber}</p>
-        <p><strong>Version Number:</strong> ${data.VersionNumber}</p>
-        <p><strong>Release Date:</strong> ${new Date(data.ReleaseDate).toLocaleString()}</p>
-        <p><strong>Product Name:</strong> ${data.ProductName}</p>
-        <p><strong>Product Description:</strong> ${data.ProductDescription}</p>
-    </div>
-    `;
-
-    // Set the HTML content of the element
-    aboutDataElement.innerHTML = html;
-}
+import './About.css';
+import { useState, useEffect } from 'react';
 
 function About() {
-    fetchData()
+    const [release, setRelease] = useState({});
+
+    const fetchRelease = async () => {
+        // URL of the API endpoint
+        const apiUrl = process.env.NODE_ENV === 'production' ? 'http://34.225.199.196/api/about' : 'http://localhost:3001/api/about';
+        // Make the GET request
+        console.log(apiUrl);
+        await fetch(apiUrl)
+            .then((response) => response.json())
+            .then((data) => {
+                // Handle the JSON response data here
+                setRelease(data);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }
+
+    useEffect(() => {
+        fetchRelease();
+    }, []);
 
     return (<main>
         <section className="hero">
             <h2>About Page</h2>
-            <div id="aboutData"></div>
+            {
+                release ?
+                    <div id='about-data'>
+                        <p><strong>Team Number:</strong> {release.TeamNumber} </p>
+                        <p><strong>Version Number:</strong> {release.VersionNumber} </p>
+                        <p><strong>Release Date:</strong> {new Date(release.ReleaseDate).toLocaleString()} </p>
+                        <p><strong>Product Name:</strong> {release.ProductName}</p>
+                        <p><strong>Product Description:</strong> {release.ProductDescription} </p>
+                    </div> :
+                    <></>
+            }
         </section>
     </main>)
 }
