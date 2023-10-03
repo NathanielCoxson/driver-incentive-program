@@ -5,10 +5,10 @@ require('dotenv').config({path: "./.env"});
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path');
 
 // Router imports
-const indexRouter = require('./routes/index');
-const aboutRouter = require('./routes/about');
+const apiRouter = require('./routes/api');
 
 // DB import
 const db = require('./db');
@@ -22,9 +22,14 @@ app.use(cors());
 // Middleware to log requests to the console
 app.use(morgan('tiny'));
 
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+
 // Use routers here
-app.use('/', indexRouter);
-app.use('/about', aboutRouter);
+app.use('/api', apiRouter);
+
+app.get('*', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
+});
 
 // Start the server listening on the defined port number.
 app.listen(port, () => {
