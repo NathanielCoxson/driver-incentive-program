@@ -3,7 +3,7 @@ import Home from '../Home/Home';
 import Navbar from '../Navbar/Navbar';
 import About from '../About/About';
 import Catalog from '../Catalog/Catalog';
-import Contact from '../Contacts/Contacts';
+import Contact from '../Contact/Contact';
 import Rewards from '../Rewards/Rewards';
 import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
