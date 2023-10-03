@@ -6,8 +6,9 @@ function About() {
 
     const fetchRelease = async () => {
         // URL of the API endpoint
-        const apiUrl = process.env.NODE_ENV === 'production' ? 'http://34.225.199.196/' : 'http://localhost:3001/api/about';
+        const apiUrl = process.env.NODE_ENV === 'production' ? 'http://34.225.199.196/api/about' : 'http://localhost:3001/api/about';
         // Make the GET request
+        console.log(apiUrl);
         await fetch(apiUrl)
             .then((response) => response.json())
             .then((data) => {
