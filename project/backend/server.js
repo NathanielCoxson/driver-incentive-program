@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 // Router imports
 const apiRouter = require('./routes/api');
@@ -21,12 +22,16 @@ const app = express();
 app.use(cors());
 // Middleware to log requests to the console
 app.use(morgan('tiny'));
-
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+// Parses incoming request bodies and attaches them to req.body
+// which is passed to the handlers.
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 // Use routers here
 app.use('/api', apiRouter);
 
+// Default route to serve react build folder
 app.get('*', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
 });

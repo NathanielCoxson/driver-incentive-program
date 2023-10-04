@@ -1,5 +1,5 @@
 const sql = require('mssql');
-require('dotenv').config({path: "./.env"});
+require('dotenv').config({ path: "./.env" });
 
 const sqlConfig = {
     user: process.env.DB_USER,
@@ -41,11 +41,79 @@ module.exports = {
      * @returns Object
      */
     getLatestRelease: async () => {
-        // Await the pool connection here
-        const pool = await poolPromise;
-        // After connection, make requests
-        const result = await pool.request()
-            .query('SELECT TOP 1 * FROM Releases ORDER BY ReleaseDate DESC');
-        return result.recordset[0];
+        try {
+            // Await the pool connection here
+            const pool = await poolPromise;
+            // After connection, make requests
+            const result = await pool.request()
+                .query('SELECT TOP 1 * FROM Releases ORDER BY ReleaseDate DESC');
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+
     },
+    /**
+     * Creates a user in the database with the given crednetials.
+     * Request Body: {
+     *  SID: String,
+     *  Name: String,
+     *  Username: String,
+     *  Password: String,
+     * }
+     */
+    createUser: async () => {
+        try {
+            
+        } catch (err) {
+            console.log(err);
+        }
+
+    },
+    /**
+     * Retrieves the user from the database with the specified username.
+     * Response: {
+     *  UID: String,
+     *  SID: String,
+     *  Name: String,
+     *  Role: String,
+     *  Username: String,
+     *  Password: String,
+     * }
+     * @param {String} username 
+     */
+    getUser: async (username) => {
+        try {
+            // Connect to pool
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('username', username)
+                .query("select * from Users where Username = @username");
+            // Return user object
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    /**
+     * Returns the SID of the sponsor with the given name:
+     * Response: {
+     *  SID: String
+     * }
+     * @param {String} sponsorName
+     */
+    getSponsorId: async (sponsorName) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('name', sql.VarChar(100), sponsorName)
+                .query('select SID from Sponsors where SponsorName = @name');
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+    }
 }
