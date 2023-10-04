@@ -49,13 +49,22 @@ api.post('/users/register', async (req, res) => {
         };
 
         // Create new user if username is available.
-        let hashed_pwd = '';
-        bcrypt.hash(req.body.Password, 12, (err, hash) => {
-            if (err) console.log(err);
-            else hashed_pwd = hash;
-        });
-        await req.app.locals.db.createUser({ ...req.body, SID: sponsor.SID, Password: hashed_pwd});
-        res.status(201).send();
+        // Start by hashing the password
+        bcrypt.hash(req.body.Password, 12)
+            // After hashing, create new user object
+            .then(hash => {
+                let newUser = {
+                    ...body,
+                    Password: hash,
+                    SID: sponsor.SID,
+                }
+                // Add user to database
+                req.app.locals.db.createUser(newUser)
+                    // If successful, send success code
+                    .then(() => {
+                        res.status(201).send();
+                    })
+            })
     } catch (err) {
         console.log(err);
         res.status(500).send();
