@@ -82,13 +82,13 @@ module.exports = {
      * }
      * @param {String} username 
      */
-    getUser: async (username) => {
+    getUser: async (Username) => {
         try {
             // Connect to pool
             const pool = await poolPromise;
             // Make request
             const result = await pool.request()
-                .input('username', username)
+                .input('username', Username)
                 .query("select * from Users where Username = @username");
             // Return user object
             return result.recordset[0];
@@ -103,13 +103,13 @@ module.exports = {
      * }
      * @param {String} sponsorName
      */
-    getSponsorId: async (sponsorName) => {
+    getSponsorId: async (SponsorName) => {
         try {
             // Connect
             const pool = await poolPromise;
             // Make request
             const result = await pool.request()
-                .input('name', sql.VarChar(100), sponsorName)
+                .input('name', sql.VarChar(100), SponsorName)
                 .query('select SID from Sponsors where SponsorName = @name');
             return result.recordset[0];
         } catch (err) {

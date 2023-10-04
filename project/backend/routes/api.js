@@ -31,8 +31,17 @@ api.post('/register', async (req, res) => {
 // GET
 api.get('/user', async (req, res) => {
     try {
-        const user = await req.app.locals.db.getUser(req.body.username);
-        res.status(200).send(user);
+        // Bad request
+        if (!req.body.Username) res.status(400).send();
+
+        // Query
+        const user = await req.app.locals.db.getUser(req.body.Username);
+        
+        // Success
+        if (user) res.status(200).send(user);
+        
+        // Not found
+        else res.status(404).send();
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -44,10 +53,10 @@ api.get('/user', async (req, res) => {
 api.get('/sponsor', async (req, res) => {
     try {
         // Bad request
-        if (!req.body.sponsorName) res.status(400).send();
+        if (!req.body.SponsorName) res.status(400).send();
 
         // Query
-        const result = await req.app.locals.db.getSponsorId(req.body.sponsorName);
+        const result = await req.app.locals.db.getSponsorId(req.body.SponsorName);
         
         // Success
         if (result) res.status(200).send(result);
