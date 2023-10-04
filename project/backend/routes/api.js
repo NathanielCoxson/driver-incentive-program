@@ -10,18 +10,53 @@ api.get('/about', async (req, res) => {
         // Make db request
         const info = await req.app.locals.db.getLatestRelease();
         res.status(200).json(info);
-    } catch(err) {
+    } catch (err) {
         console.log(err);
         res.status(500).send();
     }
 });
 
-// Register routes
+// User routes
 // POST
-api.post('/register', async (req, res) => {
+api.post('/users/register', async (req, res) => {
     try {
-        
-    } catch(err) {
+        const body = req.body;
+
+        // Bad request
+        if (
+            !body.SponsorName ||
+            !body.Name ||
+            !body.Username ||
+            !body.Password
+        ) {
+            res.status(400).send();
+            return;
+        };
+
+        // Check if user already exists, send conflict 
+        const user = await req.app.locals.db.getUser(req.body.Username);
+        console.log(user);
+        if (user) {
+            res.status(409).send('Username unavailable');
+            return;
+        }
+
+        // Get Sponsor ID
+        const sponsor = await req.app.locals.db.getSponsorId(req.body.SponsorName);
+        if (!sponsor) {
+            res.status(400).send()
+            return;
+        };
+
+        // Create new user if username is available.
+        let hashed_pwd = '';
+        bcrypt.hash(req.body.Password, 12, (err, hash) => {
+            if (err) console.log(err);
+            else hashed_pwd = hash;
+        });
+        await req.app.locals.db.createUser({ ...req.body, SID: sponsor.SID, Password: hashed_pwd});
+        res.status(201).send();
+    } catch (err) {
         console.log(err);
         res.status(500).send();
     }
@@ -29,17 +64,17 @@ api.post('/register', async (req, res) => {
 
 // User routes
 // GET
-api.get('/user', async (req, res) => {
+api.get('/users/:Username', async (req, res) => {
     try {
         // Bad request
-        if (!req.body.Username) res.status(400).send();
+        if (!req.params.Username) res.status(400).send();
 
         // Query
-        const user = await req.app.locals.db.getUser(req.body.Username);
-        
+        const user = await req.app.locals.db.getUser(req.params.Username);
+
         // Success
         if (user) res.status(200).send(user);
-        
+
         // Not found
         else res.status(404).send();
     } catch (err) {
@@ -50,17 +85,17 @@ api.get('/user', async (req, res) => {
 
 // Sponsor routes
 // GET 
-api.get('/sponsor', async (req, res) => {
+api.get('/sponsors', async (req, res) => {
     try {
         // Bad request
         if (!req.body.SponsorName) res.status(400).send();
 
         // Query
         const result = await req.app.locals.db.getSponsorId(req.body.SponsorName);
-        
+
         // Success
         if (result) res.status(200).send(result);
-        
+
         // Not found
         else res.status(404).send();
     } catch (err) {

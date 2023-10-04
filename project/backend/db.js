@@ -62,9 +62,33 @@ module.exports = {
      *  Password: String,
      * }
      */
-    createUser: async () => {
+    createUser: async (User) => {
         try {
-            
+            // Connect to pool
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('SID', sql.UniqueIdentifier, User.SID)
+                .input('Name', sql.VarChar(100), User.Name)
+                .input('Role', 'driver')
+                .input('Username', sql.VarChar(50), User.Username)
+                .input('Password', sql.VarChar(100), User.Password)
+                .query("\
+                    INSERT INTO Users(\
+                        UID,\
+                        SID,\
+                        Name,\
+                        Role,\
+                        Username,\
+                        Password) \
+                    VALUES(\
+                        NEWID(),\
+                        @SID,\
+                        @Name,\
+                        @Role,\
+                        @Username,\
+                        @Password)");
+            return;
         } catch (err) {
             console.log(err);
         }
@@ -89,7 +113,7 @@ module.exports = {
             // Make request
             const result = await pool.request()
                 .input('username', Username)
-                .query("select * from Users where Username = @username");
+                .query("SELECT * FROM Users WHERE Username = @username");
             // Return user object
             return result.recordset[0];
         } catch (err) {
@@ -110,7 +134,7 @@ module.exports = {
             // Make request
             const result = await pool.request()
                 .input('name', sql.VarChar(100), SponsorName)
-                .query('select SID from Sponsors where SponsorName = @name');
+                .query('SELECt SID FROM Sponsors WHERE SponsorName = @name');
             return result.recordset[0];
         } catch (err) {
             console.log(err);
