@@ -5,9 +5,12 @@ function Register() {
         'http://34.225.199.196/api/users/register' :
         'http://localhost:3001/api/users/register';
 
+    // Submit handler function
     const handleSubmit = (event) => {
+        // Prevent page reload on submit
         event.preventDefault();
         const input = event.target;
+        // Construct user object
         const user = {
             Username: input.username.value,
             Password: input.password.value,
@@ -15,6 +18,7 @@ function Register() {
             SponsorName: input.sponsorName.value,
             Role: input.role.value,
         }
+        // Post to /api/users/register
         fetch(registerUrl, {
             method: 'POST',
             headers: {
@@ -26,7 +30,7 @@ function Register() {
     }
     return (
         <main>
-            <section className="login-section">
+            <section className="register-section">
                 <h2>Register</h2>
                 <form onSubmit={handleSubmit} className='register-form'>
                     <label htmlFor="username">Username:</label>
