@@ -56,10 +56,11 @@ module.exports = {
     /**
      * Creates a user in the database with the given crednetials.
      * Request Body: {
-     *  SID: String,
-     *  Name: String,
      *  Username: String,
      *  Password: String,
+     *  SID: String,
+     *  Name: String,
+     *  Role: String
      * }
      */
     createUser: async (User) => {
@@ -70,7 +71,7 @@ module.exports = {
             const result = await pool.request()
                 .input('SID', sql.UniqueIdentifier, User.SID)
                 .input('Name', sql.VarChar(100), User.Name)
-                .input('Role', 'driver')
+                .input('Role', User.Role)
                 .input('Username', sql.VarChar(50), User.Username)
                 .input('Password', sql.VarChar(100), User.Password)
                 .query("\
