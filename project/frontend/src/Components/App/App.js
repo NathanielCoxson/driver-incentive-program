@@ -7,6 +7,7 @@ import Contact from '../Contact/Contact';
 import Rewards from '../Rewards/Rewards';
 import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
+import Register from '../Register/Register';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/rewards" element={<Rewards />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
       <Footer />
     </div>

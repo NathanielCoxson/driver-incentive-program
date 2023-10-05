@@ -39,6 +39,7 @@ api.post('/users/register', async (req, res) => {
             !body.Password ||
             (body.Role !== 'driver' && body.Role !== 'sponsor')
         ) {
+            console.log(req.body);
             res.status(400).send();
             return;
         };
@@ -46,14 +47,14 @@ api.post('/users/register', async (req, res) => {
         // Check if user already exists, send conflict 
         const user = await req.app.locals.db.getUser(req.body.Username);
         if (user) {
-            res.status(409).send('Username unavailable');
+            res.status(409).json('Username unavailable');
             return;
         }
 
         // Get Sponsor ID
         const sponsor = await req.app.locals.db.getSponsorId(req.body.SponsorName);
         if (!sponsor) {
-            res.status(400).send()
+            res.status(400).send();
             return;
         };
 
