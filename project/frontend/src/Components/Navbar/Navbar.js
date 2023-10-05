@@ -1,15 +1,16 @@
 import "./Navbar.css"
+import { Link } from 'react-router-dom';
 
 function Navbar(){
     return (<div className="Navbar"><header>
         <h1>Welcome to Good Driver Program</h1>
         <nav>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="about">About Us</a></li>
-                <li><a href="contact">Contact</a></li>
-                <li><a href="catalog">Catalog</a></li>
-                <li><a href="rewards">Rewards</a></li>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/about">About Us</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
+                <li><Link to="/catalog">Catalog</Link></li>
+                <li><Link to="/rewards">Rewards</Link></li>
             </ul>
         </nav>
     </header>
