@@ -130,28 +130,6 @@ p {
   margin-bottom: 20px; 
 }
 
-.breadcrumb ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.breadcrumb li {
-  display: inline;
-  margin-right: 10px;
-}
-
-.breadcrumb a {
-  text-decoration: none;
-  color: #fff;
-  font-weight: bold;
-}
-
-.breadcrumb li:last-child {
-  color: #fff;
-  font-weight: bold;
-}
-
 footer {
   background-color: #333;
   color: #fff;
