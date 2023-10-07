@@ -1,26 +1,27 @@
-// BreadCrumb.js
+// Breadcrumb.js
 import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-function BreadCrumb() {
-    // Static breadcrumb data for testing
-    const staticBreadcrumbs = [
-        { segment: 'Home', path: '/' },
-        { segment: 'About', path: '/about' },
-        // Add more static breadcrumb items as needed
-    ];
+function Breadcrumb() {
+  const location = useLocation();
+  const pathnames = location.pathname.split('/').filter(Boolean);
 
-    return (
-        <div className="breadcrumb">
-            <ul>
-                {staticBreadcrumbs.map((item, index) => (
-                    <li key={index}>
-                        <a href={item.path}>{item.segment}</a>
-                        {index < staticBreadcrumbs.length - 1 && <span>/</span>}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+  return (
+    <nav className="breadcrumb">
+      <ul>
+        <li><Link to="/">Home</Link></li>
+        {pathnames.map((path, index) => (
+          <li key={path}>
+            {index < pathnames.length - 1 ? (
+              <Link to={`/${pathnames.slice(0, index + 1).join('/')}`}>{path}</Link>
+            ) : (
+              path
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
 }
 
-export default BreadCrumb;
+export default Breadcrumb;
