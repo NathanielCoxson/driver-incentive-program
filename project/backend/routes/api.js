@@ -24,8 +24,8 @@ api.get('/about', async (req, res) => {
  *  Password: String,
  *  SponsorName: String,
  *  Name: String,
- *  Role: String (either 'driver' or 'sponsor')
- *  AdminPin: String
+ *  Role: String (either 'driver', 'sponsor', or 'admin')
+ *  AdminPin: String (only required if Role is 'admin')
  * }
  */
 api.post('/users/register', async (req, res) => {
