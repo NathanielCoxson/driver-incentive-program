@@ -123,11 +123,11 @@ p {
   border-radius: 10px; /* Add border-radius for rounded corners */
   font-size: 14px;
   position: relative; /* Change position to relative */
-  padding: 40px;
+  padding: 10px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   text-align: left; /* Align the breadcrumb text */
   margin-top: 20px;
-  margin-bottom: 20px; /* Adjust margin-bottom as needed */
+  margin-bottom: 20px; 
 }
 
 .breadcrumb ul {
@@ -150,10 +150,6 @@ p {
 .breadcrumb li:last-child {
   color: #fff;
   font-weight: bold;
-}
-
-.breadcrumb span {
-  margin: 0 10px;
 }
 
 footer {
