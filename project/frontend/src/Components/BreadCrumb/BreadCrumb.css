@@ -1,8 +1,8 @@
 /* Breadcrumb.css */
 .breadcrumb {
-  background-color: #0077b6;
+  background-color: #0077b6; /* Change the background color to blue */
   color: #fff;
-  border-radius: 10px;
+  border-radius: 10px; /* Add border-radius for rounded corners */
   font-size: 14px;
   position: absolute;
   margin-top: -20px;
