@@ -9,6 +9,7 @@ import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
 import Register from '../Register/Register';
 import Profile from '../Profile/Profile';
+import BreadCrum from '../BreadCrum/BreadCrum';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
