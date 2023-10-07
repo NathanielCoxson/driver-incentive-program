@@ -30,10 +30,17 @@ api.get('/about', async (req, res) => {
 api.post('/users/register', async (req, res) => {
     try {
         const body = req.body;
+        /*
+            Has minimum 8 characters in length. Adjust it by modifying {8,}
+            At least one uppercase English letter. You can remove this condition by removing (?=.*?[A-Z])
+            At least one lowercase English letter.  You can remove this condition by removing (?=.*?[a-z])
+            At least one digit. You can remove this condition by removing (?=.*?[0-9])
+            At least one special character,  You can remove this condition by removing (?=.*?[#?!@$%^&*-])
+        */
+        const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
         // Bad request
         if (
-            !body.SponsorName ||
             !body.Name ||
             !body.Username ||
             !body.Password ||
@@ -52,7 +59,7 @@ api.post('/users/register', async (req, res) => {
         }
 
         // Get Sponsor ID
-        const sponsor = await req.app.locals.db.getSponsorId(req.body.SponsorName);
+        const sponsor = await req.app.locals.db.getSponsorId(req.body.SponsorName || 'None');
         if (!sponsor) {
             res.status(400).send();
             return;
