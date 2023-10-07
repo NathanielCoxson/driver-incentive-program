@@ -123,7 +123,7 @@ p {
   border-radius: 10px; /* Add border-radius for rounded corners */
   font-size: 14px;
   position: relative; /* Change position to relative */
-  padding: 10px;
+  padding: 40px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
   text-align: left; /* Align the breadcrumb text */
   margin-top: 20px;
