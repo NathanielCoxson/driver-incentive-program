@@ -1,5 +1,5 @@
 const sql = require('mssql');
-require('dotenv').config({path: "./.env"});
+require('dotenv').config({ path: "./.env" });
 
 const sqlConfig = {
     user: process.env.DB_USER,
@@ -41,11 +41,104 @@ module.exports = {
      * @returns Object
      */
     getLatestRelease: async () => {
-        // Await the pool connection here
-        const pool = await poolPromise;
-        // After connection, make requests
-        const result = await pool.request()
-            .query('SELECT TOP 1 * FROM Releases ORDER BY ReleaseDate DESC');
-        return result.recordset[0];
+        try {
+            // Await the pool connection here
+            const pool = await poolPromise;
+            // After connection, make requests
+            const result = await pool.request()
+                .query('SELECT TOP 1 * FROM Releases ORDER BY ReleaseDate DESC');
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+
     },
+    /**
+     * Creates a user in the database with the given crednetials.
+     * Request Body: {
+     *  Username: String,
+     *  Password: String,
+     *  SID: String,
+     *  Name: String,
+     *  Role: String
+     * }
+     */
+    createUser: async (User) => {
+        try {
+            // Connect to pool
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('SID', sql.UniqueIdentifier, User.SID)
+                .input('Name', sql.VarChar(100), User.Name)
+                .input('Role', User.Role)
+                .input('Username', sql.VarChar(50), User.Username)
+                .input('Password', sql.VarChar(100), User.Password)
+                .query("\
+                    INSERT INTO Users(\
+                        UID,\
+                        SID,\
+                        Name,\
+                        Role,\
+                        Username,\
+                        Password) \
+                    VALUES(\
+                        NEWID(),\
+                        @SID,\
+                        @Name,\
+                        @Role,\
+                        @Username,\
+                        @Password)");
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+
+    },
+    /**
+     * Retrieves the user from the database with the specified username.
+     * Response: {
+     *  UID: String,
+     *  SID: String,
+     *  Name: String,
+     *  Role: String,
+     *  Username: String,
+     *  Password: String,
+     * }
+     * @param {String} username 
+     */
+    getUser: async (Username) => {
+        try {
+            // Connect to pool
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('username', Username)
+                .query("SELECT * FROM Users WHERE Username = @username");
+            // Return user object
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    /**
+     * Returns the SID of the sponsor with the given name:
+     * Response: {
+     *  SID: String
+     * }
+     * @param {String} sponsorName
+     */
+    getSponsorId: async (SponsorName) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('name', sql.VarChar(100), SponsorName)
+                .query('SELECt SID FROM Sponsors WHERE SponsorName = @name');
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+    }
 }
