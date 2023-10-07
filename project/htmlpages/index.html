@@ -79,6 +79,41 @@
             text-align: center;
             padding: 10px 0;
         }
+        /* Breadcrumb Styles */
+        .breadcrumb {
+            background-color: #0077b6;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 14px;
+            position: absolute;
+            margin-top: -20px;
+            margin-left: -10px;
+        }
+        .breadcrumb ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .breadcrumb li {
+            display: inline;
+            margin-right: 10px;
+        }
+        .breadcrumb a {
+            text-decoration: none;
+            color: #fff; /* Match the CTA button background color */
+            font-weight: bold;
+        }
+        /* Style the current page (last item) differently */
+        .breadcrumb li:last-child {
+            color: #fff; /* Match the header text color */
+            font-weight: bold;
+        }
+
+        /* Style the "/" separator */
+        .breadcrumb span {
+            margin: 0 10px; /* Adjust the margin value as needed */
+        }
+
     </style>
 </head>
 <body>
@@ -92,10 +127,21 @@
                 <li><a href="catalog.html">Catalog</a></li>
                 <li><a href="rewards.html">Rewards</a></li>
             </ul>
-        </nav>
+        
     </header>
     <main>
         <section class="hero">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span>/</span>
+                <a href="about.html">About Us</a>
+                <span>/</span>
+                <a href="contact.html">Contact</a>
+                <span>/</span>
+                <a href="catalog.html">Catalog</a>
+                <span>/</span>
+                Rewards
+            </div>
             <h2>Drive Safely and Get Rewarded!</h2>
             <p>Join our program and earn rewards for your good driving behavior.</p>
             <a href="login.html" class="cta-button">Login</a>
