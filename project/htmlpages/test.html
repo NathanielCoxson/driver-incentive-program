@@ -86,19 +86,14 @@
     <main>
         <section class="hero">
             <h2>Sign Up</h2>
-            <!-- Modify the form action and method to match the API endpoint -->
-            <form id="signInForm" action="/api/users/register" method="POST" onsubmit="return validateForm()">
+            <form id="signInForm" onsubmit="return validateForm()">
                 <div>
                     <label for="name">Name:</label>
-                    <input type="text" id="name" name="Name" required> <!-- Match the field name with the API -->
-                </div>
-                <div>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="Username" required> <!-- Match the field name with the API -->
+                    <input type="text" id="name" name="name" required>
                 </div>
                 <div>
                     <label for="userType">User Type:</label>
-                    <select id="userType" name="Role" required> <!-- Match the field name with the API -->
+                    <select id="userType" name="userType" required>
                         <option value="driver">Driver</option>
                         <option value="sponsor">Sponsor</option>
                         <option value="admin">Admin</option>
@@ -106,11 +101,11 @@
                 </div>
                 <div id="adminPinSection" style="display: none;">
                     <label for="adminPin">Admin Pin:</label>
-                    <input type="password" id="adminPin" name="AdminPin"> <!-- Match the field name with the API -->
+                    <input type="password" id="adminPin" name="adminPin">
                 </div>
                 <div>
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="Password" required> <!-- Match the field name with the API -->
+                    <input type="password" id="password" name="password" required>
                 </div>
                 <div>
                     <label for="retypePassword">Retype Password:</label>
@@ -128,7 +123,6 @@
     <script>
         function validateForm() {
             const name = document.getElementById('name').value;
-            const username = document.getElementById('username').value;
             const userType = document.getElementById('userType').value;
             const adminPin = document.getElementById('adminPin').value;
             const password = document.getElementById('password').value;
