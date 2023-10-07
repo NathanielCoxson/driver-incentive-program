@@ -9,7 +9,7 @@ import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
 import Register from '../Register/Register';
 import Profile from '../Profile/Profile';
-import BreadCrum from '../BreadCrum/BreadCrum';
+import BreadCrumb from '../BreadCrumb/BreadCrumb'; 
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
     <Router>
     <div className="App">
       <Navbar />
-      <BreadCrum />
+      <BreadCrumb />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
