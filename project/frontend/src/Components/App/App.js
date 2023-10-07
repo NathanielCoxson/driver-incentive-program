@@ -17,7 +17,6 @@ function App() {
     <div className="App">
       <Navbar />
       <Routes>
-        <BreadCrum />
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/catalog" element={<Catalog />} />
