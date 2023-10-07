@@ -118,17 +118,47 @@ p {
 }
 /* Breadcrumb.css */
 .breadcrumb {
-  background-color: #0077b6; /* Change the background color to blue */
+  background-color: #0077b6;
   color: #fff;
-  border-radius: 10px; /* Add border-radius for rounded corners */
+  border-radius: 10px;
   font-size: 14px;
-  position: relative; /* Change position to relative */
+  position: relative;
   padding: 10px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
-  text-align: left; /* Align the breadcrumb text */
+  text-align: left;
   margin-top: 20px;
-  margin-bottom: 20px; 
+  margin-bottom: 
+  
 }
+
+.breadcrumb ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.breadcrumb li {
+  display: inline;
+  margin-right: 10px;
+}
+
+.breadcrumb a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Style the current page (last item) differently */
+.breadcrumb li:last-child {
+  color: orange; /* Change the color to orange for the current breadcrumb */
+}
+
+/* Style the "/" separator */
+.breadcrumb span::after {
+  content: ">>"; /* Add ">>" between breadcrumb links */
+  margin: 0 10px; /* Adjust spacing as needed */
+  color: #fff; /* Match breadcrumb text color */
+} 
 
 footer {
   background-color: #333;
