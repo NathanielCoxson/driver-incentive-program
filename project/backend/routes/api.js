@@ -25,6 +25,7 @@ api.get('/about', async (req, res) => {
  *  SponsorName: String,
  *  Name: String,
  *  Role: String (either 'driver' or 'sponsor')
+ *  AdminPin: String
  * }
  */
 api.post('/users/register', async (req, res) => {
@@ -38,15 +39,18 @@ api.post('/users/register', async (req, res) => {
             At least one special character,  You can remove this condition by removing (?=.*?[#?!@$%^&*-])
         */
         const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+        const adminPin = process.env.DB_PWD;
 
         // Bad request
         if (
             !body.Name ||
             !body.Username ||
             !body.Password ||
-            (body.Role !== 'driver' && body.Role !== 'sponsor')
+            (body.Role !== 'driver' && body.Role !== 'sponsor' && body.Role !== 'admin') ||
+            (body.AdminPin && body.AdminPin !== adminPin) ||
+            (body.Role === 'admin' && body.AdminPin !== adminPin) ||
+            !passwordRegex.test(body.Password)
         ) {
-            console.log(req.body);
             res.status(400).send();
             return;
         };
@@ -59,7 +63,9 @@ api.post('/users/register', async (req, res) => {
         }
 
         // Get Sponsor ID
-        const sponsor = await req.app.locals.db.getSponsorId(req.body.SponsorName || 'None');
+        let sponsorName = req.body.SponsorName || 'None';
+        if (body.Role === 'admin') sponsorName = 'Admins';
+        const sponsor = await req.app.locals.db.getSponsorId(sponsorName);
         if (!sponsor) {
             res.status(400).send();
             return;
@@ -74,7 +80,6 @@ api.post('/users/register', async (req, res) => {
                     ...body,
                     Password: hash,
                     SID: sponsor.SID,
-                    Role: body.Role === 'sponsor' ? 'sponsor' : 'driver'
                 }
                 // Add user to database
                 req.app.locals.db.createUser(newUser)
