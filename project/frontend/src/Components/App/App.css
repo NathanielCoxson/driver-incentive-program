@@ -131,8 +131,10 @@ p {
   margin-bottom: 20px;
   margin-left: 20px;
   margin-right: 20px; 
-}
+  display: flex; /* Add display:flex to align the breadcrumb items */
+  align-items: center; /* Vertically align items in the breadcrumb */
 
+}
 
 .breadcrumb li {
   display: inline;
@@ -152,11 +154,12 @@ p {
 }
 
 
-.breadcrumb span::after {
-  content: ">>"; 
-  margin: 0 10px; 
-  color: #fff; 
-} 
+/* Add the ">>" symbols using ::after pseudo-element */
+.breadcrumb a::after {
+  content: " >> ";
+  color: #fff;
+  font-weight: normal; /* Optionally, set the font weight to normal for the separator */
+}
 
 footer {
   background-color: #333;
