@@ -1,0 +1,34 @@
+    /* Breadcrumb Styles */
+    .breadcrumb {
+        background-color: #0077b6;
+        color: #fff;
+        border-radius: 10px;
+        font-size: 14px;
+        position: absolute;
+        margin-top: -20px;
+        margin-left: -10px;
+    }
+    .breadcrumb ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .breadcrumb li {
+        display: inline;
+        margin-right: 10px;
+    }
+    .breadcrumb a {
+        text-decoration: none;
+        color: #fff; /* Match the CTA button background color */
+        font-weight: bold;
+    }
+    /* Style the current page (last item) differently */
+    .breadcrumb li:last-child {
+        color: #fff; /* Match the header text color */
+        font-weight: bold;
+    }
+
+    /* Style the "/" separator */
+    .breadcrumb span {
+        margin: 0 10px; /* Adjust the margin value as needed */
+    }

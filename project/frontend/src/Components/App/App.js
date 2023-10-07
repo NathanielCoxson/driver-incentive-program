@@ -8,6 +8,7 @@ import Rewards from '../Rewards/Rewards';
 import Login from '../Login/Login';
 import Footer from '../Footer/Footer';
 import Register from '../Register/Register';
+import BreadCrum from '../BreadCrum/BreadCrum';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     <div className="App">
       <Navbar />
       <Routes>
+        <BreadCrum />
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/catalog" element={<Catalog />} />

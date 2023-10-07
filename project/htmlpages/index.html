@@ -115,6 +115,29 @@
         }
 
     </style>
+        <script>
+            // JavaScript to update breadcrumb
+            function updateBreadcrumb() {
+                const breadcrumb = document.getElementById('breadcrumb');
+                const path = window.location.pathname.split('/').filter(Boolean); // Split the URL path
+                let breadcrumbHTML = '';
+    
+                // Create breadcrumb links
+                for (let i = 0; i < path.length; i++) {
+                    breadcrumbHTML += '<a href="/' + path.slice(0, i + 1).join('/') + '">' + path[i] + '</a>';
+                    if (i < path.length - 1) {
+                        breadcrumbHTML += '<span>/</span>';
+                    }
+                }
+    
+                breadcrumb.innerHTML = breadcrumbHTML;
+            }
+    
+            // Call the updateBreadcrumb function when the page loads
+            window.onload = function () {
+                updateBreadcrumb();
+            };
+        </script>
 </head>
 <body>
     <header>
@@ -131,16 +154,8 @@
     </header>
     <main>
         <section class="hero">
-            <div class="breadcrumb">
-                <a href="index.html">Home</a>
-                <span>/</span>
-                <a href="about.html">About Us</a>
-                <span>/</span>
-                <a href="contact.html">Contact</a>
-                <span>/</span>
-                <a href="catalog.html">Catalog</a>
-                <span>/</span>
-                Rewards
+            <!-- Breadcrumb container -->
+            <div id="breadcrumb" class="breadcrumb"></div>
             </div>
             <h2>Drive Safely and Get Rewarded!</h2>
             <p>Join our program and earn rewards for your good driving behavior.</p>
@@ -151,6 +166,9 @@
     <footer>
         &copy; 2023 Good Driver Program. All rights reserved.
     </footer>
+    
+    
+    
     
 </body>
 </html>
