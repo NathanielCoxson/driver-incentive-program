@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './BreadCrum.css'; // Import the breadcrumb CSS
+import './BreadCrumb.css'; // Import the breadcrumb CSS
 
 function BreadCrumb() {
   useEffect(() => {
