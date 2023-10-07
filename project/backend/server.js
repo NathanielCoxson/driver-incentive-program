@@ -25,7 +25,9 @@ const app = express();
 app.use(cors());
 
 // Middleware to log requests to the console
-app.use(morgan('tiny'));
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('tiny'));
+}
 
 // Defines location of react build folder
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
