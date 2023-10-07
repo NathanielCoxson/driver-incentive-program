@@ -5,7 +5,6 @@ import BreadCrumb from '../BreadCrumb/BreadCrumb'; // Import BreadCrumb componen
 function Home() {
     return (
         <main>
-            <BreadCrumb /> {/* Include the BreadCrumb component here */}
             <section className="hero">
                 <h2>Drive Safely and Get Rewarded!</h2>
                 <p>Join our program and earn rewards for your good driving behavior.</p>

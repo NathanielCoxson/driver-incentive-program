@@ -1,25 +1,33 @@
 // BreadCrumb.js
 import './BreadCrumb.css';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 function BreadCrumb() {
+    const location = useLocation();
+    const [breadcrumbs, setBreadcrumbs] = useState([]);
+
     useEffect(() => {
-        const breadcrumb = document.getElementById('breadcrumb');
-        const path = window.location.pathname.split('/').filter(Boolean);
-        let breadcrumbHTML = '';
+        const path = location.pathname.split('/').filter(Boolean);
+        const breadcrumbItems = path.map((segment, index) => ({
+            segment,
+            path: path.slice(0, index + 1).join('/'),
+        }));
 
-        for (let i = 0; i < path.length; i++) {
-            breadcrumbHTML += `<a href="${path.slice(0, i + 1).join('/')}">${path[i]}</a>`;
-            if (i < path.length - 1) {
-                breadcrumbHTML += '<span>/</span>';
-            }
-        }
-
-        breadcrumb.innerHTML = breadcrumbHTML;
-    }, []);
+        setBreadcrumbs(breadcrumbItems);
+    }, [location.pathname]);
 
     return (
-        <div id="breadcrumb" className="breadcrumb"></div>
+        <div className="breadcrumb">
+            <ul>
+                {breadcrumbs.map((item, index) => (
+                    <li key={index}>
+                        <a href={item.path}>{item.segment}</a>
+                        {index < breadcrumbs.length - 1 && <span>/</span>}
+                    </li>
+                ))}
+            </ul>
+        </div>
     );
 }
 
