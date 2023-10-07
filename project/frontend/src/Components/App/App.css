@@ -151,14 +151,14 @@ p {
 .breadcrumb li:last-child {
   color: orange; 
   font-weight: bold;
+  text-align: center;
 }
 
 
-/* Add the ">>" symbols using ::after pseudo-element */
 .breadcrumb a::after {
   content: " >> ";
   color: #fff;
-  font-weight: normal; /* Optionally, set the font weight to normal for the separator */
+  font-weight: bold; 
 }
 
 footer {
