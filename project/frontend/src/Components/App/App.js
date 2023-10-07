@@ -17,6 +17,7 @@ function App() {
     <Router>
     <div className="App">
       <Navbar />
+      <BreadCrum />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
