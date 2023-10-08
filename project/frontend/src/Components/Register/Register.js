@@ -4,10 +4,14 @@ import { useEffect, useState } from 'react';
 function Register() {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
+    const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+    
 
     const registerUrl = process.env.NODE_ENV === 'production' ?
         'http://34.225.199.196/api/users/register' :
         'http://localhost:3001/api/users/register';
+        const passwordRequirementsMessage =
+        'Password must be:\nat least eight characters long,\ncontain one uppercase letter,\none lowercase letter,\none number,\nand one special character.';
 
     /*
             Has minimum 8 characters in length. Adjust it by modifying {8,}
@@ -95,6 +99,14 @@ function Register() {
         console.log(adminPinInput);
     }
 
+    const handlePasswordFocus = () => {
+        setIsPasswordFocused(true);
+    };
+
+    const handlePasswordBlur = () => {
+        setIsPasswordFocused(false);
+    };
+
     return (
         <main>
             <section className="register-section">
@@ -131,6 +143,12 @@ function Register() {
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password" required />
                     </div>
+
+                    {isPasswordFocused && (
+                        <div className="password-requirements">
+                            {passwordRequirementsMessage}
+                        </div>
+                    )}
 
                     <div>
                         <label for="retypePassword">Retype Password:</label>
