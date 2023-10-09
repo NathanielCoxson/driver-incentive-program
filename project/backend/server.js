@@ -7,8 +7,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
 const bodyParser = require('body-parser');
-// const swaggerDocument = require('./apiDoc.json'); // imports doc file
-// const swaggerUi = require('swagger-ui-express'); // serves doc file
+const swaggerDocument = require('./openapi.json'); // imports doc file
+const swaggerUi = require('swagger-ui-express'); // serves doc file
 
 // Router imports
 const apiRouter = require('./routes/api');
@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 
 // Use routers here
 app.use('/api', apiRouter);
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Default route to serve react build folder
 app.get('*', async (req, res) => {

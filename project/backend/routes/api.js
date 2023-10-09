@@ -31,6 +31,7 @@ api.get('/about', async (req, res) => {
 api.post('/users/register', async (req, res) => {
     try {
         const body = req.body;
+        const query = req.query;
         /*
             Has minimum 8 characters in length. Adjust it by modifying {8,}
             At least one uppercase English letter. You can remove this condition by removing (?=.*?[A-Z])
@@ -40,17 +41,17 @@ api.post('/users/register', async (req, res) => {
         */
         const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
         const adminPin = process.env.DB_PWD;
+        const conditions = [
+            !body.Name, !body.Username, !body.Password, !body.Role, // Required fields
+            (body.Role !== 'driver' && body.Role !== 'sponsor' && body.Role !== 'admin'), // Role validation
+            !passwordRegex.test(body.Password), // Password validation
+            (query.AdminPin && query.AdminPin !== adminPin), // AdminPin is correct if provided
+            (body.Role === 'admin' && query.AdminPin !== adminPin), // Admin role has correct pin
+            (query.SponsorName === 'Admins' || query.SponsorName === 'None') // Restricted sponsor names
+        ]
 
         // Bad request
-        if (
-            !body.Name ||
-            !body.Username ||
-            !body.Password ||
-            (body.Role !== 'driver' && body.Role !== 'sponsor' && body.Role !== 'admin') ||
-            (body.AdminPin && body.AdminPin !== adminPin) ||
-            (body.Role === 'admin' && body.AdminPin !== adminPin) ||
-            !passwordRegex.test(body.Password)
-        ) {
+        if (conditions.includes(true)) {
             res.status(400).send();
             return;
         };
@@ -63,8 +64,9 @@ api.post('/users/register', async (req, res) => {
         }
 
         // Get Sponsor ID
-        let sponsorName = req.body.SponsorName || 'None';
+        let sponsorName = '';
         if (body.Role === 'admin') sponsorName = 'Admins';
+        else sponsorName = query.SponsorName || 'None';
         const sponsor = await req.app.locals.db.getSponsorId(sponsorName);
         if (!sponsor) {
             res.status(400).send();
