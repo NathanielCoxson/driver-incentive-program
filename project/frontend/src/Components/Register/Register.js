@@ -6,7 +6,7 @@ function Register() {
     const [adminPinInput, setAdminPinInput] = useState(false);
     
 
-    const registerUrl = process.env.NODE_ENV === 'production' ?
+    const baseURL = process.env.NODE_ENV === 'production' ?
         'http://34.225.199.196/api/users/register' :
         'http://localhost:3001/api/users/register';
     const passwordRequirementsMessage =
@@ -33,7 +33,7 @@ function Register() {
         // Password validation rules (same as previous example)
 
         if (!password.match(passwordRegex)) {
-            setResponseMessage("Password must be at least eight characters long, contain one uppercase letter, one lowercase letter, one number, and one special character.");
+            setResponseMessage(passwordRequirementsMessage);
             return false;
         }
 
@@ -70,15 +70,10 @@ function Register() {
             Password: input.password.value,
             Name: input.name.value,
             Role: input.role.value,
-        }
-        if (input.adminPin) user = {
-            ...user, 
-            AdminPin: input.adminPin.value,
-            SponsorName: 'Admins'
         };
-
+        let url = input.adminPin ? `${baseURL}?AdminPin=${encodeURIComponent(input.adminPin.value)}` : baseURL;
         // Post to /api/users/register
-        fetch(registerUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -86,6 +81,7 @@ function Register() {
             body: JSON.stringify(user),
         })
         .then(res => {
+            if (res.status === 400) setResponseMessage('Invalid Input')
             if (res.status === 409) setResponseMessage('Username already taken.');
             if (res.status === 201) setResponseMessage('Success!');
         })
@@ -93,9 +89,7 @@ function Register() {
     }
 
     const handleSelectChange = (event) => {
-        console.log(event.target.value);
         setAdminPinInput(event.target.value === 'admin' ? true : false);
-        console.log(adminPinInput);
     }
 
     return (
