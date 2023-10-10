@@ -141,14 +141,14 @@ function Register() {
 
 
                     <div className="password-requirements">
-                    <p>Password requirements:</p>
-                        <ul>
-                            <li> At least eight characters long</li>
-                            <li> Contain one uppercase letter</li>
-                            <li> Contain one lowercase letter</li>
-                            <li> Contain one number</li>
-                            <li> Contain one special character</li>
-                        </ul>
+                        <p>Password requirements:</p>
+                            <ul>
+                                <li> At least eight characters long</li>
+                                <li> Contain one uppercase letter</li>
+                                <li> Contain one lowercase letter</li>
+                                <li> Contain one number</li>
+                                <li> Contain one special character</li>
+                            </ul>
                     </div>
 
                     <div class="password-validation" id="passwordValidation">{responseMessage}</div>

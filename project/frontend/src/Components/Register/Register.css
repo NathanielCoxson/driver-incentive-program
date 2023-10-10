@@ -1,9 +1,0 @@
-.password-requirements ul {
-    list-style-type: non; /* Use square bullet points */
-    margin-left: 0px; /* Add left margin to the list */
-    padding-left: 0px; /* Add some padding for spacing between bullet points and text */
-  }
-  
-  .password-requirements li {
-    margin-left: 0px; /* Add some vertical spacing between each list item */
-  }
