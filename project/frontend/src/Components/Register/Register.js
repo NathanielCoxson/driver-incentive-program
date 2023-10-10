@@ -75,6 +75,7 @@ function Register() {
             Password: input.password.value,
             Name: input.name.value,
             Role: input.role.value,
+            Email: input.email.value,
         };
         let url = input.adminPin ? `${baseURL}?AdminPin=${encodeURIComponent(input.adminPin.value)}` : baseURL;
         // Post to /api/users/register
@@ -105,6 +106,11 @@ function Register() {
                     <div>
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" required />
+                    </div>
+
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" name="email" required />
                     </div>
 
                     <div>
