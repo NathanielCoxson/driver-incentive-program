@@ -118,7 +118,7 @@ module.exports = {
             // Make request
             const result = await pool.request()
                 .input('username', Username)
-                .query("SELECT * FROM Users WHERE Username = @username");
+                .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Username = @username");
             // Return user object
             return result.recordset[0];
         } catch (err) {
