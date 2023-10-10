@@ -23,7 +23,8 @@ api.get('/about', async (req, res) => {
  *  Username: String,
  *  Password: String,
  *  Name: String,
- *  Role: String (either 'driver', 'sponsor', or 'admin')
+ *  Role: String, (either 'driver', 'sponsor', or 'admin')
+ *  Email: String
  * }
  * Query Parameters {
  *  AdminPin: string // Required if Role is admin

@@ -104,6 +104,7 @@ module.exports = {
      *  Role: String,
      *  Username: String,
      *  Password: String,
+     *  Email: String
      * }
      * @param {String} Username 
      */
