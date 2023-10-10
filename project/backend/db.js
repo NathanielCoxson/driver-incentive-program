@@ -105,9 +105,9 @@ module.exports = {
      *  Username: String,
      *  Password: String,
      * }
-     * @param {String} username 
+     * @param {String} Username 
      */
-    getUser: async (Username) => {
+    getUserByUsername: async (Username) => {
         try {
             // Connect to pool
             const pool = await poolPromise;
@@ -125,17 +125,18 @@ module.exports = {
      * Returns the SID of the sponsor with the given name:
      * Response: {
      *  SID: String
+     *  SponsorName: String
      * }
-     * @param {String} sponsorName
+     * @param {String} SponsorName
      */
-    getSponsorId: async (SponsorName) => {
+    getSponsorByName: async (SponsorName) => {
         try {
             // Connect
             const pool = await poolPromise;
             // Make request
             const result = await pool.request()
                 .input('name', sql.VarChar(100), SponsorName)
-                .query('SELECt SID FROM Sponsors WHERE SponsorName = @name');
+                .query('SELECT * FROM Sponsors WHERE SponsorName = @name');
             return result.recordset[0];
         } catch (err) {
             console.log(err);

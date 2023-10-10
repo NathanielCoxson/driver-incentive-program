@@ -18,7 +18,11 @@
   "tags": [
     {
       "name": "users",
-      "description": "Operations about user"
+      "description": "Operations about users"
+    },
+    {
+      "name": "sponsors",
+      "description": "Operations about sponsors"
     }
   ],
   "paths": {
@@ -55,7 +59,20 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/User"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "Password": {
+                        "type": "string",
+                        "example": "1234"
+                      }
+                    }
+                  }
+                ]
               }
             }
           }
@@ -76,241 +93,104 @@
         }
       }
     },
-    "/user/createWithList": {
-      "post": {
+    "/users/{Username}": {
+      "get": {
         "tags": [
           "users"
         ],
-        "summary": "Creates list of users with given input array",
-        "description": "Creates list of users with given input array",
-        "operationId": "createUsersWithListInput",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/login": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Logs user into the system",
-        "description": "",
-        "operationId": "loginUser",
+        "summary": "Retrieve user by username",
+        "description": "Retrieves the user with the given username",
+        "operationId": "getUserByUsername",
         "parameters": [
           {
-            "name": "username",
-            "in": "query",
-            "description": "The user name for login",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "The password for login in clear text",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "headers": {
-              "X-Rate-Limit": {
-                "description": "calls per hour allowed by the user",
-                "schema": {
-                  "type": "integer",
-                  "format": "int32"
-                }
-              },
-              "X-Expires-After": {
-                "description": "date in UTC when token expires",
-                "schema": {
-                  "type": "string",
-                  "format": "date-time"
-                }
-              }
-            },
-            "content": {
-              "application/xml": {
-                "schema": {
-                  "type": "string"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid username/password supplied"
-          }
-        }
-      }
-    },
-    "/user/logout": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Logs out current logged in user session",
-        "description": "",
-        "operationId": "logoutUser",
-        "parameters": [],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/{username}": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Get user by user name",
-        "description": "",
-        "operationId": "getUserByName",
-        "parameters": [
-          {
-            "name": "username",
             "in": "path",
-            "description": "The name that needs to be fetched. Use user1 for testing. ",
-            "required": true,
+            "name": "Username",
             "schema": {
               "type": "string"
-            }
+            },
+            "description": "Username of the user to retrieve",
+            "required": true
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "UID": {
+                          "type": "string",
+                          "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
+                        },
+                        "Password": {
+                          "type": "string",
+                          "example": "$2b$12$QP.cE.OAgiLcg7vUV4N3/ONunj7euIZTyRdcMsVOTLr6DkP7xbxT6"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid username supplied"
+            "description": "Bad request"
           },
           "404": {
             "description": "User not found"
           }
         }
-      },
-      "put": {
+      }
+    },
+    "/sponsors/{SponsorName}": {
+      "get": {
         "tags": [
-          "user"
+          "sponsors"
         ],
-        "summary": "Update user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
+        "summary": "Retrieve sponsor",
+        "description": "Retrieves sponsor with SponsorName",
+        "operationId": "getSponsorByName",
         "parameters": [
           {
-            "name": "username",
             "in": "path",
-            "description": "name that need to be deleted",
-            "required": true,
+            "name": "SponsorName",
             "schema": {
               "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "Update an existent user in the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
             },
-            "application/xml": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            },
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              }
-            }
-          }
-        },
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be deleted",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "description": "Name of the sponsor to retrieve",
+            "required": true
           }
         ],
         "responses": {
-          "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Sponsor"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "SID": {
+                          "type": "string",
+                          "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -323,11 +203,7 @@
         "properties": {
           "Username": {
             "type": "string",
-            "example": "theUser"
-          },
-          "Password": {
-            "type": "string",
-            "example": "12345"
+            "example": "username"
           },
           "Name": {
             "type": "string",
@@ -336,6 +212,19 @@
           "Role": {
             "type": "string",
             "example": "driver"
+          }
+        }
+      },
+      "Sponsor": {
+        "type": "object",
+        "properties": {
+          "SID": {
+            "type": "string",
+            "example": "544F44D9-8D86-4EB8-A2C6-687519C2FD86"
+          },
+          "SponsorName": {
+            "type": "string",
+            "example": "Sponsor Org."
           }
         }
       },

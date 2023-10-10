@@ -22,10 +22,12 @@ api.get('/about', async (req, res) => {
  * Request Body {
  *  Username: String,
  *  Password: String,
- *  SponsorName: String,
  *  Name: String,
  *  Role: String (either 'driver', 'sponsor', or 'admin')
- *  AdminPin: String (only required if Role is 'admin')
+ * }
+ * Query Parameters {
+ *  AdminPin: string // Required if Role is admin
+ *  SponsorName: string // Optional, default is None
  * }
  */
 api.post('/users/register', async (req, res) => {
@@ -57,7 +59,7 @@ api.post('/users/register', async (req, res) => {
         };
 
         // Check if user already exists, send conflict 
-        const user = await req.app.locals.db.getUser(req.body.Username);
+        const user = await req.app.locals.db.getUserByUsername(req.body.Username);
         if (user) {
             res.status(409).json('Username unavailable');
             return;
@@ -67,7 +69,7 @@ api.post('/users/register', async (req, res) => {
         let sponsorName = '';
         if (body.Role === 'admin') sponsorName = 'Admins';
         else sponsorName = query.SponsorName || 'None';
-        const sponsor = await req.app.locals.db.getSponsorId(sponsorName);
+        const sponsor = await req.app.locals.db.getSponsorByName(sponsorName);
         if (!sponsor) {
             res.status(400).send();
             return;
@@ -83,6 +85,7 @@ api.post('/users/register', async (req, res) => {
                     Password: hash,
                     SID: sponsor.SID,
                 }
+                res.status(201).send();
                 // Add user to database
                 req.app.locals.db.createUser(newUser)
                     // If successful, send success code
@@ -99,7 +102,7 @@ api.post('/users/register', async (req, res) => {
 // User routes
 /**
  * GET <baseurl>/api/users/:Username
- * Returns the User with the given Username from the database.
+ * Returns the user with the given Username from the database.
  */
 api.get('/users/:Username', async (req, res) => {
     try {
@@ -107,7 +110,7 @@ api.get('/users/:Username', async (req, res) => {
         if (!req.params.Username) res.status(400).send();
 
         // Query
-        const user = await req.app.locals.db.getUser(req.params.Username);
+        const user = await req.app.locals.db.getUserByUsername(req.params.Username);
 
         // Success
         if (user) res.status(200).send(user);
@@ -123,7 +126,7 @@ api.get('/users/:Username', async (req, res) => {
 // Sponsor routes
 /**
  * GET <baseurl>/api/sponsors/:SponsorName
- * Returns the Sponsor Id of the sponsor with the given name in the database.
+ * Returns the sponsor with the given sponsor name from the database.
  */
 api.get('/sponsors/:SponsorName', async (req, res) => {
     try {
@@ -131,7 +134,7 @@ api.get('/sponsors/:SponsorName', async (req, res) => {
         if (!req.params.SponsorName) res.status(400).send();
 
         // Query
-        const result = await req.app.locals.db.getSponsorId(req.params.SponsorName);
+        const result = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
 
         // Success
         if (result) res.status(200).send(result);
