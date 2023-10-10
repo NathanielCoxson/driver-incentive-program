@@ -1,6 +1,7 @@
 // Router for <baseURL>/api
 const express = require('express'); // express server
 const bcrypt = require('bcrypt'); // password encrypting
+const { getUserSpecific } = require('../db');
 const api = express.Router(); // express router
 
 // About routes
@@ -15,6 +16,17 @@ api.get('/about', async (req, res) => {
         res.status(500).send();
     }
 });
+
+//
+// POST
+api.post("/users/login", (req, res) => {
+    const user = getUserSpecific(req.body.Username, bcrypt.hash(req.body.Password));
+    if (user){
+        res.status(200).send(user);
+    } else {
+        res.status(400).send();
+    }
+})
 
 // User routes
 /**
