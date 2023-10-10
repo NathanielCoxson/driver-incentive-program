@@ -74,6 +74,7 @@ module.exports = {
                 .input('Role', User.Role)
                 .input('Username', sql.VarChar(50), User.Username)
                 .input('Password', sql.VarChar(100), User.Password)
+                .input('Email', sql.VarChar(300), User.Email)
                 .query("\
                     INSERT INTO Users(\
                         UID,\
@@ -81,14 +82,16 @@ module.exports = {
                         Name,\
                         Role,\
                         Username,\
-                        Password) \
+                        Password,\
+                        Email) \
                     VALUES(\
                         NEWID(),\
                         @SID,\
                         @Name,\
                         @Role,\
                         @Username,\
-                        @Password)");
+                        @Password,\
+                        @Email)");
             return;
         } catch (err) {
             console.log(err);

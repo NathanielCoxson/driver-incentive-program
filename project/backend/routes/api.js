@@ -43,11 +43,13 @@ api.post('/users/register', async (req, res) => {
             At least one special character,  You can remove this condition by removing (?=.*?[#?!@$%^&*-])
         */
         const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+        const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
         const adminPin = process.env.DB_PWD;
         const conditions = [
-            !body.Name, !body.Username, !body.Password, !body.Role, // Required fields
+            !body.Name, !body.Username, !body.Password, !body.Role, !body.Email, // Required fields
             (body.Role !== 'driver' && body.Role !== 'sponsor' && body.Role !== 'admin'), // Role validation
             !passwordRegex.test(body.Password), // Password validation
+            !emailRegex.test(body.Email), // Email validation
             (query.AdminPin && query.AdminPin !== adminPin), // AdminPin is correct if provided
             (body.Role === 'admin' && query.AdminPin !== adminPin), // Admin role has correct pin
             (query.SponsorName === 'Admins' || query.SponsorName === 'None') // Restricted sponsor names
