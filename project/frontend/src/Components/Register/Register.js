@@ -10,7 +10,7 @@ function Register() {
         'http://34.225.199.196/api/users/register' :
         'http://localhost:3001/api/users/register';
     
-        const passwordRequirementsMessage =
+    const passwordRequirementsMessage =
         'Password must be:\n' +
         '- At least eight characters long\n' +
         '- Contain one uppercase letter\n' +
