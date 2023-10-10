@@ -19,12 +19,17 @@ api.get('/about', async (req, res) => {
 
 //
 // POST
-api.post("/users/login", (req, res) => {
-    const user = getUserSpecific(req.body.Username, bcrypt.hash(req.body.Password));
-    if (user){
-        res.status(200).send(user);
-    } else {
-        res.status(400).send();
+api.post("/users/login", async (req, res) => {
+    try{
+        const user = await req.app.locals.db.getUserSpecific(req.body.Username, bcrypt.hash(req.body.Password));
+        if (user){
+            res.status(200).send(user);
+        } else {
+            res.status(400).send();
+        }
+    } catch (err){
+        console.log(err);
+        res.status(500).send();
     }
 })
 
