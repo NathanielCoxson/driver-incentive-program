@@ -140,15 +140,13 @@ function Register() {
                     </div>
 
                     <div className="password-requirements">
-                    <p>Password requirements:</p>
-                    <ul>
-                        <li>&#9642; At least eight characters long</li>
-                        <li>&#9642; Contain one uppercase letter</li>
-                        <li>&#9642; Contain one lowercase letter</li>
-                        <li>&#9642; Contain one number</li>
-                        <li>&#9642; Contain one special character</li>
-                    </ul>
-                </div>
+                        <p>Password requirements:</p>
+                            At least eight characters long
+                            Contain one uppercase letter
+                            Contain one lowercase letter
+                            Contain one number
+                            Contain one special character
+                    </div>
 
                     <div class="password-validation" id="passwordValidation">{responseMessage}</div>
                     <button type="submit" class="cta-button">Sign Up</button>
