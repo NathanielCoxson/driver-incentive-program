@@ -9,9 +9,14 @@ function Register() {
     const baseURL = process.env.NODE_ENV === 'production' ?
         'http://34.225.199.196/api/users/register' :
         'http://localhost:3001/api/users/register';
-    const passwordRequirementsMessage =
-        'Password must be:\nat least eight characters long,\ncontain one uppercase letter,\none lowercase letter,\none number,\nand one special character.';
-
+    
+        const passwordRequirementsMessage =
+        'Password must be:\n' +
+        '- At least eight characters long\n' +
+        '- Contain one uppercase letter\n' +
+        '- Contain one lowercase letter\n' +
+        '- Contain one number\n' +
+        '- Contain one special character';
     /*
             Has minimum 8 characters in length. Adjust it by modifying {8,}
             At least one uppercase English letter. You can remove this condition by removing (?=.*?[A-Z])
@@ -132,6 +137,17 @@ function Register() {
                     <div>
                         <label for="retypePassword">Retype Password:</label>
                         <input type="password" id="retypePassword" name="retypePassword" required />
+                    </div>
+
+                    <div className="password-requirements">
+                        <p>Password requirements:</p>
+                        <ul>
+                            <li>At least eight characters long</li>
+                            <li>Contain one uppercase letter</li>
+                            <li>Contain one lowercase letter</li>
+                            <li>Contain one number</li>
+                            <li>Contain one special character</li>
+                        </ul>
                     </div>
 
                     <div class="password-validation" id="passwordValidation">{responseMessage}</div>
