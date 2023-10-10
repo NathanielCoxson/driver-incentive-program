@@ -161,13 +161,13 @@ p {
 }
 
 .password-requirements ul {
-  list-style-type: square; /* Use square bullet points */
-  margin-left: 20px; /* Add left margin to the list */
-  padding-left: 10px; /* Add some padding for spacing between bullet points and text */
+  list-style-type: non; /* Use square bullet points */
+  margin-left: 0px; /* Add left margin to the list */
+  padding-left: 0px; /* Add some padding for spacing between bullet points and text */
 }
 
-.password-requirements ul li {
-  margin: 5px 0; /* Add some vertical spacing between each list item */
+.password-requirements li {
+  margin-left: 0px; /* Add some vertical spacing between each list item */
 }
 
 footer {
