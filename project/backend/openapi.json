@@ -59,7 +59,20 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/User"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "Password": {
+                        "type": "string",
+                        "example": "1234"
+                      }
+                    }
+                  }
+                ]
               }
             }
           }
@@ -76,6 +89,62 @@
           },
           "409": {
             "description": "Conflict with existing user"
+          }
+        }
+      }
+    },
+    "/users/{Username}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Retrieve user by username",
+        "description": "Retrieves the user with the given username",
+        "operationId": "getUserByUsername",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of the user to retrieve",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "UID": {
+                          "type": "string",
+                          "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
+                        },
+                        "Password": {
+                          "type": "string",
+                          "example": "$2b$12$QP.cE.OAgiLcg7vUV4N3/ONunj7euIZTyRdcMsVOTLr6DkP7xbxT6"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
           }
         }
       }
@@ -105,12 +174,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "name": {
-                      "type": "string"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Sponsor"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "SID": {
+                          "type": "string",
+                          "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -126,11 +203,7 @@
         "properties": {
           "Username": {
             "type": "string",
-            "example": "theUser"
-          },
-          "Password": {
-            "type": "string",
-            "example": "12345"
+            "example": "username"
           },
           "Name": {
             "type": "string",
@@ -139,6 +212,19 @@
           "Role": {
             "type": "string",
             "example": "driver"
+          }
+        }
+      },
+      "Sponsor": {
+        "type": "object",
+        "properties": {
+          "SID": {
+            "type": "string",
+            "example": "544F44D9-8D86-4EB8-A2C6-687519C2FD86"
+          },
+          "SponsorName": {
+            "type": "string",
+            "example": "Sponsor Org."
           }
         }
       },
