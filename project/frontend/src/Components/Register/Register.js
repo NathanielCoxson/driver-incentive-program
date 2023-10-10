@@ -139,14 +139,17 @@ function Register() {
                         <input type="password" id="retypePassword" name="retypePassword" required />
                     </div>
 
+
                     <div className="password-requirements">
-                        <p>Password requirements:</p>
-                            At least eight characters long
-                            Contain one uppercase letter
-                            Contain one lowercase letter
-                            Contain one number
-                            Contain one special character
-                    </div>
+                    <p>Password requirements:</p>
+                    <ul>
+                        <li> At least eight characters long</li>
+                        <li> Contain one uppercase letter</li>
+                        <li> Contain one lowercase letter</li>
+                        <li> Contain one number</li>
+                        <li> Contain one special character</li>
+                    </ul>
+                </div>
 
                     <div class="password-validation" id="passwordValidation">{responseMessage}</div>
                     <button type="submit" class="cta-button">Sign Up</button>
