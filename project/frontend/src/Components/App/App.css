@@ -171,6 +171,11 @@ input {
   border-radius: 5px;
 }
 
+#userType {
+  height: 40px;
+  font-size: 18px;
+}
+
 footer {
   background-color: #333;
   color: #fff;

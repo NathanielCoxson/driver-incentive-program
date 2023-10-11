@@ -115,7 +115,7 @@ function Register() {
 
                     <div>
                         <label for="role">User Type:</label>
-                        <select onChange={handleSelectChange} id="role" name="role" required style="height: 25px; font-size: 18px; ">
+                        <select onChange={handleSelectChange} id="role" name="role" required >
                             <option value="driver">Driver</option>
                             <option value="sponsor">Sponsor</option>
                             <option value="admin">Admin</option>
