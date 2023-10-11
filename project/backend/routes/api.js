@@ -62,9 +62,14 @@ api.post('/users/register', async (req, res) => {
         };
 
         // Check if user already exists, send conflict 
-        const user = await req.app.locals.db.getUserByUsername(req.body.Username);
-        if (user) {
-            res.status(409).json('Username unavailable');
+        const username = await req.app.locals.db.getUserByUsername(req.body.Username);
+        const email = await req.app.locals.db.getUserByEmail(req.body.Email);
+        if (username) {
+            res.status(409).json('Username already taken');
+            return;
+        }
+        else if (email) {
+            res.status(409).json('Email already taken');
             return;
         }
 
