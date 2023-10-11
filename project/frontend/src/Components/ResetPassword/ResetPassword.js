@@ -4,8 +4,7 @@ import './ResetPassword.css';
 
 function ResetPassword() {
   const [responseMessage, setResponseMessage] = useState('');
-  const [token, setToken] = useState('');
-  const [params, setParams] = useSearchParams();
+  const [params] = useSearchParams();
 
   const baseURL = process.env.NODE_ENV === 'production' ?
         'http://34.225.199.196' :
@@ -56,24 +55,22 @@ function ResetPassword() {
       Password: input.newPassword.value,
       Token: params.get('token'),
     };
-    console.log(passwordUpdate);
 
-    // Your API request here
-
-    // Example:
-    // fetch('/api/reset-password', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(user),
-    // })
-    //   .then((res) => {
-    //     if (res.status === 400) setResponseMessage('Invalid Input');
-    //     if (res.status === 409) setResponseMessage('Username already taken.');
-    //     if (res.status === 201) setResponseMessage('Success!');
-    //   })
-    //   .catch((err) => console.log(err));
+    // Send update
+    fetch(`${baseURL}/api/users/password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(passwordUpdate),
+    })
+      .then((res) => {
+        if (res.status === 400) setResponseMessage('Invalid input or token.');
+        if (res.status === 404) setResponseMessage('Reset request not found.');
+        if (res.status === 403) setResponseMessage("You don't have permission to perform this request.")
+        if (res.status === 204) setResponseMessage('Success!');
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleEmailRequest = (event) => {

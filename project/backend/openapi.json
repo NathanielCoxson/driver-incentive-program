@@ -202,8 +202,11 @@
           "400": {
             "description": "Bad request"
           },
+          "403": {
+            "description": "Forbidden request"
+          },
           "404": {
-            "description": "User not found"
+            "description": "User or password reset request not found in database."
           }
         }
       }

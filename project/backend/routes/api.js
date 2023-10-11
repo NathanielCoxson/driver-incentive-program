@@ -152,8 +152,8 @@ api.put('/users/password', async (req, res) => {
             const user = await req.app.locals.db.getUserPasswordResetToken(req.body.Email);
 
             // If no user or no reset token is found, then send 404.
-            if (!user) {
-                res.status(404).send('Password reset request not found.');
+            if (!user || !user.PasswordResetToken) {
+                res.status(404).send('User or password reset request not found.');
                 return;
             }
 
