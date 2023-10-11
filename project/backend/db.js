@@ -141,14 +141,14 @@ module.exports = {
      * }
      * @param {String} Username 
      */
-    getUserByEmail: async (Email) => {
+    getUserPasswordResetToken: async (Email) => {
         try {
             // Connect to pool
             const pool = await poolPromise;
             // Make request
             const result = await pool.request()
-                .input('email', Email)
-                .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Email = @email");
+                .input('email', sql.VarChar(300), Email)
+                .query("SELECT PasswordResetToken, PasswordResetExpiration FROM Users WHERE Email = @email");
             // Return user object
             return result.recordset[0];
         } catch (err) {
@@ -189,25 +189,34 @@ module.exports = {
             const pool = await poolPromise;
             
             // Make request
+            let transaction;
             try {
-                const transaction = pool.transaction();
+                transaction = pool.transaction();
                 await transaction.begin();
-
+                const datetime = new Date();
                 // Insert new token and timeout
-                await new sql.Request(transaction)
+                const insert = await new sql.Request(transaction)
                     .input('Email', sql.VarChar(300), Email)
+                    .input('year', sql.Int, datetime.getUTCFullYear())
+                    .input('month', sql.Int, datetime.getUTCMonth()+1)
+                    .input('day', sql.Int, datetime.getUTCDate())
+                    .input('hour', sql.Int, datetime.getUTCHours())
+                    .input('minute', sql.Int, datetime.getUTCMinutes())
+                    .input('seconds', sql.Int, datetime.getUTCSeconds())
+                    .input('milliseconds', sql.Int, datetime.getUTCMilliseconds())
                     .query("UPDATE Users \
                             SET \
                                 PasswordResetToken = NEWID(), \
-                                PasswordResetExpiration = DATEADD(hour, 1, SYSDATETIME()) \
+                                PasswordResetExpiration = DATEADD(hour, 1, DATETIMEFROMPARTS(@year, @month, @day, @hour, @minute, @seconds, @milliseconds)) \
                             WHERE Email = @Email");
+                if (!insert) return {};
 
                 // Get newly generated token
                 const result = await new sql.Request(transaction)
                     .input('Email', sql.VarChar(300), Email)
                     .query("SELECT PasswordResetToken FROM Users WHERE Email = @Email");
 
-                if (result.recordset.length === 0) throw new Error('Reset token failed to insert into database.');
+                if (!result || result.recordset.length === 0) throw new Error("Failed to insert password reset token into database.");
 
                 // Commit and return new token
                 await transaction.commit();
@@ -227,7 +236,20 @@ module.exports = {
      * Updates the password of the user with the given email.
      * @param {String} Email 
      */
-    resetUserPassword: async (Email) => {
-
+    resetUserPassword: async (Email, Password) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('Email', sql.VarChar(300), Email)
+                .input('Password', sql.VarChar(100), Password)
+                // Update password and wipe the reset token to prevent further changes.
+                .query('UPDATE Users \
+                        SET Password = @Password, PasswordResetToken = NULL, PasswordResetExpiration = NULL \
+                        WHERE Email = @Email');
+        } catch (err) {
+            console.log(err);
+        }
     }
 }
