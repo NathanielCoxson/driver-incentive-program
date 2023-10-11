@@ -107,7 +107,6 @@ api.post('/users/register', async (req, res) => {
     }
 });
 
-// User routes
 /**
  * GET <baseurl>/api/users/:Username
  * Returns the user with the given Username from the database.
@@ -125,6 +124,34 @@ api.get('/users/:Username', async (req, res) => {
 
         // Not found
         else res.status(404).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+api.put('/users/password', async (req, res) => {
+    try {
+        // Determine if user is sending new password, or requesting a reset email
+        // Sending new password and token
+        if (req.body.Token) {
+
+        }
+        // Requesting email
+        else {
+            const token = await req.app.locals.db.generatePasswordResetToken(req.body.Email);
+            res.status(202).send(token);
+            return;
+            // Construct email
+            const resetEmail = {
+                from: 'cpsc4910team01@gmail.com',
+                to: 'ncoxson@clemson.edu',
+                subject: 'Node.js Test Email',
+                text: 'Hello World!'
+            };
+            // Send email
+            
+        }
     } catch (err) {
         console.log(err);
         res.status(500).send();

@@ -53,6 +53,7 @@ module.exports = {
         }
 
     },
+
     /**
      * Creates a user in the database with the given crednetials.
      * Request Body: {
@@ -98,6 +99,7 @@ module.exports = {
         }
 
     },
+
     /**
      * Retrieves the user from the database with the specified username.
      * Response: {
@@ -125,6 +127,7 @@ module.exports = {
             console.log(err);
         }
     },
+
     /**
      * Retrieves the user from the database with the specified username.
      * Response: {
@@ -152,6 +155,7 @@ module.exports = {
             console.log(err);
         }
     },
+    
     /**
      * Returns the SID of the sponsor with the given name:
      * Response: {
@@ -172,5 +176,58 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+
+    /**
+     * Sets a password reset token and timeout value for the user with the specific email 
+     * in the database, as well as returns the token to be used by the caller.
+     * @param {String} Email 
+     */
+    generatePasswordResetToken: async (Email) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            
+            // Make request
+            try {
+                const transaction = pool.transaction();
+                await transaction.begin();
+
+                // Insert new token and timeout
+                await new sql.Request(transaction)
+                    .input('Email', sql.VarChar(300), Email)
+                    .query("UPDATE Users \
+                            SET \
+                                PasswordResetToken = NEWID(), \
+                                PasswordResetExpiration = DATEADD(hour, 1, SYSDATETIME()) \
+                            WHERE Email = @Email");
+
+                // Get newly generated token
+                const result = await new sql.Request(transaction)
+                    .input('Email', sql.VarChar(300), Email)
+                    .query("SELECT PasswordResetToken FROM Users WHERE Email = @Email");
+
+                if (result.recordset.length === 0) throw new Error('Reset token failed to insert into database.');
+
+                // Commit and return new token
+                await transaction.commit();
+                return result.recordset[0].PasswordResetToken;
+            } catch (err) {
+                await transaction.rollback();
+                console.log(err);
+                throw err;
+            }
+            
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    /**
+     * Updates the password of the user with the given email.
+     * @param {String} Email 
+     */
+    resetUserPassword: async (Email) => {
+
     }
 }
