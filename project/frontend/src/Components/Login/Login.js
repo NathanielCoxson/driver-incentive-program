@@ -12,10 +12,13 @@ function Login() {
                 <input type="password" id="password" name="password" required /><br />
                 <button type="submit" className="cta-button">Submit</button>
             </form>
-            <span>Need an account? </span>
-            <Link to='/register'>Signup</Link>
-            <span>Already have an account?</span>
-            <Link to='/register'>Forgot Password</Link> 
+            <div>
+                <div>
+                    <span>Need an account? </span>
+                    <Link to='/register'>Signup</Link>
+                </div>
+                <Link to='/password-reset'>Forgot Password?</Link> 
+            </div>   
         </section>
     </main>)
 }

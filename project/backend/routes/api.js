@@ -196,11 +196,16 @@ api.put('/users/password', async (req, res) => {
 
             // Send email
             req.app.locals.email.sendMail(resetEmail, (err, info) => {
-                if (err) throw new Error(`Failed to send reset email to: ${req.body.Email}`);
+                if (err) {
+                    console.log(`Failed to send reset email to: ${req.body.Email}`);
+                    res.status(500).send("Failed to send email.");
+                    return;
+                }
+                else {
+                    res.status(202).send();
+                    return;
+                }
             });
-
-            // Send response
-            res.status(202).send();
         }
         return;
     } catch (err) {
