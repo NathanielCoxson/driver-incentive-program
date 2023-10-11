@@ -251,5 +251,25 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
+    },
+
+    /**
+     * Sets PasswordResetToken and PasswordResetExpiration to NULL for the user with the given email.
+     * @param {String} Email 
+     */
+    clearPasswordReset: async (Email) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('Email', sql.VarChar(300), Email)
+                // Update password and wipe the reset token to prevent further changes.
+                .query('UPDATE Users \
+                        SET PasswordResetToken = NULL, PasswordResetExpiration = NULL \
+                        WHERE Email = @Email');
+        } catch (err) {
+            console.log(err);
+        }
     }
 }

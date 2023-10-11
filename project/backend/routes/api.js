@@ -171,6 +171,8 @@ api.put('/users/password', async (req, res) => {
             }
             // Forbidden request if expiration has passed or token is invalid.
             else {
+                // Wipe any reset request from the database if forbidden request is made.
+                await req.app.locals.db.clearPasswordReset(req.body.Email);
                 res.status(403).send();
                 return;
             }
