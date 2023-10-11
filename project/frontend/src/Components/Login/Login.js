@@ -14,6 +14,8 @@ function Login() {
             </form>
             <span>Need an account? </span>
             <Link to='/register'>Signup</Link>
+            <span>Already have an account?</span>
+            <Link to='/register'>Forgot Password</Link> 
         </section>
     </main>)
 }

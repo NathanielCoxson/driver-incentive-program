@@ -10,6 +10,7 @@ import Footer from '../Footer/Footer';
 import Register from '../Register/Register';
 import Profile from '../Profile/Profile';
 import BreadCrumb from '../BreadCrumb/BreadCrumb'; 
+import ResetPassword from '../ResetPassword/ResetPassword';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/resetpassword" element= {<ResetPassword />} />
         </Routes>
       <Footer />
     </div>
