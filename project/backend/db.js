@@ -53,6 +53,7 @@ module.exports = {
         }
 
     },
+
     /**
      * Creates a user in the database with the given crednetials.
      * Request Body: {
@@ -98,6 +99,7 @@ module.exports = {
         }
 
     },
+
     /**
      * Retrieves the user from the database with the specified username.
      * Response: {
@@ -118,13 +120,42 @@ module.exports = {
             // Make request
             const result = await pool.request()
                 .input('username', Username)
-                .query("SELECT * FROM Users WHERE Username = @username");
+                .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Username = @username");
             // Return user object
             return result.recordset[0];
         } catch (err) {
             console.log(err);
         }
     },
+
+    /**
+     * Retrieves the user from the database with the specified username.
+     * Response: {
+     *  UID: String,
+     *  SID: String,
+     *  Name: String,
+     *  Role: String,
+     *  Username: String,
+     *  Password: String,
+     *  Email: String
+     * }
+     * @param {String} Username 
+     */
+    getUserPasswordResetToken: async (Email) => {
+        try {
+            // Connect to pool
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('email', sql.VarChar(300), Email)
+                .query("SELECT PasswordResetToken, PasswordResetExpiration FROM Users WHERE Email = @email");
+            // Return user object
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    
     /**
      * Returns the SID of the sponsor with the given name:
      * Response: {
@@ -148,12 +179,108 @@ module.exports = {
     },
 
     /**
+     * Sets a password reset token and timeout value for the user with the specific email 
+     * in the database, as well as returns the token to be used by the caller.
+     * @param {String} Email 
+     */
+    generatePasswordResetToken: async (Email) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            
+            // Make request
+            let transaction;
+            try {
+                transaction = pool.transaction();
+                await transaction.begin();
+                const datetime = new Date();
+                // Insert new token and timeout
+                const insert = await new sql.Request(transaction)
+                    .input('Email', sql.VarChar(300), Email)
+                    .input('year', sql.Int, datetime.getUTCFullYear())
+                    .input('month', sql.Int, datetime.getUTCMonth()+1)
+                    .input('day', sql.Int, datetime.getUTCDate())
+                    .input('hour', sql.Int, datetime.getUTCHours())
+                    .input('minute', sql.Int, datetime.getUTCMinutes())
+                    .input('seconds', sql.Int, datetime.getUTCSeconds())
+                    .input('milliseconds', sql.Int, datetime.getUTCMilliseconds())
+                    .query("UPDATE Users \
+                            SET \
+                                PasswordResetToken = NEWID(), \
+                                PasswordResetExpiration = DATEADD(hour, 1, DATETIMEFROMPARTS(@year, @month, @day, @hour, @minute, @seconds, @milliseconds)) \
+                            WHERE Email = @Email");
+                if (!insert) return {};
+
+                // Get newly generated token
+                const result = await new sql.Request(transaction)
+                    .input('Email', sql.VarChar(300), Email)
+                    .query("SELECT PasswordResetToken FROM Users WHERE Email = @Email");
+
+                if (!result || result.recordset.length === 0) throw new Error("Failed to insert password reset token into database.");
+
+                // Commit and return new token
+                await transaction.commit();
+                return result.recordset[0].PasswordResetToken;
+            } catch (err) {
+                await transaction.rollback();
+                console.log(err);
+                throw err;
+            }
+            
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    /**
+     * Updates the password of the user with the given email.
+     * @param {String} Email 
+     */
+    resetUserPassword: async (Email, Password) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('Email', sql.VarChar(300), Email)
+                .input('Password', sql.VarChar(100), Password)
+                // Update password and wipe the reset token to prevent further changes.
+                .query('UPDATE Users \
+                        SET Password = @Password, PasswordResetToken = NULL, PasswordResetExpiration = NULL \
+                        WHERE Email = @Email');
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    /**
+     * Sets PasswordResetToken and PasswordResetExpiration to NULL for the user with the given email.
+     * @param {String} Email 
+     */
+    clearPasswordReset: async (Email) => {
+        try {
+            // Connect
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('Email', sql.VarChar(300), Email)
+                // Update password and wipe the reset token to prevent further changes.
+                .query('UPDATE Users \
+                        SET PasswordResetToken = NULL, PasswordResetExpiration = NULL \
+                        WHERE Email = @Email');
+        } catch (err) {
+            console.log(err);
+        }
+    },
+    
+    /**
      * Create a log entry into Logins with the given details
      * Request Body: {
      *  LoginDate: Date/Time,
      *  Username: String,
      *  Success: String
      * }
+     * @param {Object} Login 
      */
     createLogin: async (Login) => {
         try {

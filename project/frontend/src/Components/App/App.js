@@ -28,7 +28,7 @@ function App() {
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/resetpassword" element= {<ResetPassword />} />
+          <Route path="/password-reset" element= {<ResetPassword />} />
         </Routes>
       <Footer />
     </div>

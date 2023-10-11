@@ -149,6 +149,68 @@
         }
       }
     },
+    "/users/password": {
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Update user password",
+        "description": "Accepts request to reset a user's password. If email is send in request body, an email is sent to the user with a reset link. If valid token and new password are sent, the user's password is updated in the database.",
+        "operationId": "resetUserPassword",
+        "requestBody": {
+          "description": "Reset password request",
+          "content": {
+            "Request Email": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Email": {
+                    "type": "string",
+                    "example": "email@example.com"
+                  }
+                }
+              }
+            },
+            "Update Password": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Email": {
+                    "type": "string",
+                    "example": "email@example.com"
+                  },
+                  "Password": {
+                    "type": "string",
+                    "exmaple": "1234"
+                  },
+                  "Token": {
+                    "type": "string",
+                    "example": "1234567890"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted request, awaiting update."
+          },
+          "204": {
+            "description": "Successfullly updated password."
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden request"
+          },
+          "404": {
+            "description": "User or password reset request not found in database."
+          }
+        }
+      }
+    },
     "/sponsors/{SponsorName}": {
       "get": {
         "tags": [
