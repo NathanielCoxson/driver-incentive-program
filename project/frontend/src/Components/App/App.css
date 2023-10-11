@@ -160,6 +160,13 @@ p {
   font-weight: bold; 
 }
 
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 footer {
   background-color: #333;
   color: #fff;
