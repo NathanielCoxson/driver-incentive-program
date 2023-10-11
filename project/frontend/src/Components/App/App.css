@@ -159,6 +159,10 @@ p {
   color: #fff;
   font-weight: bold; 
 }
+label {
+  display: block;
+  font-weight: bold;
+}
 
 input {
   width: 100%;

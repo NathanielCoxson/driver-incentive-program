@@ -62,6 +62,16 @@
             border-radius: 5px;
             font-weight: bold;
         }
+        label {
+            display: block;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
         .password-requirements ul {
             list-style-type: none; /* Use square bullet points */
             margin-left: 0px; /* Add left margin to the list */
@@ -108,7 +118,7 @@
                 </div>
                 <div>
                     <label for="userType">User Type:</label>
-                    <select id="userType" name="Role" required> <!-- Match the field name with the API -->
+                    <select id="userType" name="Role" required style="height: 25px; font-size: 18px; "> <!-- Match the field name with the API -->
                         <option value="driver">Driver</option>
                         <option value="sponsor">Sponsor</option>
                         <option value="admin">Admin</option>
