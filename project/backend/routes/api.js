@@ -150,5 +150,30 @@ api.get('/sponsors/:SponsorName', async (req, res) => {
     }
 });
 
+// User routes
+/**
+ * POST to <baseurl>/api/users/login
+ * Request Body {
+ *  LoginDate: Date/Time
+ *  Username: String,
+ *  Success: String
+ * }
+ */
+api.post('/users/login', async (req, res) => {
+    try {
+        const body = req.body;
+
+        let newLogin = {...body}
+        // Add user to database
+        req.app.locals.db.createLogin(newLogin)
+        // If successful, send success code
+        .then(() => {
+            res.status(201).send();
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
 
 module.exports = api;

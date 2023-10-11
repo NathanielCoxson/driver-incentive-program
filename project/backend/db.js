@@ -145,5 +145,39 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
-    }
+    },
+
+    /**
+     * Create a log entry into Logins with the given details
+     * Request Body: {
+     *  LoginDate: Date/Time,
+     *  Username: String,
+     *  Success: String
+     * }
+     */
+    createLogin: async (Login) => {
+        try {
+            // Connect to pool
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('LoginDate', sql.DateTime, Login.LoginDate)
+                .input('Username', sql.VarChar(50), User.Username)
+                .input('Success', sql.VarChar(50), User.Password)
+                .query("\
+                    INSERT INTO Logins(\
+                        LID,\
+                        LoginDate,\
+                        Username,\
+                        Success) \
+                    VALUES(\
+                        NEWID(),\
+                        @LoginDate,\
+                        @Username,\
+                        @Success)");
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    },
 }
