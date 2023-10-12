@@ -292,6 +292,17 @@
               }
             }
           }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User or sponsor not found"
+          }
         }
       }
     }
