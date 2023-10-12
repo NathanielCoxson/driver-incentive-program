@@ -266,4 +266,13 @@ api.post('/users/login', async (req, res) => {
     }
 });
 
+// Applications Routes
+/**
+ * Accepts a new driver application and stores it in the database.
+ */
+api.post('/applications', async (req, res) => {
+    await req.app.locals.db.createApplication(req.body);
+    res.status(200).send();
+});
+
 module.exports = api;
