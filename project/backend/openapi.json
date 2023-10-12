@@ -23,6 +23,10 @@
     {
       "name": "sponsors",
       "description": "Operations about sponsors"
+    },
+    {
+      "name": "applications",
+      "description": "Operations about applications"
     }
   ],
   "paths": {
@@ -250,6 +254,40 @@
                       }
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/applications": {
+      "post": {
+        "tags": [
+          "applications"  
+        ],
+        "summary": "Submit application",
+        "description": "Submits a new driver",
+        "operationId": "createApplication",
+        "requestBody": {
+          "description": "Example request body.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Username": {
+                    "type": "string",
+                    "example": "JohnDoe"
+                  },
+                  "SponsorName": {
+                    "type": "string",
+                    "example": "Sponsor Org."
+                  },
+                  "Reason": {
+                    "type": "string",
+                    "example": "I would like to join your sponsor organization..."
+                  }
                 }
               }
             }
