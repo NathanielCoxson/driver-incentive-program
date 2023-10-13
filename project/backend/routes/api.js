@@ -271,8 +271,49 @@ api.post('/users/login', async (req, res) => {
  * Accepts a new driver application and stores it in the database.
  */
 api.post('/applications', async (req, res) => {
-    await req.app.locals.db.createApplication(req.body);
-    res.status(200).send();
+    const body = req.body;
+
+    try {
+        const conditions = [
+            !body.Username, !body.SponsorName, !body.Reason
+        ];
+        if (conditions.includes(true)) {
+            res.status(400).send();
+            return;
+        }
+
+        // Get user and sponsor
+        const user = await req.app.locals.db.getUserByUsername(body.Username);
+        const sponsor = await req.app.locals.db.getSponsorByName(body.SponsorName);
+
+        // Check if user and sponsor were found
+        if (!user) {
+            res.status(404).send('User not found');
+            return;
+        }
+        if (!sponsor) {
+            res.status(404).send('Sponsor not found');
+            return;
+        }
+
+        // Make sure that user hasn't already applied to this sponsor.
+        const userApplicationSIDs = (await req.app.locals.db.getUserApplications(user.UID)).map(app => app.SID);
+        if (userApplicationSIDs.includes(sponsor.SID)) {
+            res.status(409).send('User already has pending application with that sponsor.');
+            return;
+        }
+
+        // Create the application
+        await req.app.locals.db.createApplication({
+            UID: user.UID,
+            SID: sponsor.SID,
+            Reason: body.Reason
+        });
+        res.status(200).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 module.exports = api;

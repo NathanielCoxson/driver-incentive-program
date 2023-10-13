@@ -302,6 +302,9 @@
           },
           "404": {
             "description": "User or sponsor not found"
+          },
+          "409": {
+            "description": "User already has an applictaion for that sponsor."
           }
         }
       }

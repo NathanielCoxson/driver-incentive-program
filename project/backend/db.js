@@ -322,20 +322,30 @@ async function createApplication(Application) {
         // Connect to pool
         const pool = await poolPromise;
 
-        // Get sponsor id
-        const sponsor = await getSponsorByName(Application.SponsorName);
-        // Get user id
-        const user = await getUserByUsername(Application.Username);
-
         // Make request
         await pool.request()
-            .input('UID', sql.UniqueIdentifier, user.UID)
-            .input('SID', sql.UniqueIdentifier, sponsor.SID)
+            .input('UID', sql.UniqueIdentifier, Application.UID)
+            .input('SID', sql.UniqueIdentifier, Application.SID)
             .input('Reason', sql.VarChar(100), Application.Reason)
             .query("\
                     INSERT INTO Applications(AID, UID, SID, ApplicationDate, ApplicationStatus, Reason) \
                     VALUES(NEWID(), @UID, @SID, SYSDATETIME(), 'Pending', @Reason)");
         return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getUserApplications(UID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .query("SELECT * FROM Applications WHERE UID = @UID");
+        
+        return result.recordset;
     } catch (err) {
         console.log(err);
     }
@@ -353,5 +363,6 @@ module.exports = {
     resetUserPassword,
     clearPasswordReset,
     createLogin,
-    createApplication
+    createApplication,
+    getUserApplications
 }
