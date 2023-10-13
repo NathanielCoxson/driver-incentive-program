@@ -88,8 +88,15 @@ function Register() {
         })
         .then(res => {
             if (res.status === 400) setResponseMessage('Invalid Input')
-            if (res.status === 409) setResponseMessage('Username already taken.');
             if (res.status === 201) setResponseMessage('Success!');
+            return res.json();
+        })
+        .then(res => {
+            // 409 Conflict reponse messages
+            if (res) {
+                if (res === 'Email already taken') setResponseMessage('That email has already been taken.')
+                if (res === 'Username already taken') setResponseMessage('That username has already been taken.')
+            } 
         })
         .catch(err => console.log(err));
     }

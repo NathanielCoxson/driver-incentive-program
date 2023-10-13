@@ -307,4 +307,32 @@ module.exports = {
             console.log(err);
         }
     },
+
+    /**
+     * Retrieves the user from the database with the specified email.
+     * Response: {
+     *  UID: String,
+     *  SID: String,
+     *  Name: String,
+     *  Role: String,
+     *  Username: String,
+     *  Password: String,
+     *  Email: String
+     * }
+     * @param {String} Username 
+     */
+    getUserByEmail: async (Email) => {
+        try {
+            // Connect to pool
+            const pool = await poolPromise;
+            // Make request
+            const result = await pool.request()
+                .input('Email', sql.VarChar(300), Email)
+                .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Email = @Email");
+            // Return user object
+            return result.recordset[0];
+        } catch (err) {
+            console.log(err);
+        }
+    },
 }
