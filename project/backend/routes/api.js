@@ -74,13 +74,13 @@ api.post('/users/register', async (req, res) => {
         }
 
         // Get Sponsor ID
-        let sponsorName = '';
-        if (body.Role === 'admin') sponsorName = 'Admins';
-        else sponsorName = query.SponsorName || 'None';
-        const sponsor = await req.app.locals.db.getSponsorByName(sponsorName);
-        if (!sponsor) {
-            res.status(400).send();
-            return;
+        let sponsor = {};
+        if (body.SponsorName) {
+            sponsor = await req.app.locals.db.getSponsorByName(body.SponsorName);
+            if (!sponsor) {
+                res.status(400).send();
+                return;
+            }
         };
 
         // Create new user if username is available.
@@ -91,13 +91,17 @@ api.post('/users/register', async (req, res) => {
                 let newUser = {
                     ...body,
                     Password: hash,
-                    SID: sponsor.SID,
+                    SID: body.SponsorName ? sponsor.SID : 'NULL',
                 }
                 res.status(201).send();
                 // Add user to database
                 req.app.locals.db.createUser(newUser)
                     // If successful, send success code
-                    .then(() => {
+                    .then(result => {
+                        if (result != 1) {
+                            res.status(500).send();
+                            return;
+                        }
                         res.status(201).send();
                     })
             })

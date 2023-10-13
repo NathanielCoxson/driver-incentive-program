@@ -78,6 +78,34 @@ async function getUserByUsername(Username) {
 }
 
 /**
+ * Retrieves the user from the database with the specified email.
+ * Response: {
+ *  UID: String,
+ *  SID: String,
+ *  Name: String,
+ *  Role: String,
+ *  Username: String,
+ *  Password: String,
+ *  Email: String
+ * }
+ * @param {String} Username 
+ */
+async function getUserByEmail (Email) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('Email', sql.VarChar(300), Email)
+            .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Email = @Email");
+        // Return user object
+        return result.recordset[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
  * Returns the most recent entry in the Releases table as an object of the form:
  * {
  *  RID: <unique identifier from dbms>
@@ -118,8 +146,35 @@ async function createUser(User) {
         // Connect to pool
         const pool = await poolPromise;
         // Make request
-        const result = await pool.request()
-            .input('SID', sql.UniqueIdentifier, User.SID)
+        let result = {};
+        if (User.SID === 'NULL') {
+            result = await pool.request()
+                .input('Name', sql.VarChar(100), User.Name)
+                .input('Role', User.Role)
+                .input('Username', sql.VarChar(50), User.Username)
+                .input('Password', sql.VarChar(100), User.Password)
+                .input('Email', sql.VarChar(300), User.Email)
+                .query("\
+                    INSERT INTO Users(\
+                        UID,\
+                        SID,\
+                        Name,\
+                        Role,\
+                        Username,\
+                        Password,\
+                        Email) \
+                    VALUES(\
+                        NEWID(),\
+                        NULL,\
+                        @Name,\
+                        @Role,\
+                        @Username,\
+                        @Password,\
+                        @Email)");
+        }
+        else {
+            result = await pool.request()
+            .input('SID', User.SID)
             .input('Name', sql.VarChar(100), User.Name)
             .input('Role', User.Role)
             .input('Username', sql.VarChar(50), User.Username)
@@ -142,7 +197,8 @@ async function createUser(User) {
                     @Username,\
                     @Password,\
                     @Email)");
-        return;
+        }
+        return result.rowsAffected[0];
     } catch (err) {
         console.log(err);
     }
@@ -356,6 +412,7 @@ async function getUserApplications(UID) {
 module.exports = {
     getSponsorByName,
     getUserByUsername,
+    getUserByEmail,
     getLatestRelease,
     createUser,
     getUserPasswordResetToken,
