@@ -174,29 +174,29 @@ async function createUser(User) {
         }
         else {
             result = await pool.request()
-            .input('SID', User.SID)
-            .input('Name', sql.VarChar(100), User.Name)
-            .input('Role', User.Role)
-            .input('Username', sql.VarChar(50), User.Username)
-            .input('Password', sql.VarChar(100), User.Password)
-            .input('Email', sql.VarChar(300), User.Email)
-            .query("\
-                INSERT INTO Users(\
-                    UID,\
-                    SID,\
-                    Name,\
-                    Role,\
-                    Username,\
-                    Password,\
-                    Email) \
-                VALUES(\
-                    NEWID(),\
-                    @SID,\
-                    @Name,\
-                    @Role,\
-                    @Username,\
-                    @Password,\
-                    @Email)");
+                .input('SID', User.SID)
+                .input('Name', sql.VarChar(100), User.Name)
+                .input('Role', User.Role)
+                .input('Username', sql.VarChar(50), User.Username)
+                .input('Password', sql.VarChar(100), User.Password)
+                .input('Email', sql.VarChar(300), User.Email)
+                .query("\
+                    INSERT INTO Users(\
+                        UID,\
+                        SID,\
+                        Name,\
+                        Role,\
+                        Username,\
+                        Password,\
+                        Email) \
+                    VALUES(\
+                        NEWID(),\
+                        @SID,\
+                        @Name,\
+                        @Role,\
+                        @Username,\
+                        @Password,\
+                        @Email)");
         }
         return result.rowsAffected[0];
     } catch (err) {

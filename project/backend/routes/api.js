@@ -93,18 +93,22 @@ api.post('/users/register', async (req, res) => {
                     Password: hash,
                     SID: body.SponsorName ? sponsor.SID : 'NULL',
                 }
-                res.status(201).send();
                 // Add user to database
                 req.app.locals.db.createUser(newUser)
                     // If successful, send success code
                     .then(result => {
-                        if (result != 1) {
+                        
+                        if (result === 1) {
+                            console.log(result, 'asdfasdf');
+                            res.status(201).send();
+                            return;
+                        }
+                        else {
                             res.status(500).send();
                             return;
                         }
-                        res.status(201).send();
                     })
-            })
+            });
     } catch (err) {
         console.log(err);
         res.status(500).send();
