@@ -340,6 +340,7 @@
                       "type": "array",
                       "example": [
                         {
+                          "AID": "EEC8ED37-F3C0-4537-AC20-42CF9E1FD340",
                           "Username": "JohnDoe",
                           "SponsorName": "Example Sponsor",
                           "ApplicationDate": "2023-10-14 02:43:12.713",
@@ -355,6 +356,35 @@
           },
           "404": {
             "description": "No applications found"
+          }
+        }
+      }
+    },
+    "/applications/{AID}": {
+      "delete": {
+        "tags": [
+          "applications"
+        ],
+        "summary": "Delete an application",
+        "description": "Delete an application given its AID",
+        "operationId": "deleteApplication",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "AID",
+            "schema": {
+              "type": "string"
+            },
+            "description": "AID of the application to delete",
+            "required": "true"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Application not found"
           }
         }
       }

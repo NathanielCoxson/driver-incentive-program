@@ -401,6 +401,7 @@ async function getUserApplications(Username) {
             .input('Username', sql.VarChar(50), Username)
             .query(
                 "SELECT \
+                    Applications.AID,\
                     Users.Username,\
                     Sponsors.SponsorName,\
                     Applications.ApplicationDate,\
@@ -414,6 +415,21 @@ async function getUserApplications(Username) {
         
         console.log(result);
         return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function deleteApplication(AID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('AID', sql.UniqueIdentifier, AID)
+            .query("DELETE FROM Applications WHERE AID = @AID");
+            
+        return result.rowsAffected[0];
     } catch (err) {
         console.log(err);
     }
@@ -433,5 +449,6 @@ module.exports = {
     clearPasswordReset,
     createLogin,
     createApplication,
-    getUserApplications
+    getUserApplications,
+    deleteApplication
 }
