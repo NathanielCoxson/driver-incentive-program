@@ -317,6 +317,17 @@
         "summary": "Retrieve a user's applications.",
         "description": "Retrieves the applications of a specific user given their username.",
         "operationId": "getUserApplications",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of the user whose applications are to be retrieved.",
+            "required": "true"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -325,29 +336,17 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "AID": {
-                      "type": "string",
-                      "example": "D4F1E388-3D30-43DE-B29E-7D47DD8F5606"
-                    },
-                    "UID": {
-                      "type": "string",
-                      "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
-                    },
-                    "SID": {
-                      "type": "string",
-                      "example": "FC5FE8A8-CACF-4991-9E49-8DACCDF2C8FE"
-                    },
-                    "ApplicationDate": {
-                      "type": "string",
-                      "example": "2023-10-14 02:43:12.713"
-                    },
-                    "Application Status": {
-                      "type": "string",
-                      "Example": "Pending"
-                    },
-                    "Reason": {
-                      "type": "string",
-                      "example": "I'd like to join your sponsor organization because..."
+                    "applications": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "Username": "JohnDoe",
+                          "SponsorName": "Example Sponsor",
+                          "ApplicationDate": "2023-10-14 02:43:12.713",
+                          "Application Status": "Pending",
+                          "Reason": "I'd like to join your sponsor organization because..."
+                        }
+                      ]
                     }
                   }
                 }

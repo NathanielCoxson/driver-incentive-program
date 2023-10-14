@@ -392,15 +392,27 @@ async function createApplication(Application) {
     }
 }
 
-async function getUserApplications(UID) {
+async function getUserApplications(Username) {
     try {
         // Connect to pool
         const pool = await poolPromise;
 
         const result = await pool.request()
-            .input('UID', sql.UniqueIdentifier, UID)
-            .query("SELECT * FROM Applications WHERE UID = @UID");
+            .input('Username', sql.VarChar(50), Username)
+            .query(
+                "SELECT \
+                    Users.Username,\
+                    Sponsors.SponsorName,\
+                    Applications.ApplicationDate,\
+                    Applications.ApplicationStatus,\
+                    Applications.Reason \
+                FROM Applications \
+                JOIN Users ON Users.UID = Applications.UID \
+                JOIN Sponsors ON Sponsors.SID = Applications.SID \
+                WHERE Users.Username = @Username"
+            );
         
+        console.log(result);
         return result.recordset;
     } catch (err) {
         console.log(err);

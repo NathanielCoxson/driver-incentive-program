@@ -324,4 +324,22 @@ api.post('/applications', async (req, res) => {
     }
 });
 
+api.get('/applications/users/:Username', async (req, res) => {
+    const Username = req.params.Username;
+
+    try {
+        const applications = await req.app.locals.db.getUserApplications(Username);
+        console.log(applications);
+        if (applications.length === 0) {
+            res.status(404).send('No applications found.');
+            return;
+        }
+
+        res.status(200).send({applications});
+    } catch (err) {
+        console.log(error);
+        res.status(500).send();
+    }
+});
+
 module.exports = api;
