@@ -1,11 +1,15 @@
-
-.sidebar {
+/* Driver_Dashboard.css */
+.sidebar-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .sidebar {
     width: 200px;
     background-color: #0077b6;
     color: #fff;
     padding: 20px;
     border-radius: 10px;
-    margin-right: 20px;
   }
   
   .sidebar ul {
@@ -19,8 +23,4 @@
     color: #fff; /* Change the text color to white */
     font-weight: bold;
   }
-
-.content {
-    margin-left: 220px;
-    padding: 20px;
-}
+  

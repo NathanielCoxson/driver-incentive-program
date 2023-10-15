@@ -176,13 +176,18 @@ input {
   font-size: 18px;
 }
 
+/* Driver_Dashboard.css */
+.sidebar-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .sidebar {
   width: 200px;
   background-color: #0077b6;
   color: #fff;
   padding: 20px;
   border-radius: 10px;
-  margin-right: 20px;
 }
 
 .sidebar ul {
@@ -196,6 +201,7 @@ input {
   color: #fff; /* Change the text color to white */
   font-weight: bold;
 }
+
 
 footer {
   background-color: #333;
