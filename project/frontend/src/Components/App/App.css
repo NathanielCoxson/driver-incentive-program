@@ -176,15 +176,13 @@ input {
   font-size: 18px;
 }
 
-/* Adjust styles for the sidebar and content layout */
 .sidebar {
   width: 200px;
   background-color: #0077b6;
   color: #fff;
-  padding: 20px 0;
-  position: fixed;
-  max-height: calc(100% - 10px); /* Set max-height to accommodate the footer's height */
-  overflow-y: auto; /* Add vertical scroll if needed */
+  padding: 20px;
+  border-radius: 10px;
+  margin-right: 20px;
 }
 
 .sidebar ul {

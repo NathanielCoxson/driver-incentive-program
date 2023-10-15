@@ -1,26 +1,24 @@
 
-
-/* Adjust styles for the sidebar and content layout */
 .sidebar {
     width: 200px;
     background-color: #0077b6;
     color: #fff;
-    padding: 20px 0;
-    position: fixed;
-    height: 100%;
-}
-
-.sidebar ul {
+    padding: 20px;
+    border-radius: 10px;
+    margin-right: 20px;
+  }
+  
+  .sidebar ul {
     list-style: none;
     padding: 20px 0;
     margin: 10px;
-}
-
-.sidebar ul a {
+  }
+  
+  .sidebar ul a {
     text-decoration: none;
     color: #fff; /* Change the text color to white */
     font-weight: bold;
-}
+  }
 
 .content {
     margin-left: 220px;
