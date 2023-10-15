@@ -179,7 +179,6 @@ input {
 /* Driver_Dashboard.css */
 .sidebar-container {
   display: flex;
-  align-items: flex-start;
 }
 
 .sidebar {
@@ -187,6 +186,7 @@ input {
   background-color: #0077b6;
   color: #fff;
   padding: 40px;
+  margin-right: 40px;
   border-radius: 10px;
 }
 
