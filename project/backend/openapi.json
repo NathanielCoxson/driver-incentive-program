@@ -27,9 +27,61 @@
     {
       "name": "applications",
       "description": "Operations about applications"
+    },
+    {
+      "name": "about",
+      "description": "Operations for releases"
     }
   ],
   "paths": {
+    "/about": {
+      "get": {
+        "tags": [
+          "about"
+        ],
+        "summary": "Returns latest release",
+        "description": "Returns an object with the lastest release information.",
+        "operationId": "getLatestRelease",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "RID": {
+                      "type": "string",
+                      "example": "AF766CDD-37D3-4D0B-95FE-E629CE8B30AE"
+                    },
+                    "TeamNumber": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "VersionNumber": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "ReleaseDate": {
+                      "type": "string",
+                      "example": "2023-10-11T20:42:32.237Z"
+                    },
+                    "ProductName": {
+                      "type": "string",
+                      "example": "Team01 Good Driver Incentive Program"
+                    },
+                    "ProductDescription": {
+                      "type": "string",
+                      "example": "Team01: FIFO Good Driver Incentive Program for Sprint 5"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/register": {
       "post": {
         "tags": [
@@ -215,6 +267,46 @@
         }
       }
     },
+    "/sponsors/": {
+      "get": {
+        "tags": [
+          "sponsors"
+        ],
+        "summary": "Retrieve all sponsors",
+        "description": "Retrieves a list of all sponsors.",
+        "operationId": "getSponsors",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sponsors": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "SID": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A",
+                          "SponsorName": "Sponsor Org."
+                        },
+                        {
+                          "SID": "EEC8ED37-F3C0-4537-AC20-42CF9E1FD340",
+                          "SponsorName": "Test Sponsor"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sponsors not found."
+          }
+        }
+      }
+    },
     "/sponsors/{SponsorName}": {
       "get": {
         "tags": [
@@ -257,6 +349,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Missing sponsor name."
+          },
+          "404": {
+            "description": "Sponsor not found"
           }
         }
       }

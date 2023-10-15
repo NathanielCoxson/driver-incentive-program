@@ -26,6 +26,27 @@ const poolPromise = new sql.ConnectionPool(sqlConfig)
     })
     .catch(err => console.log(err));
 
+/**
+ * Retrieves all sponsor objects from the database and returns
+ * an array of these objects.
+ * Sponsor Object {
+ *  SID: String,
+ *  SponsorName: String
+ * }
+ * @returns Array
+ */
+async function getSponsors() {
+    try {
+        // Connect
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .query('SELECT * FROM Sponsors');
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 /**
  * Returns the SID of the sponsor with the given name:
@@ -392,6 +413,20 @@ async function createApplication(Application) {
     }
 }
 
+/**
+ * Returns an array of application objects belonging to the user with
+ * Username from the database.
+ * Application Example: {
+ *  AID: String,
+ *  Username: String,
+ *  SponsorName: String,
+ *  ApplicationDate: String,
+ *  ApplicationStatus: String,
+ *  Reason: String
+ * }
+ * @param {String} Username 
+ * @returns Array
+ */
 async function getUserApplications(Username) {
     try {
         // Connect to pool
@@ -419,6 +454,13 @@ async function getUserApplications(Username) {
     }
 }
 
+/**
+ * Deletes the application with AID and Username from the database
+ * and returns 1 if successful and 0 if no record was found.
+ * @param {String} AID 
+ * @param {String} Username 
+ * @returns Number
+ */
 async function deleteApplication(AID, Username) {
     try {
         // Connect to pool
@@ -435,6 +477,12 @@ async function deleteApplication(AID, Username) {
     }
 }
 
+/**
+ * Deletes all of the applications with Username from the database
+ * and returns the number of applications deleted.
+ * @param {String} Username 
+ * @returns Number
+ */
 async function deleteUsersApplications(Username) {
     try {
         // Connect to pool
@@ -453,6 +501,7 @@ async function deleteUsersApplications(Username) {
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
+    getSponsors,
     getSponsorByName,
     getUserByUsername,
     getUserByEmail,

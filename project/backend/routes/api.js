@@ -4,7 +4,11 @@ const bcrypt = require('bcrypt'); // password encrypting
 const api = express.Router(); // express router
 
 // About routes
-// GET
+/**
+ * GET to <baseurl>/api/about
+ * Returns an object containing the latest release from the database: {
+ * }
+ */
 api.get('/about', async (req, res) => {
     try {
         // Make db request
@@ -138,6 +142,25 @@ api.get('/users/:Username', async (req, res) => {
     }
 });
 
+/**
+ * PUT to <baseurl>/api/users/password
+ * Used to request an email for resetting a user's password.
+ * Provde the user's email in the request body: {
+ *  "Email": "example@example.com"
+ * }
+ * When only the email is provided, an email will be sent to this
+ * email address with a link to reset the user's password.
+ * 
+ * To update the user's password send a request body like this: {
+ *  "Email": String,
+ *  "Password": String,
+ *  "Token": String
+ * }
+ * The password is the new password the user has entered and the token
+ * should be taken from the 'token' parameter in the query string of the link 
+ * provided by the previous email request. If the token is invalid, the update
+ * will not occur and a 403 Forbidden status code will be sent back.
+ */
 api.put('/users/password', async (req, res) => {
     try {
         // Request condition checking
@@ -224,31 +247,6 @@ api.put('/users/password', async (req, res) => {
     }
 });
 
-// Sponsor routes
-/**
- * GET <baseurl>/api/sponsors/:SponsorName
- * Returns the sponsor with the given sponsor name from the database.
- */
-api.get('/sponsors/:SponsorName', async (req, res) => {
-    try {
-        // Bad request
-        if (!req.params.SponsorName) res.status(400).send();
-
-        // Query
-        const result = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
-
-        // Success
-        if (result) res.status(200).send(result);
-
-        // Not found
-        else res.status(404).send();
-    } catch (err) {
-        console.log(err);
-        res.status(500).send();
-    }
-});
-
-// User routes
 /**
  * POST to <baseurl>/api/users/login
  * Request Body {
@@ -274,9 +272,59 @@ api.post('/users/login', async (req, res) => {
     }
 });
 
+// Sponsor routes
+/**
+ * GET <baseurl>/api/sponsors
+ * Returns an object with a sponsors property that contains a list of sponsor objects.
+ */
+api.get('/sponsors', async (req, res) => {
+    try {
+        const sponsors = await req.app.locals.db.getSponsors();
+
+        if (sponsors.length === 0) {
+            res.status(404).send();
+            return;
+        }
+
+        res.status(200).send({sponsors});
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * GET <baseurl>/api/sponsors/:SponsorName
+ * Returns the sponsor with the given sponsor name from the database.
+ */
+api.get('/sponsors/:SponsorName', async (req, res) => {
+    try {
+        // Bad request
+        if (!req.params.SponsorName) res.status(400).send();
+
+        // Query
+        const result = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
+
+        // Success
+        if (result) res.status(200).send(result);
+
+        // Not found
+        else res.status(404).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 // Applications Routes
 /**
+ * POST to <baseurl>/api/applications
  * Accepts a new driver application and stores it in the database.
+ * Example request body: {
+ *  "Username": "JohnDoe",
+ *  "SponsorName": "Test Sponsor",
+ *  "Reason": "I would like to join your sponsor organization..."
+ * }
  */
 api.post('/applications', async (req, res) => {
     const body = req.body;
@@ -329,6 +377,10 @@ api.post('/applications', async (req, res) => {
     }
 });
 
+/**
+ * GET to <baseurl>/api/applications/users/:Username
+ * Retrieves the applications of the user with the provided username.
+ */
 api.get('/applications/users/:Username', async (req, res) => {
     const Username = req.params.Username;
 
@@ -346,6 +398,17 @@ api.get('/applications/users/:Username', async (req, res) => {
     }
 });
 
+/**
+ * DELETE to <baseurl>/api/applications/users/:Username
+ * Deletes some or all of the applications of the user with the given username.
+ * The request body should look like: {
+ *  "IDs": [
+ *      "EEC8ED37-F3C0-4537-AC20-42CF9E1FD340",
+ *      "544F44D9-8D86-4EB8-A2C6-687519C2FD86"
+ *  ], (list of application ids for the application to be deleted)
+ *  "all": false (optional flag that will delete all applications if true)
+ * }
+ */
 api.delete('/applications/users/:Username', async (req, res) => {
     try {
         // Delete all of a user's applications
