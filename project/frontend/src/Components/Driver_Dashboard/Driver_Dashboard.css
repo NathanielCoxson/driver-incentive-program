@@ -1,0 +1,64 @@
+/* Your existing styles here */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f2f2f2;
+}
+
+/* Adjust styles for the sidebar and content layout */
+.sidebar {
+    width: 200px;
+    background-color: #0077b6;
+    color: #fff;
+    padding: 20px 0;
+    position: fixed;
+    height: 100%;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 20px 0;
+    margin: 10px;
+}
+
+.sidebar ul a {
+    text-decoration: none;
+    color: #fff; /* Change the text color to white */
+    font-weight: bold;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+/* Additional styles for the driver dashboard */
+.hero {
+    background-color: #0077b6;
+    color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+p {
+    font-size: 18px;
+}
+
+.cta-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #f77f00;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* You can add more styles specific to the driver dashboard here */
