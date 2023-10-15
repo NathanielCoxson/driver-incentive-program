@@ -183,7 +183,8 @@ input {
   color: #fff;
   padding: 20px 0;
   position: fixed;
-  height: 100%; /* Set the height to 100% to match the full height of the container */
+  max-height: calc(100% - 10px); /* Set max-height to accommodate the footer's height */
+  overflow-y: auto; /* Add vertical scroll if needed */
 }
 
 .sidebar ul {
