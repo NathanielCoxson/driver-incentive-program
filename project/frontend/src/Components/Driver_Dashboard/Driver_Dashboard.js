@@ -6,10 +6,10 @@ function DriverDashboard() {
         <main>
             <div className="sidebar-container">
                 <div className="sidebar">
-                    <ul>
+                   <ul>
                         <li><Link to="/driver_dashboard">Driver Home</Link></li>
-                        <li><Link to="/profile"> Driver Profile</Link></li> 
-                        <li><a href="sponsor-organization.html">Sponsor Organization</a></li>
+                        <li><Link to="/profile">Driver Profile</Link></li>
+                        <li><Link to="/sponsor-organization">Sponsor Organization</Link></li>
                         <li><Link to="/catalog">Driver Catalog</Link></li>
                     </ul>
                 </div>
