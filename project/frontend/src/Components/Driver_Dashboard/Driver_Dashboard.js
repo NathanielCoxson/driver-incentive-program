@@ -1,7 +1,7 @@
 import React from 'react';
 import './Driver_Dashboard.css';
+import DriverSidebar from './DriverSidebar'; 
 import { Link } from 'react-router-dom';
-import DriverSidebar from './DriverSidebar'; // Import the DriverSidebar component
 
 function DriverDashboard() {
     return (
