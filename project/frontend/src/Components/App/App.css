@@ -179,7 +179,8 @@ input {
 /* Driver_Dashboard.css */
 .sidebar-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; 
+  align-items: flex-start; 
 }
 
 .sidebar {
@@ -198,9 +199,10 @@ input {
 
 .sidebar ul a {
   text-decoration: none;
-  color: #fff; /* Change the text color to white */
+  color: #fff;
   font-weight: bold;
 }
+
 
 
 footer {

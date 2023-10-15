@@ -4,12 +4,7 @@ import { Link } from 'react-router-dom';
 function DriverDashboard() {
     return (
         <main>
-            <section className="hero">
-                <h2>Welcome to Your Dashboard</h2>
-                <p>Welcome to your driver dashboard. Here you can access various features and information.</p>
-                <a href="#" className="cta-button">Explore</a>
-            </section>
-            <div className="sidebar-container">
+            <div className="sidebar-container"> {/* Updated the class name here */}
                 <div className="sidebar">
                     <ul>
                         <li><a href="driver_dashboard.html">Dashboard Home</a></li>
@@ -18,6 +13,11 @@ function DriverDashboard() {
                         <li><a href="catalog.html">Catalog</a></li>
                     </ul>
                 </div>
+                <section className="hero"> {/* Updated the order of hero and sidebar */}
+                    <h2>Welcome to Your Dashboard</h2>
+                    <p>Welcome to your driver dashboard. Here you can access various features and information.</p>
+                    <a href="#" className="cta-button">Explore</a>
+                </section>
             </div>
         </main>
     );
