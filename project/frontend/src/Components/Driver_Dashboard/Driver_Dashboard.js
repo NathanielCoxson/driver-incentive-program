@@ -7,10 +7,10 @@ function DriverDashboard() {
             <div className="sidebar-container">
                 <div className="sidebar">
                     <ul>
-                        <li><a href="driver_dashboard.html">Dashboard Home</a></li>
-                        <li><a href="profile.html">Profile</a></li>
+                        <li><Link to="/driver_dashboard">Driver Home</Link></li>
+                        <li><Link to="/profile"> Driver Profile</Link></li> 
                         <li><a href="sponsor-organization.html">Sponsor Organization</a></li>
-                        <li><a href="catalog.html">Catalog</a></li>
+                        <li><Link to="/catalog">Driver Catalog</Link></li>
                     </ul>
                 </div>
                 <section className="hero">
