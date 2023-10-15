@@ -186,13 +186,13 @@ input {
   width: 200px;
   background-color: #0077b6;
   color: #fff;
-  padding: 20px;
+  padding: 40px;
   border-radius: 10px;
 }
 
 .sidebar ul {
   list-style: none;
-  padding: 20px 0;
+  padding: 40px 0;
   margin: 10px;
 }
 
@@ -201,8 +201,6 @@ input {
   color: #fff;
   font-weight: bold;
 }
-
-
 
 
 footer {
