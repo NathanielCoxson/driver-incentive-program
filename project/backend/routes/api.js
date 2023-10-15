@@ -303,10 +303,14 @@ api.post('/applications', async (req, res) => {
             res.status(404).send('Sponsor not found');
             return;
         }
+        if (user.Role !== 'driver') {
+            res.status(403).send('User is not a driver');
+            return;
+        }
 
         // Make sure that user hasn't already applied to this sponsor.
-        const userApplicationSIDs = (await req.app.locals.db.getUserApplications(user.UID)).map(app => app.SID);
-        if (userApplicationSIDs.includes(sponsor.SID)) {
+        const userApplications = (await req.app.locals.db.getUserApplications(user.Username)).map(app => app.SponsorName);
+        if (userApplications.includes(sponsor.SponsorName)) {
             res.status(409).send('User already has pending application with that sponsor.');
             return;
         }
@@ -317,7 +321,8 @@ api.post('/applications', async (req, res) => {
             SID: sponsor.SID,
             Reason: body.Reason
         });
-        res.status(200).send();
+        const AID = (await req.app.locals.db.getUserApplications(user.Username)).find(app => app.SponsorName === sponsor.SponsorName).AID;
+        res.status(201).send({AID});
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -329,7 +334,6 @@ api.get('/applications/users/:Username', async (req, res) => {
 
     try {
         const applications = await req.app.locals.db.getUserApplications(Username);
-        console.log(applications);
         if (applications.length === 0) {
             res.status(404).send('No applications found.');
             return;
@@ -342,14 +346,29 @@ api.get('/applications/users/:Username', async (req, res) => {
     }
 });
 
-api.delete('/applications/:AID', async (req, res) => {
+api.delete('/applications/users/:Username', async (req, res) => {
     try {
-        const result = await req.app.locals.db.deleteApplication(req.params.AID);
-        if (result === 0) {
-            res.status(404).send();
-            return;
+        // Delete all of a user's applications
+        if (req.body.all) {
+            const result = await req.app.locals.db.deleteUsersApplications(req.params.Username);
+            if (result === 0) {
+                res.status(404).send();
+                return;
+            }
+            res.status(200).send();
         }
-        res.status(200).send();
+
+        // Delete applications with provided ids.
+        else if (req.body.IDs) {
+            console.log(req.body.IDs);
+            for (let id of req.body.IDs) {
+                await req.app.locals.db.deleteApplication(id, req.params.Username);
+            }
+            res.status(200).send();
+        }
+
+        else res.status(400).send();
+        
     } catch (err) {
         console.log(err);
         res.status(500).send();

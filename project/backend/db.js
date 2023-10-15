@@ -413,22 +413,37 @@ async function getUserApplications(Username) {
                 WHERE Users.Username = @Username"
             );
         
-        console.log(result);
         return result.recordset;
     } catch (err) {
         console.log(err);
     }
 }
 
-async function deleteApplication(AID) {
+async function deleteApplication(AID, Username) {
     try {
         // Connect to pool
         const pool = await poolPromise;
 
         const result = await pool.request()
+            .input('Username', sql.VarChar(50), Username)
             .input('AID', sql.UniqueIdentifier, AID)
-            .query("DELETE FROM Applications WHERE AID = @AID");
-            
+            .query("DELETE Applications FROM Applications JOIN Users ON Users.UID = Applications.UID WHERE Username = @Username AND AID = @AID");
+
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function deleteUsersApplications(Username) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('Username', sql.VarChar(50), Username)
+            .query("DELETE Applications FROM Applications JOIN Users ON Users.UID = Applications.UID WHERE Username = @Username");
+
         return result.rowsAffected[0];
     } catch (err) {
         console.log(err);
@@ -450,5 +465,6 @@ module.exports = {
     createLogin,
     createApplication,
     getUserApplications,
-    deleteApplication
+    deleteApplication,
+    deleteUsersApplications
 }
