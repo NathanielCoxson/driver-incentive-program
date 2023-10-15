@@ -12,7 +12,7 @@ import Profile from '../Profile/Profile';
 import BreadCrumb from '../BreadCrumb/BreadCrumb'; 
 import ResetPassword from '../ResetPassword/ResetPassword';
 import DriverDashboard from '../Driver_Dashboard/Driver_Dashboard';
-import DriverSidebar from '../Driver_SideBar/Driver_Sidebar';
+import DriverSidebar from '../Driver_Sidebar/Driver_Sidebar';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
