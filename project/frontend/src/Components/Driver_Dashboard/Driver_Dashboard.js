@@ -1,18 +1,13 @@
+import React from 'react';
 import './Driver_Dashboard.css';
 import { Link } from 'react-router-dom';
+import DriverSidebar from './DriverSidebar'; // Import the DriverSidebar component
 
 function DriverDashboard() {
     return (
         <main>
             <div className="sidebar-container">
-                <div className="sidebar">
-                   <ul>
-                        <li><Link to="/driver_dashboard">Driver Home</Link></li>
-                        <li><Link to="/profile">Driver Profile</Link></li>
-                        <li><Link to="/sponsor-organization">Sponsor Organization</Link></li>
-                        <li><Link to="/catalog">Driver Catalog</Link></li>
-                    </ul>
-                </div>
+                <DriverSidebar /> {/* Include the DriverSidebar component here */}
                 <section className="hero">
                     <h2>Welcome to Your Dashboard</h2>
                     <p>Welcome to your driver dashboard. Here you can access various features and information.</p>
