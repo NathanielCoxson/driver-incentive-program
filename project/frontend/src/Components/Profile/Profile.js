@@ -7,7 +7,7 @@ function Profile() {
     return (
         <main>
             <div className="sidebar-container">
-                <DriverSidebar /> {/* Include the DriverSidebar component here */}
+                <DriverSidebar /> 
                 <section class="hero">
                     <h2>Hello, {userName}.</h2>
                     <h1>My Profile</h1>              
@@ -17,7 +17,6 @@ function Profile() {
                         <p><strong>Sponsor Company:</strong> ABC Motors</p>
                         <p><strong>Phone Number:</strong> (123) 456-7890</p>
                     </div>
-                    
                 </section>
             </div>
         </main>)
