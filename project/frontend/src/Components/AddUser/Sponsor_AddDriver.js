@@ -9,14 +9,35 @@ function SponsorAddDriver() {
         ? 'http://34.225.199.196/api/users/register' // Adjust the URL as needed
         : 'http://localhost:3001/api/users/register';
 
-    // This function handles form submission
+    const passwordRequirementsMessage =
+        'Password must be:\n' +
+        '- At least eight characters long\n' +
+        '- Contain one uppercase letter\n' +
+        '- Contain one lowercase letter\n' +
+        '- Contain one number\n' +
+        '- Contain one special character';
+
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
         setResponseMessage('');
 
         const input = event.target;
 
-        // Validate the form data if needed
+        const password = input.password.value;
+        const retypePassword = input.retypePassword.value;
+
+        if (!password.match(passwordRegex)) {
+            setResponseMessage(passwordRequirementsMessage);
+            return;
+        }
+
+        if (password !== retypePassword) {
+            setResponseMessage("Passwords do not match.");
+            return;
+        }
 
         const user = {
             Username: input.username.value,
@@ -70,6 +91,17 @@ function SponsorAddDriver() {
                         <div>
                             <label htmlFor="retypePassword">Retype Password:</label>
                             <input type="password" id="retypePassword" name="retypePassword" required />
+                        </div>
+
+                        <div className="password-requirements">
+                            <p>Password requirements:</p>
+                            <ul>
+                                <li> At least eight characters long</li>
+                                <li> Contain one uppercase letter</li>
+                                <li> Contain one lowercase letter</li>
+                                <li> Contain one number</li>
+                                <li> Contain one special character</li>
+                            </ul>
                         </div>
 
                         <div className="password-validation" id="passwordValidation">
