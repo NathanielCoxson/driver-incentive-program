@@ -7,7 +7,7 @@ function SponsorDashboard() {
     return (
         <main>
             <div className="sidebar-container">
-
+                <SponsorSidebar />
                 <section className="hero">
                     <h2>Welcome to Your Dashboard</h2>
                     <p>Welcome to your sponsor dashboard. Here you can access various features and information.</p>             
