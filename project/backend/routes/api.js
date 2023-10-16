@@ -20,6 +20,35 @@ api.get('/about', async (req, res) => {
     }
 });
 
+//
+// POST
+api.post("/users/login", async (req, res) => {
+    console.log("login:", req.body)
+    try{
+        const user = await req.app.locals.db.getUserByUsername(req.body.Username);
+        if (user){
+            bcrypt.compare(req.body.Password, user.Password)
+                .then(valid => {
+                    console.log("Valid:", valid)
+                    if (valid){
+                        res.status(200).send()
+                    }else{
+                        res.status(400).send()
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    res.status(400).send()
+                })
+        } else {
+            res.status(400).send();
+        }
+    } catch (err){
+        console.log(err);
+        res.status(500).send();
+    }
+})
+
 // User routes
 /**
  * POST to <baseurl>/api/users/register
@@ -47,7 +76,7 @@ api.post('/users/register', async (req, res) => {
             At least one special character,  You can remove this condition by removing (?=.*?[#?!@$%^&*-])
         */
         const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-        const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+        const emailRegex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
         const adminPin = process.env.DB_PWD;
         const conditions = [
             !body.Name, !body.Username, !body.Password, !body.Role, !body.Email, // Required fields

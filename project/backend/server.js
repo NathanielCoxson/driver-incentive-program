@@ -28,7 +28,7 @@ const apiRouter = require('./routes/api');
 const db = require('./db');
 
 // App configuration
-const port = process.env.PORT || '3000';
+const port = process.env.PORT || '3001';
 const app = express();
 
 // Enables CORS (cross-origin resource sharing) between frontend and backend
