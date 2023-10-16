@@ -6,6 +6,7 @@ function SponsorSidebar() {
         <div className="sidebar">
             <ul>
                 <li><Link to="/sponsor_dashboard">Sponsor Home</Link></li>
+                <li><Link to="/sponsor_dashboard/sponsor_profile">Sponsor Profile</Link></li>
                 <li><Link to="/sponsor_dashboard/sponsor_organization">Sponsor Organization</Link></li>
                 <li><Link to="/sponsor_dashboard/sponsor_add_user">Add User</Link></li>
                 <li><Link to="/sponsor_dashboard/sponsor_catalog">Sponsor Catalog</Link></li>

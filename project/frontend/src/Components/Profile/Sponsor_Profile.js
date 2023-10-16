@@ -1,21 +1,18 @@
 import React from 'react';
-import DriverSidebar from '../Sidebar/Driver_Sidebar';
-import { Link } from 'react-router-dom';
+import SponsorSidebar from '../Sidebar/Sponsor_sidebar';
 
-function Profile() {
+function SponsorProfile() {
     const userName = "John Doe";
     return (
         <main>
             <div className="sidebar-container">
-                <DriverSidebar /> 
+                <SponsorSidebar /> 
                 <section class="hero">
-                
                     <h2>Hello, {userName}.</h2>
                     <h2>Welcome to Your's Profile Dashboard</h2>
                     <h1>My Profile</h1>              
                     <div class="profile-info">
                         <p><strong>Username:</strong> JohnDoe123</p>
-                        <p><strong>Vehicle:</strong> Toyota Camry</p>
                         <p><strong>Sponsor Company:</strong> ABC Motors</p>
                         <p><strong>Phone Number:</strong> (123) 456-7890</p>
                     </div>
@@ -24,4 +21,4 @@ function Profile() {
         </main>)
 }
 
-export default Profile;
+export default SponsorProfile;

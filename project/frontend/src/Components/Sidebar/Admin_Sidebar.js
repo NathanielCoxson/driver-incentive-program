@@ -6,7 +6,7 @@ function AdminSidebar() {
         <div className="sidebar">
             <ul>
                 <li><Link to="/admin_dashboard">Admin Home</Link></li>
-                <li><Link to="/profile">Admin Profile</Link></li>
+                <li><Link to="/admin_dashboard/admin_profile">Admin Profile</Link></li>
                 <li><Link to="/admin_dashboard/admin_add_user">Add User</Link></li>                
                 <li><Link to="/admin_dashboard/admin_messagebox">Message Box</Link></li>
             </ul>
