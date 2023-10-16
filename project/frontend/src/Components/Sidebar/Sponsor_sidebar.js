@@ -1,4 +1,4 @@
-import "./Driver_Sidebar.css"
+import "./Sponsor_Sidebar.css"
 import { Link } from 'react-router-dom';
 
 function SponsorSidebar() {
