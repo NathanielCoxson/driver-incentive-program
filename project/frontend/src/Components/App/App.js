@@ -24,6 +24,9 @@ import SponsorAddUser from '../AddUser/Sponsor_AddUser';
 import SponsorAddDriver from '../AddUser/Sponsor_AddDriver';
 import SponsorAddSponsor from '../AddUser/Sponsor_AddSponsor';
 import AdminDashboard from '../Dashboard/Admin_Dashboard';
+import AdminAddUser from '../AddUser/Admin_AddUser';
+import AdminAddDriver from '../AddUser/Admin_AddDriver';
+import AdminAddSponsor from '../AddUser/Admin_AddSponsor';
 
 function App() {
   return (
@@ -54,6 +57,10 @@ function App() {
           <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_driver" element= {<SponsorAddDriver />} />
           <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_sponsor" element= {<SponsorAddSponsor />} />
           <Route path="/admin_dashboard" element= {<AdminDashboard />} />
+          <Route path="/admin_dashboard/admin_add_user" element= {<AdminAddUser />} />
+          <Route path="/admin_dashboard/admin_add_user/admin_add_driver" element= {<AdminAddDriver />} />
+          <Route path="/admin_dashboard/admin_add_user/admin_add_sponsor" element= {<AdminAddSponsor />} />
+
         </Routes>
       <Footer />
     </div>
