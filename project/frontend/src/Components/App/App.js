@@ -44,6 +44,7 @@ function App() {
           <Route path="/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
           <Route path="/sponsor_dashboard" element= {<SponsorDashboard />} />
           <Route path="/sponsor_organization" element= {<SponsorOrganization />} />
+          <Route path="/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
         </Routes>
       <Footer />
     </div>
