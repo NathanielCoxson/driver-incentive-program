@@ -2,7 +2,7 @@ import './App.css';
 import Home from '../Home/Home';
 import Navbar from '../Navbar/Navbar';
 import About from '../About/About';
-import Catalog from '../Catalog/Catalog';
+import Catalog from '../Catalog/Driver_Catalog';
 import Contact from '../Contact/Contact';
 import Rewards from '../Rewards/Rewards';
 import Login from '../Login/Login';
@@ -16,6 +16,7 @@ import DriverSidebar from '../Sidebar/Driver_Sidebar';
 import DriverPoint from '../Point/Driver_Point';
 import DriverSponsorOrganization from '../Sponsor_Org/Driver_SponsorOrganization';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import DriverCatalog from '../Catalog/Driver_Catalog';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/driver_dashboard" element= {<DriverDashboard />} />
           <Route path="/driver_point" element= {<DriverPoint />} />
           <Route path="/driver_sponsor_organization" element= {<DriverSponsorOrganization />} />
+          <Route path="/driver_catalog" element= {<DriverCatalog />} />
         </Routes>
       <Footer />
     </div>
