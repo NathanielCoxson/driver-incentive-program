@@ -149,6 +149,87 @@
         }
       }
     },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "users" 
+        ],
+        "summary": "Login the given user.",
+        "description": "Attempts to login the provided user and returns the user from the database if successful.",
+        "operationId": "getUserByUsername",
+        "requestBody": {
+          "description": "Username and password of the user.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "Username": {
+                    "type": "string",
+                    "example": "JohnDoe"
+                  },
+                  "Password": {
+                    "type": "string",
+                    "example": "1234"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "UID": {
+                      "type": "string",
+                      "example": "64C4FE0F-AC6D-4144-B2A2-5BBDBF6196B5"
+                    },
+                    "SID": {
+                      "type": "string",
+                      "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
+                    },
+                    "Name": {
+                      "type": "string",
+                      "example": "John Doe"
+                    },
+                    "Role": {
+                      "type": "string",
+                      "example": "driver"
+                    },
+                    "Username": {
+                      "type": "string",
+                      "example": "JohnDoe"
+                    },
+                    "Password": {
+                      "type": "string",
+                      "example": "$2b$12$pr4ZaLC9G4saJ9PE23KbDOaqlUyWXwyf.fwWIE6slXV7mPOVt7JEW"
+                    },
+                    "Email": {
+                      "type": "string",
+                      "example": "testDriver@example.com"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "/users/{Username}": {
       "get": {
         "tags": [

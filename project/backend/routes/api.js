@@ -20,35 +20,6 @@ api.get('/about', async (req, res) => {
     }
 });
 
-//
-// POST
-api.post("/users/login", async (req, res) => {
-    console.log("login:", req.body)
-    try{
-        const user = await req.app.locals.db.getUserByUsername(req.body.Username);
-        if (user){
-            bcrypt.compare(req.body.Password, user.Password)
-                .then(valid => {
-                    console.log("Valid:", valid)
-                    if (valid){
-                        res.status(200).send()
-                    }else{
-                        res.status(400).send()
-                    }
-                })
-                .catch(err => {
-                    console.error(err)
-                    res.status(400).send()
-                })
-        } else {
-            res.status(400).send();
-        }
-    } catch (err){
-        console.log(err);
-        res.status(500).send();
-    }
-})
-
 // User routes
 /**
  * POST to <baseurl>/api/users/register
@@ -143,6 +114,45 @@ api.post('/users/register', async (req, res) => {
                     })
             });
     } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * POST <baseurl>/api/users/login
+ * Request body: {
+ *  Username: String,
+ *  Password: String
+ * }
+ * Returns an object of the user with the given username if 
+ * the provided password is correct.
+ */
+api.post("/users/login", async (req, res) => {
+    console.log("login:", req.body)
+    try{
+        const user = await req.app.locals.db.getUserByUsername(req.body.Username);
+        if (user){
+            bcrypt.compare(req.body.Password, user.Password)
+                .then(valid => {
+                    console.log("Valid:", valid)
+                    if (valid){
+                        res.status(201).send(user);
+                        return;
+                    }else{
+                        res.status(403).send();
+                        return;
+                    }
+                })
+                .catch(err => {
+                    console.error(err)
+                    res.status(500).send()
+                    return;
+                })
+        } else {
+            res.status(404).send();
+        }
+    } catch (err){
         console.log(err);
         res.status(500).send();
     }
