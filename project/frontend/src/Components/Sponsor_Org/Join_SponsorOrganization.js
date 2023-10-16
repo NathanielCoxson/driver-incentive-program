@@ -1,19 +1,37 @@
 import './Join_SponsorOrganization.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function JoinSponsorOrganization() {
     const [responseMessage, setResponseMessage] = useState('');
+    const [Username, setUsername] = useState('');
+    const [SponsorName, setSponsorName] = useState('');
+    const [Reason, setReason] = useState('');
+    const [options, setOptions] = useState([]);
 
     const baseURL = process.env.NODE_ENV === 'production'
-        ? 'http://34.225.199.196/api/users/join-sponsor'
-        : 'http://localhost:3001/api/users/join-sponsor';
+        ? 'http://34.225.199.196/api'
+        : 'http://localhost:3001/api';
 
-    function validateForm(form) {
-        const username = form.username.value;
-        const reason = form.reason.value;
-        const organization = form.organization.value;
-
-        if (!username || !reason || !organization) {
+    useEffect(() => {
+        const baseURL = process.env.NODE_ENV === 'production'
+        ? 'http://34.225.199.196/api'
+        : 'http://localhost:3001/api';
+        fetch(`${baseURL}/sponsors`)
+        .then(res => res.json())
+        .then(res => {
+            let newOptions = res.sponsors.map(sponsor => {
+                return {
+                    value: sponsor.SponsorName,
+                    label: sponsor.SponsorName
+                }
+            });
+            setOptions(newOptions);
+            setSponsorName(newOptions[0].label);
+        });
+    }, []);
+        
+    function validateForm() {
+        if (!Username || !Reason || !SponsorName) {
             setResponseMessage('All fields are required.');
             return false;
         }
@@ -25,27 +43,26 @@ function JoinSponsorOrganization() {
         event.preventDefault();
         setResponseMessage('');
 
-        const input = event.target;
-        if (!validateForm(input)) return;
+        if (!validateForm()) return;
 
-        const user = {
-            Username: input.username.value,
-            Reason: input.reason.value,
-            Organization: input.organization.value,
-        };
+        console.log({Username, SponsorName, Reason});
 
-        fetch(baseURL, {
+        fetch(`${baseURL}/applications`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(user),
+            body: JSON.stringify({Username, SponsorName, Reason}),
         })
-            .then((res) => {
-                if (res.status === 400) setResponseMessage('Invalid Input');
-                if (res.status === 201) setResponseMessage('Success!');
-            })
-            .catch((err) => console.log(err));
+        .then((res) => {
+            if (res.status === 400) setResponseMessage('Invalid Input');
+            if (res.status === 404) setResponseMessage('User not found');
+            if (res.status === 409) setResponseMessage("You've already submitted an application to that sponsor.")
+            if (res.status === 201) setResponseMessage('Success!');
+        })
+        .catch((err) => console.log(err));
+        setUsername('');
+        setReason('');
     };
 
     return (
@@ -55,7 +72,14 @@ function JoinSponsorOrganization() {
                 <form id="joinSponsorForm" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="username">Username:</label>
-                        <input type="text" id="username" name="username" required />
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            required 
+                            onChange={event => setUsername(event.target.value)} 
+                            value={Username}
+                        />
                     </div>
 
                     <div>
@@ -65,15 +89,20 @@ function JoinSponsorOrganization() {
                             name="reason"
                             rows="4"
                             required
+                            onChange={event => setReason(event.target.value)}
+                            value={Reason}
                         ></textarea>
                     </div>
 
                     <div>
-                        <label htmlFor="organization">Sponsor Organization Name:</label>
-                        <select id="organization" name="organization" required>
-                            <option value="sponsor-org-1">Sponsor Organization 1</option>
-                            <option value="sponsor-org-2">Sponsor Organization 2</option>
-                            <option value="sponsor-org-3">Sponsor Organization 3</option>
+                        <label htmlFor="sponsorName">Sponsor Organization Name:</label>
+                        <select 
+                            id="sponsorName" 
+                            name="sponsorName" 
+                            required 
+                            onChange={event => setSponsorName(event.target.value)}
+                        >
+                            {options.map(option => <option value={option.value}>{option.label}</option>)}
                         </select>
                     </div>
 

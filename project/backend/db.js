@@ -41,7 +41,7 @@ async function getSponsors() {
         const pool = await poolPromise;
         // Make request
         const result = await pool.request()
-            .query('SELECT * FROM Sponsors');
+            .query("SELECT * FROM Sponsors WHERE SponsorName != 'Admins' AND SponsorName != 'None'");
         return result.recordset;
     } catch (err) {
         console.log(err);
