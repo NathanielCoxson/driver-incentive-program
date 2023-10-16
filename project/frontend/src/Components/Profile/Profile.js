@@ -9,7 +9,9 @@ function Profile() {
             <div className="sidebar-container">
                 <DriverSidebar /> 
                 <section class="hero">
+                
                     <h2>Hello, {userName}.</h2>
+                    <h2>Welcome to Your Driver's Profile Dashboard</h2>
                     <h1>My Profile</h1>              
                     <div class="profile-info">
                         <p><strong>Username:</strong> JohnDoe123</p>
