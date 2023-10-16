@@ -17,6 +17,7 @@ import DriverPoint from '../Point/Driver_Point';
 import DriverSponsorOrganization from '../Sponsor_Org/Driver_SponsorOrganization';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DriverCatalog from '../Catalog/Driver_Catalog';
+import JoinSponsorOrganization from '../Sponsor_Org/Join_SponsorOrganization';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/driver_point" element= {<DriverPoint />} />
           <Route path="/driver_sponsor_organization" element= {<DriverSponsorOrganization />} />
           <Route path="/driver_catalog" element= {<DriverCatalog />} />
+          <Route path="/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
         </Routes>
       <Footer />
     </div>
