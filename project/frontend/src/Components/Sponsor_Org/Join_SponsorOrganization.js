@@ -54,7 +54,7 @@ function JoinSponsorOrganization() {
                 <h2>Join Sponsor Organization</h2>
                 <form id="joinSponsorForm" onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="username">Driver's Username:</label>
+                        <label htmlFor="username">Username:</label>
                         <input type="text" id="username" name="username" required />
                     </div>
 
