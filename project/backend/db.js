@@ -122,22 +122,6 @@ module.exports = {
         }
     },
 
-    getUserSpecific: async (username, password) => {
-        try {
-            // Connect to pool
-            const pool = await poolPromise;
-            // Make request
-            const result = await pool.request()
-                .input('username', username)
-                .input('password', password)
-                .query("SELECT * FROM Users WHERE Username = @username AND password = @password");
-            // Return user object
-            return result.recordset[0];
-        } catch (err) {
-            console.log(err);
-        }
-    },
-
     /**
      * Returns the SID of the sponsor with the given name:
      * Response: {
