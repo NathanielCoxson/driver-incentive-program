@@ -3,13 +3,6 @@ const express = require('express'); // express server
 const bcrypt = require('bcrypt'); // password encrypting
 const api = express.Router(); // express router
 
-api.post('/login', async (req, res) => {
-    res.status(200).send({
-        Username: "TestDriver",
-        Role: "driver"
-    });
-});
-
 // About routes
 /**
  * GET to <baseurl>/api/about
@@ -136,18 +129,16 @@ api.post('/users/register', async (req, res) => {
  * the provided password is correct.
  */
 api.post("/users/login", async (req, res) => {
-    console.log("login:", req.body)
     try{
         const user = await req.app.locals.db.getUserByUsername(req.body.Username);
         if (user){
             bcrypt.compare(req.body.Password, user.Password)
                 .then(valid => {
-                    console.log("Valid:", valid)
                     if (valid){
                         res.status(201).send(user);
                         return;
                     }else{
-                        res.status(403).send();
+                        res.status(401).send();
                         return;
                     }
                 })

@@ -1,17 +1,18 @@
 import './Login.css'
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
-const LOGIN_URL = '/login';
-
-
 
 function Login() {
     const { setAuth } = useAuth();
     const [Username, setUsername] = useState('');
     const [Password, setPassword] = useState('');
-    const [valid, setValid] = useState(false);
+    const [responseMessage, setResponseMessage] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const LOGIN_URL = '/users/login';
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -25,16 +26,31 @@ function Login() {
                 }
             );
             console.log(response.data);
-            const Role = response?.data?.Role;
-            setAuth({ Username, Password, Role });
+            setAuth(response?.data);
             setUsername('');
             setPassword('');
+            navigate(from, { replace: true });
         } catch (err) {
-    
+            if (!err?.response) {
+                setResponseMessage('No Server Response');
+            }
+            else if (err.response?.status === 400) {
+                setResponseMessage('Missing username or password');
+            }
+            else if (err.response?.status === 401) {
+                setResponseMessage('Incorrect password');
+            }
+            else if (err.response?.status === 404) {
+                setResponseMessage('User not found');
+            }
+            else {
+                setResponseMessage('Login Failed');
+            }
         }
     };
 
-    return (<main>
+    return (
+    <main>
         <section className="login-section">
             <h2>Login</h2>
             <form onSubmit={handleSubmit} className='login-form'>
@@ -59,6 +75,7 @@ function Login() {
                 />
                 <br />
                 <button type="submit" className="cta-button">Submit</button>
+                <div class="response" id="response">{responseMessage}</div>
             </form>
             <div>
                 <div>

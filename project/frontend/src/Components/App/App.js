@@ -11,6 +11,8 @@ import ResetPassword from '../ResetPassword/ResetPassword';
 import Layout from '../Layout/Layout';
 import RequireAuth from '../RequireAuth/RequireAuth';
 import { Route, Routes } from 'react-router-dom';
+import Missing from '../Missing/Missing';
+import Unauthorized from '../Unauthorized/Unauthorized';
 // import DriverDashboard from '../Dashboard/Driver_Dashboard';
 // import DriverPoint from '../Point/Driver_Point';
 // import DriverSponsorOrganization from '../Sponsor_Org/Driver_SponsorOrganization';
@@ -34,6 +36,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/password-reset" element={<ResetPassword />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* <Route path="/driver_dashboard" element= {<DriverDashboard />} />
         <Route path="/driver_dashboard/driver_point" element= {<DriverPoint />} />
@@ -49,11 +52,14 @@ function App() {
         <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_sponsor" element= {<SponsorAddSponsor />} /> */}
 
         {/* private */}
-        <Route element={<RequireAuth />}>
+        <Route element={<RequireAuth allowedRoles={['driver', 'admin', 'sponsor']}/>}>
           <Route path="/catalog" element={<Catalog />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/rewards" element={<Rewards />} />
         </Route>
+
+        {/* catch all*/}
+        <Route path="*" element={<Missing />} />
       </Route>
     </Routes>
   );
