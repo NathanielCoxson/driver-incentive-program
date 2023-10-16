@@ -20,6 +20,7 @@ import JoinSponsorOrganization from '../Sponsor_Org/Join_SponsorOrganization';
 import SponsorDashboard from '../Dashboard/Sponsor_Dashboard';
 import SponsorOrganization from '../Sponsor_Org/Sponsor_Organization';
 import CreateSponsorOrganization from '../Sponsor_Org/Create_SponsorOrganization';
+import SponsorAddUser from '../AddUser/Sponsor_AddUser';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           <Route path="/sponsor_dashboard/sponsor_organization" element= {<SponsorOrganization />} />
           <Route path="/sponsor_dashboard/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
           <Route path="/sponsor_dashboard/sponsor_organization/create_sponsor_organization" element= {<CreateSponsorOrganization />} />
+          <Route path="/sponsor_dashboard/sponsor_add_user" element= {<SponsorAddUser />} />
         </Routes>
       <Footer />
     </div>
