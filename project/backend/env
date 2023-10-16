@@ -1,8 +1,0 @@
-DB_USER = "Team01admin"
-DB_PWD = "FIFO-admin-01&"
-DB_NAME = "incentiveprogram"
-DB_SERVER_NAME = "team01-rds.cobd8enwsupz.us-east-1.rds.amazonaws.com"
-
-PORT = 3001
-
-NODE_ENV = "development"
