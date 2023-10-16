@@ -10,6 +10,17 @@ const bodyParser = require('body-parser');
 const swaggerDocument = require('./openapi.json'); // imports doc file
 const swaggerUi = require('swagger-ui-express'); // serves doc file
 
+// Email sending
+const nodemailer = require('nodemailer');
+// Email transport object
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'cpsc4910team01@gmail.com',
+        pass: process.env.EMAIL_PWD
+    }
+});
+
 // Router imports
 const apiRouter = require('./routes/api');
 
@@ -51,5 +62,6 @@ app.listen(port, () => {
     // Attach db to app.locals object to be used
     // in route files.
     app.locals.db = db;
+    app.locals.email = transporter;
     console.log(`Listening on port ${port}`);
 });

@@ -70,3 +70,6 @@
     - Role ("Driver"/"Sponsor"/"Admin")
     - Username (String)
     - Password (String)
+    - Email (String)
+    - PasswordResetToken
+    - PasswordResetExpiration

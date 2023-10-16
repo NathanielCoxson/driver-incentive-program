@@ -75,6 +75,7 @@ function Register() {
             Password: input.password.value,
             Name: input.name.value,
             Role: input.role.value,
+            Email: input.email.value,
         };
         let url = input.adminPin ? `${baseURL}?AdminPin=${encodeURIComponent(input.adminPin.value)}` : baseURL;
         // Post to /api/users/register
@@ -87,8 +88,15 @@ function Register() {
         })
         .then(res => {
             if (res.status === 400) setResponseMessage('Invalid Input')
-            if (res.status === 409) setResponseMessage('Username already taken.');
             if (res.status === 201) setResponseMessage('Success!');
+            return res.json();
+        })
+        .then(res => {
+            // 409 Conflict reponse messages
+            if (res) {
+                if (res === 'Email already taken') setResponseMessage('That email has already been taken.')
+                if (res === 'Username already taken') setResponseMessage('That username has already been taken.')
+            } 
         })
         .catch(err => console.log(err));
     }
@@ -108,8 +116,13 @@ function Register() {
                     </div>
 
                     <div>
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" name="email" required />
+                    </div>
+
+                    <div>
                         <label for="role">User Type:</label>
-                        <select onChange={handleSelectChange} id="roel" name="role" required>
+                        <select onChange={handleSelectChange} id="role" name="role" required >
                             <option value="driver">Driver</option>
                             <option value="sponsor">Sponsor</option>
                             <option value="admin">Admin</option>
