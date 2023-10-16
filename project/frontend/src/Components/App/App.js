@@ -39,10 +39,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/password-reset" element= {<ResetPassword />} />
           <Route path="/driver_dashboard" element= {<DriverDashboard />} />
-          <Route path="/driver_point" element= {<DriverPoint />} />
-          <Route path="/driver_sponsor_organization" element= {<DriverSponsorOrganization />} />
-          <Route path="/driver_catalog" element= {<DriverCatalog />} />
-          <Route path="/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
+          <Route path="/driver_dashboard/driver_point" element= {<DriverPoint />} />
+          <Route path="/driver_dashboard/driver_sponsor_organization" element= {<DriverSponsorOrganization />} />
+          <Route path="/driver_dashboard/driver_catalog" element= {<DriverCatalog />} />
+          <Route path="/driver_dashboard/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
           <Route path="/sponsor_dashboard" element= {<SponsorDashboard />} />
           <Route path="/sponsor_organization" element= {<SponsorOrganization />} />
           <Route path="/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
