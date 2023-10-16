@@ -3,6 +3,13 @@ const express = require('express'); // express server
 const bcrypt = require('bcrypt'); // password encrypting
 const api = express.Router(); // express router
 
+api.post('/login', async (req, res) => {
+    res.status(200).send({
+        Username: "TestDriver",
+        Role: "driver"
+    });
+});
+
 // About routes
 // GET
 api.get('/about', async (req, res) => {

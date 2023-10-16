@@ -3,12 +3,13 @@
 // Dependency imports
 require('dotenv').config({path: "./.env"});
 const express = require('express');
-const cors = require('cors');
-const morgan = require('morgan');
-const path = require('path');
-const bodyParser = require('body-parser');
+const cors = require('cors'); // CORS to enable cross-origin resource sharing
+const morgan = require('morgan'); // Logs requests to console
+const path = require('path'); // Given to express.static to locate frontend build folder
+const bodyParser = require('body-parser'); // Parses json body into js body
 const swaggerDocument = require('./openapi.json'); // imports doc file
 const swaggerUi = require('swagger-ui-express'); // serves doc file
+const cookieParser = require('cookie-parser'); // Used to parse cookies from requests
 
 // Email sending
 const nodemailer = require('nodemailer');
@@ -33,7 +34,19 @@ const app = express();
 
 // Enables CORS (cross-origin resource sharing) between frontend and backend
 // since they are on different ports.
-app.use(cors());
+// Allowed origins include localhost and our EC2 ip.
+const allowedOrigins = ['http://localhost:3000', 'http://34.225.199.196'];
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if(!allowedOrigins.includes(origin)) {
+            const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true
+}));
 
 // Middleware to log requests to the console
 if (process.env.NODE_ENV === 'development') {
@@ -47,6 +60,9 @@ app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 // which is passed to the handlers.
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+
+// Parse cookies
+app.use(cookieParser());
 
 // Use routers here
 app.use('/api', apiRouter);
