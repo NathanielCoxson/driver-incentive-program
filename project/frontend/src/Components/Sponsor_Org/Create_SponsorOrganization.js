@@ -1,4 +1,4 @@
-import './CreateSponsorOrganization.css';
+import './Create_SponsorOrganization.css';
 import { useState } from 'react';
 
 function CreateSponsorOrganization() {
