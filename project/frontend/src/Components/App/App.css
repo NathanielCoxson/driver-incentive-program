@@ -176,6 +176,34 @@ input {
   font-size: 18px;
 }
 
+/* Driver_Dashboard.css */
+.sidebar-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #0077b6;
+  color: #fff;
+  padding: 10px;
+  margin-top: 40px;
+  margin-right: 40px;
+  border-radius: 10px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 40px 0;
+  margin: 10px;
+}
+
+.sidebar ul a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+
 footer {
   background-color: #333;
   color: #fff;
