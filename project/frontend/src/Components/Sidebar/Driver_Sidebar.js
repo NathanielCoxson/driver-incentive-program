@@ -10,6 +10,7 @@ function DriverSidebar() {
                 <li><Link to="/driver_point">Driver Point</Link></li>
                 <li><Link to="/driver_sponsor_organization">Driver's Sponsor Organization</Link></li>
                 <li><Link to="/driver_catalog">Driver Catalog</Link></li>
+                <li><Link to="/driver_messagebox">Message Box</Link></li>
             </ul>
         </div>
     );
