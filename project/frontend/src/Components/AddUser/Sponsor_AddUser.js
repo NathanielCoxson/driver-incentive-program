@@ -10,6 +10,7 @@ function SponsorAddUser() {
                 <section className="hero">
                     <h2>What type of user do you want to add?</h2>
                     <Link to="/sponsor_dashboard/sponsor_add_user/add_driver" className="cta-button">Add Driver User</Link>
+                    <p></p>
                     <Link to="/sponsor_dashboard/sponsor_add_user/add_sponsor" className="cta-button"> Add Sponsor User</Link>
                 </section>
             </div>
