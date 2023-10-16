@@ -1,6 +1,7 @@
 import React from 'react';
 import './Driver_Dashboard.css';
 import DriverSidebar from '../Sidebar/Driver_Sidebar';
+import SponsorSidebar from '../Sidebar/Sponsor_Sidebar';
 import { Link } from 'react-router-dom';
 
 function DriverDashboard() {
