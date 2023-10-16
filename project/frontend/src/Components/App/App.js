@@ -27,6 +27,7 @@ import AdminDashboard from '../Dashboard/Admin_Dashboard';
 import AdminAddUser from '../AddUser/Admin_AddUser';
 import AdminAddDriver from '../AddUser/Admin_AddDriver';
 import AdminAddSponsor from '../AddUser/Admin_AddSponsor';
+import AdminAddAdmin from '../AddUser/Admin_AddAdmin';
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
           <Route path="/admin_dashboard/admin_add_user" element= {<AdminAddUser />} />
           <Route path="/admin_dashboard/admin_add_user/admin_add_driver" element= {<AdminAddDriver />} />
           <Route path="/admin_dashboard/admin_add_user/admin_add_sponsor" element= {<AdminAddSponsor />} />
+          <Route path="/admin_dashboard/admin_add_user/admin_add_admin" element= {<AdminAddAdmin />} />
 
         </Routes>
       <Footer />
