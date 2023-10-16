@@ -1,6 +1,6 @@
 import React from 'react';
 import './Sponsor_Dashboard.css';
-import SponsorSidebar from '../Sidebar/Sponsor_Sidebar';
+import DriverSidebar from '../Sidebar/Driver_Sidebar';
 import { Link } from 'react-router-dom';
 
 function SponsorDashboard() {
