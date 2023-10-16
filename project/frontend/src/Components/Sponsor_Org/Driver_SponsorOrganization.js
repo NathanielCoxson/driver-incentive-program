@@ -13,7 +13,7 @@ function DriverSponsorOrganization() {
                     <div class="sponsor-info">
                         <p><strong>Sponsor Company:</strong> ABC Motors</p>
                         <p>Looking for a Sponsor?</p>
-                        <li><Link to="/driver_sponsor_organization/join_sponsor_organization" className="cta-button">Join An Sponsor Organization</Link></li>
+                        <Link to="/driver_sponsor_organization/join_sponsor_organization" className="cta-button">Join An Sponsor Organization</Link>
                     </div>
                 </section>
             </div>
