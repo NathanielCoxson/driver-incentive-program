@@ -67,6 +67,7 @@ function SponsorAddDriver() {
                 <SponsorSidebar /> {/* Include the DriverSidebar component here */}
                 <section className="hero">
                     <h2>Add Driver</h2>
+                    <p>Please register the driver you want to add the system.</p>
                     <form id="addDriverForm" onSubmit={handleSubmit}>
                         <div>
                             <label htmlFor="name">Name:</label>
