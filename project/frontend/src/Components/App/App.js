@@ -13,6 +13,7 @@ import BreadCrumb from '../BreadCrumb/BreadCrumb';
 import ResetPassword from '../ResetPassword/ResetPassword';
 import DriverDashboard from '../Driver_Dashboard/Driver_Dashboard';
 import DriverSidebar from '../Sidebar/Driver_Sidebar';
+import DriverPoint from '../Point/Driver_Point';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/password-reset" element= {<ResetPassword />} />
           <Route path="/driver_dashboard" element= {<DriverDashboard />} />
+          <Route path="/driver_point" element= {<DriverPoint />} />
         </Routes>
       <Footer />
     </div>
