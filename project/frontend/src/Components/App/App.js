@@ -12,14 +12,13 @@ import Profile from '../Profile/Profile';
 import BreadCrumb from '../BreadCrumb/BreadCrumb'; 
 import ResetPassword from '../ResetPassword/ResetPassword';
 import DriverDashboard from '../Dashboard/Driver_Dashboard';
-import DriverSidebar from '../Sidebar/Driver_Sidebar';
 import DriverPoint from '../Point/Driver_Point';
 import DriverSponsorOrganization from '../Sponsor_Org/Driver_SponsorOrganization';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DriverCatalog from '../Catalog/Driver_Catalog';
 import JoinSponsorOrganization from '../Sponsor_Org/Join_SponsorOrganization';
 import SponsorDashboard from '../Dashboard/Sponsor_Dashboard';
-import SponsorSidebar from '../Sidebar/Sponsor_Sidebar';
+
 
 function App() {
   return (
