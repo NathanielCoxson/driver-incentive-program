@@ -10,9 +10,6 @@ function Navbar(){
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/about">About Us</Link></li>
                     <li><Link to="/contact">Contact</Link></li>
-                    <li><Link to="/profile">Profile</Link></li>       
-                    <li><Link to="/catalog">Catalog</Link></li>
-                    <li><Link to="/rewards">Rewards</Link></li>
                 </ul>
             </nav>
         </header>
