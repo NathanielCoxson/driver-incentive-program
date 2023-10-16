@@ -1,6 +1,6 @@
 import React from 'react';
 import './Sponsor_Organization.css';
-import SponsorSidebar from '../Sidebar/Sponsor_Sidebar';
+import SponsorSidebar from '../Sidebar/Sponsor_sidebar';
 import { Link } from 'react-router-dom';
 
 function SponsorOrganization() {
