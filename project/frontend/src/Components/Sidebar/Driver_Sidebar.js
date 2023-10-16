@@ -8,8 +8,8 @@ function DriverSidebar() {
                 <li><Link to="/driver_dashboard">Driver Home</Link></li>
                 <li><Link to="/profile">Driver Profile</Link></li>
                 <li><Link to="/driver_point">Driver Point</Link></li>
-                <li><Link to="/sponsor-organization">Sponsor Organization</Link></li>
-                <li><Link to="/catalog">Driver Catalog</Link></li>
+                <li><Link to="/driver_sponsor_organization">Sponsor Organization</Link></li>
+                <li><Link to="/driver_catalog">Driver Catalog</Link></li>
             </ul>
         </div>
     );
