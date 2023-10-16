@@ -19,6 +19,7 @@ import DriverCatalog from '../Catalog/Driver_Catalog';
 import JoinSponsorOrganization from '../Sponsor_Org/Join_SponsorOrganization';
 import SponsorDashboard from '../Dashboard/Sponsor_Dashboard';
 import SponsorOrganization from '../Sponsor_Org/Sponsor_Organization';
+import CreateSponsorOrganization from '../Sponsor_Org/Create_SponsorOrganization';
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           <Route path="/sponsor_dashboard" element= {<SponsorDashboard />} />
           <Route path="/sponsor_organization" element= {<SponsorOrganization />} />
           <Route path="/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
+          <Route path="/sponsor_organization/create_sponsor_organization" element= {<CreateSponsorOrganization />} />
         </Routes>
       <Footer />
     </div>
