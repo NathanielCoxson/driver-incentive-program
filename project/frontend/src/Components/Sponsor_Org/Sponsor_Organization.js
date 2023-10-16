@@ -14,9 +14,9 @@ function SponsorOrganization() {
                         <p><strong>Sponsor Company:</strong> ABC Motors</p>
                     </div>
                     <p>Looking for a Sponsor?</p>
-                    <Link to="/sponsor_organization/join_sponsor_organization" className="cta-button">Join An Sponsor Organization</Link>
+                    <Link to="/sponsor_dashboard/sponsor_organization/join_sponsor_organization" className="cta-button">Join An Sponsor Organization</Link>
                     <p>If not</p>
-                    <Link to="/sponsor_organization/create_sponsor_organization" className="cta-button"> Create An Sponsor Organization</Link>
+                    <Link to="//sponsor_dashboard/sponsor_organization/create_sponsor_organization" className="cta-button"> Create An Sponsor Organization</Link>
 
                 </section>
             </div>
