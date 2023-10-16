@@ -1,6 +1,6 @@
 import './Admin_AddUser.css'; // Update the CSS import
 import AdminSidebar from '../Sidebar/Admin_Sidebar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function AdminAddAdmin() { // Update the component name
     const [responseMessage, setResponseMessage] = useState('');
