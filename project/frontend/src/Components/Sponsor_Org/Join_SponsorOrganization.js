@@ -9,9 +9,10 @@ function JoinSponsorOrganization() {
     const [options, setOptions] = useState([]);
 
     const baseURL = process.env.NODE_ENV === 'production'
-        ? 'http://34.225.199.196/api'
-        : 'http://localhost:3001/api';
+    ? 'http://34.225.199.196/api'
+    : 'http://localhost:3001/api';
 
+    // Fetch sponsors from the database.
     useEffect(() => {
         const baseURL = process.env.NODE_ENV === 'production'
         ? 'http://34.225.199.196/api'
@@ -45,8 +46,6 @@ function JoinSponsorOrganization() {
 
         if (!validateForm()) return;
 
-        console.log({Username, SponsorName, Reason});
-
         fetch(`${baseURL}/applications`, {
             method: 'POST',
             headers: {
@@ -55,12 +54,14 @@ function JoinSponsorOrganization() {
             body: JSON.stringify({Username, SponsorName, Reason}),
         })
         .then((res) => {
+            // Status codes for setting response message.
             if (res.status === 400) setResponseMessage('Invalid Input');
             if (res.status === 404) setResponseMessage('User not found');
             if (res.status === 409) setResponseMessage("You've already submitted an application to that sponsor.")
             if (res.status === 201) setResponseMessage('Success!');
         })
         .catch((err) => console.log(err));
+        // Clear the form when done.
         setUsername('');
         setReason('');
     };
