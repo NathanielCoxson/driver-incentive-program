@@ -11,13 +11,15 @@ import Register from '../Register/Register';
 import Profile from '../Profile/Profile';
 import BreadCrumb from '../BreadCrumb/BreadCrumb'; 
 import ResetPassword from '../ResetPassword/ResetPassword';
-import DriverDashboard from '../Driver_Dashboard/Driver_Dashboard';
+import DriverDashboard from '../Dashboard/Driver_Dashboard';
 import DriverSidebar from '../Sidebar/Driver_Sidebar';
 import DriverPoint from '../Point/Driver_Point';
 import DriverSponsorOrganization from '../Sponsor_Org/Driver_SponsorOrganization';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DriverCatalog from '../Catalog/Driver_Catalog';
 import JoinSponsorOrganization from '../Sponsor_Org/Join_SponsorOrganization';
+import SponsorDashboard from '../Dashboard/Sponsor_Dashboard';
+import SponsorSidebar from '../Sidebar/Sponsor_Sidebar';
 
 function App() {
   return (
@@ -40,6 +42,7 @@ function App() {
           <Route path="/driver_sponsor_organization" element= {<DriverSponsorOrganization />} />
           <Route path="/driver_catalog" element= {<DriverCatalog />} />
           <Route path="/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
+          <Route path="/sponsor_dashboard" element= {<SponsorDashboard />} />
         </Routes>
       <Footer />
     </div>
