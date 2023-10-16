@@ -44,9 +44,9 @@ function App() {
           <Route path="/driver_dashboard/driver_catalog" element= {<DriverCatalog />} />
           <Route path="/driver_dashboard/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
           <Route path="/sponsor_dashboard" element= {<SponsorDashboard />} />
-          <Route path="/sponsor_organization" element= {<SponsorOrganization />} />
-          <Route path="/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
-          <Route path="/sponsor_organization/create_sponsor_organization" element= {<CreateSponsorOrganization />} />
+          <Route path="/sponsor_dashboard/sponsor_organization" element= {<SponsorOrganization />} />
+          <Route path="/sponsor_dashboard/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
+          <Route path="/sponsor_dashboard/sponsor_organization/create_sponsor_organization" element= {<CreateSponsorOrganization />} />
         </Routes>
       <Footer />
     </div>
