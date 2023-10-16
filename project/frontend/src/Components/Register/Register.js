@@ -87,7 +87,8 @@ function Register() {
             body: JSON.stringify(user),
         })
         .then(res => {
-            if (res.status === 400) setResponseMessage('Invalid Input')
+            if (res.status === 400) setResponseMessage('Invalid Input');
+            if (res.status === 500) setResponseMessage('Error creating your account please try again later.')
             if (res.status === 201) setResponseMessage('Success!');
             return res.json();
         })

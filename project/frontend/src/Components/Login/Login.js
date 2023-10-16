@@ -1,5 +1,5 @@
 import './Login.css'
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
@@ -11,6 +11,7 @@ function Login() {
     const { setAuth } = useAuth();
     const [Username, setUsername] = useState('');
     const [Password, setPassword] = useState('');
+    const [valid, setValid] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

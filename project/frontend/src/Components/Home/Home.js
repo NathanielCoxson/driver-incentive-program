@@ -1,6 +1,5 @@
 import './Home.css';
 import { Link } from 'react-router-dom';
-import BreadCrumb from '../BreadCrumb/BreadCrumb'; // Import BreadCrumb component
 
 function Home() {
     return (
