@@ -1,5 +1,5 @@
 import React from 'react';
-import './driver_catalog.css';
+import './catalog.css';
 import DriverSidebar from '../Sidebar/Driver_Sidebar';
 import { Link } from 'react-router-dom';
 
