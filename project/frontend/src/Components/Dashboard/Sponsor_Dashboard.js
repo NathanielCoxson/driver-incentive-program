@@ -4,12 +4,19 @@ import SponsorSidebar from '../Sidebar/Sponsor_sidebar';
 import { Link } from 'react-router-dom';
 
 function SponsorDashboard() {
-    // Remove the following unused declarations
-    // const [joinRequests, setJoinRequests] = useState([...]);
-    // const [rejectionReason, setRejectionReason] = useState('');
-    // const [showRejectionModal, setShowRejectionModal] = useState(false);
-    // const rejectRequest = (driverName) => { ... }
-    // const handleRejectWithReason = (reason) => { ... }
+    const [joinRequests, setJoinRequests] = useState([
+        {
+            driverName: 'Driver 1',
+            requestReason: 'I want to join your organization',
+            status: 'Pending', // Add a status field to track request status
+        },
+        {
+            driverName: 'Driver 2',
+            requestReason: 'Please accept my request',
+            status: 'Pending',
+        },
+        // Add more join requests as needed
+    ]);
 
     const [acceptedRequests, setAcceptedRequests] = useState([]); // Track accepted requests
 
@@ -18,6 +25,20 @@ function SponsorDashboard() {
             ...prevAcceptedRequests,
             driverName,
         ]);
+    };
+
+    const [rejectionReason, setRejectionReason] = useState('');
+    const [showRejectionModal, setShowRejectionModal] = useState(false); // State to control the rejection modal
+
+    const rejectRequest = (driverName) => {
+        setShowRejectionModal(true);
+    };
+
+    const handleRejectWithReason = (reason) => {
+        if (reason) {
+            alert(`Rejected with reason: ${reason}`);
+        }
+        setShowRejectionModal(false);
     };
 
     return (
