@@ -9,9 +9,9 @@ function Sidebar() {
             <ul>
                 {auth?.Role === 'driver' &&
                     <>
-                        <li><Link to="/dashboard">Driver Home</Link></li>
+                        <li><Link to=".">Driver Home</Link></li>
                         <li><Link to="profile">Driver Profile</Link></li>
-                        <li><Link to="/dashboard/driver_point">Driver Point</Link></li>
+                        <li><Link to="driver_point">Driver Point</Link></li>
                         <li><Link to="/dashboard/driver_sponsor_organization">Driver's Sponsor Organization</Link></li>
                         <li><Link to="/dashboard/catalog">Driver Catalog</Link></li>
                         <li><Link to="/dashboard/driver_messagebox">Message Box</Link></li>
@@ -20,19 +20,19 @@ function Sidebar() {
 
                 {auth?.Role === 'sponsor' &&
                     <>
-                        <li><Link to="/sponsor_dashboard">Sponsor Home</Link></li>
-                        <li><Link to="/sponsor_dashboard/sponsor_profile">Sponsor Profile</Link></li>
-                        <li><Link to="/sponsor_dashboard/sponsor_organization">Sponsor Organization</Link></li>
-                        <li><Link to="/sponsor_dashboard/sponsor_add_user">Add User</Link></li>
-                        <li><Link to="/sponsor_dashboard/sponsor_catalog">Sponsor Catalog</Link></li>
-                        <li><Link to="/sponsor_dashboard/sponsor_messagebox">Message Box</Link></li>
+                        <li><Link to=".">Sponsor Home</Link></li>
+                        <li><Link to="profile">Sponsor Profile</Link></li>
+                        <li><Link to="sponsor_organization">Sponsor Organization</Link></li>
+                        <li><Link to="sponsor_add_user">Add User</Link></li>
+                        <li><Link to="sponsor_catalog">Sponsor Catalog</Link></li>
+                        <li><Link to="sponsor_messagebox">Message Box</Link></li>
                     </>
                 }
 
                 {auth?.Role === 'admin' &&
                     <>
-                        <li><Link to="/admin_dashboard">Admin Home</Link></li>
-                        <li><Link to="/admin_dashboard/admin_profile">Admin Profile</Link></li>
+                        <li><Link to=".">Admin Home</Link></li>
+                        <li><Link to="profile">Admin Profile</Link></li>
                         <li><Link to="/admin_dashboard/admin_add_user">Add User</Link></li>
                         <li><Link to="/admin_dashboard/admin_messagebox">Message Box</Link></li>
                     </>

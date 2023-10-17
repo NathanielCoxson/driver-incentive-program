@@ -4,7 +4,7 @@ import About from '../About/About';
 import Contact from '../Contact/Contact';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
-import DriverProfile from '../Profile/Driver_Profile';
+import DriverProfile from '../Profile/DriverProfile';
 import ResetPassword from '../ResetPassword/ResetPassword';
 import Layout from '../Layout/Layout';
 import RequireAuth from '../RequireAuth/RequireAuth';
@@ -23,6 +23,7 @@ import SponsorAddSponsor from '../AddUser/Sponsor_AddSponsor';
 import PersistLogin from '../PersistLogin/PersistLogin';
 import Dashboard from '../Dashboard/Dashboard';
 import DashboardLayout from '../Dashboard/DashboardLayout';
+import Profile from '../Profile/Profile';
 
 function App() {
   return (
@@ -39,29 +40,42 @@ function App() {
 
 
 
-        <Route path="/sponsor_dashboard/sponsor_organization" element={<SponsorOrganization />} />
-        <Route path="/sponsor_dashboard/sponsor_organization/join_sponsor_organization" element={<JoinSponsorOrganization />} />
-        <Route path="/sponsor_dashboard/sponsor_organization/create_sponsor_organization" element={<CreateSponsorOrganization />} />
-        <Route path="/sponsor_dashboard/sponsor_add_user" element={<SponsorAddUser />} />
-        <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_driver" element={<SponsorAddDriver />} />
-        <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_sponsor" element={<SponsorAddSponsor />} />
+
 
         {/* private */}
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth allowedRoles={['driver', 'admin', 'sponsor']} />}>
             <Route path="dashboard" element={<DashboardLayout />}>
-              <Route path="profile" element={<DriverProfile />} />
+              {/* universal */}
+              <Route path="profile" element={<Profile />} />
+
+              {/* driver */}
               <Route path="catalog" element={<Catalog />} />
               <Route path="driver_point" element={<DriverPoint />} />
               <Route path="driver_sponsor_organization" element={<DriverSponsorOrganization />} />
               <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
+
+              {/* sponsor */}
+              <Route path="sponsor_organization" element={<SponsorOrganization />} />
+
+              <Route path="sponsor_add_user" element={<SponsorAddUser />} />
+
+              <Route path="sponsor_organization/join_sponsor_organization" element={<JoinSponsorOrganization />} />
+              <Route path="sponsor_organization/create_sponsor_organization" element={<CreateSponsorOrganization />} />
+              <Route path="sponsor_add_user/sponsor_add_driver" element={<SponsorAddDriver />} />
+              <Route path="sponsor_add_user/sponsor_add_sponsor" element={<SponsorAddSponsor />} />
+
+              {/* admin */}
+            
+
+              {/* catch all */}
               <Route path="" element={<Dashboard />} />
             </Route>
           </Route>
         </Route>
 
 
-        {/* catch all*/}
+        {/* catch all */}
         <Route path="*" element={<Missing />} />
       </Route>
     </Routes>
