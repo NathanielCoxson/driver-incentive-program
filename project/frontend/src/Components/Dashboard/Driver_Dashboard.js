@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Driver_Dashboard.css';
 import DriverSidebar from '../Sidebar/Driver_Sidebar';
 import { Link } from 'react-router-dom';
@@ -10,14 +10,16 @@ function DriverDashboard() {
         sponsorName: 'Sponsor Name', // Replace with actual sponsor name
     };
 
+    const [invitationStatus, setInvitationStatus] = useState(''); // To track invitation status
+
     const acceptInvitation = () => {
         // Handle the logic to accept the invitation
-        alert('Invitation accepted');
+        setInvitationStatus('Accepted');
     };
 
     const declineInvitation = () => {
         // Handle the logic to decline the invitation
-        alert('Invitation declined');
+        setInvitationStatus('Rejected');
     };
 
     return (
@@ -34,8 +36,14 @@ function DriverDashboard() {
                         <div className="invitation-section">
                             <h3>Invitation to Join {invitation.organizationName}</h3>
                             <p>You have received an invitation from {invitation.sponsorName} to join {invitation.organizationName}.</p>
-                            <button onClick={acceptInvitation} className="cta-button">Accept</button>
-                            <button onClick={declineInvitation} className="cta-button">Decline</button>
+                            {invitationStatus === '' ? (
+                                <>
+                                    <button onClick={acceptInvitation} className="cta-button">Accept</button>
+                                    <button onClick={declineInvitation} className="cta-button">Decline</button>
+                                </>
+                            ) : (
+                                <p>{invitationStatus}</p>
+                            )}
                         </div>
                     )}
                 </section>
