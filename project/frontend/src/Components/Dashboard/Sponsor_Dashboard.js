@@ -9,10 +9,12 @@ function SponsorDashboard() {
         {
             driverName: 'Driver 1',
             requestReason: 'I want to join your organization',
+            status: 'Pending', // Add a status field to track request status
         },
         {
             driverName: 'Driver 2',
             requestReason: 'Please accept my request',
+            status: 'Pending',
         },
         // Add more join requests as needed
     ]);
@@ -61,7 +63,9 @@ function SponsorDashboard() {
                                 <p>
                                     <strong>Reason:</strong> {request.requestReason}
                                 </p>
-                                {!acceptedRequests.includes(request.driverName) ? (
+                                {acceptedRequests.includes(request.driverName) ? (
+                                    <p>Accepted</p>
+                                ) : (
                                     <>
                                         <button onClick={() => acceptRequest(request.driverName)} className="cta-button">
                                             Accept
@@ -70,8 +74,6 @@ function SponsorDashboard() {
                                             Reject
                                         </Link>
                                     </>
-                                ) : (
-                                    <p>Accepted</p>
                                 )}
                             </div>
                         ))}
