@@ -474,4 +474,37 @@ api.delete('/applications/users/:Username', async (req, res) => {
     }
 });
 
+// User routes
+/**
+ * POST to <baseurl>/api/users/resetpassword
+ * Request Body {
+ *  LoginDate: Date/Time,
+ *  Email: String,
+ *  ChangeType: String
+ * }
+ * Create a password change log entry into PWChanges with the given details
+ */
+api.post('/users/resetpassword', async (req, res) => {
+    try {
+        const body = req.body;
+        const email = req.app.locals.db.getUserByEmail(body.Email.value)
+        .then(() => {
+            let newPWC = {
+                LoginDate: body.LoginDate.value,
+                Username: email,
+                Success: body.ChangeType.value
+            }
+            // Add PWC to database
+            req.app.locals.db.createPWC(newPWC)
+            // If successful, send success code
+            .then(() => {
+                res.status(201).send();
+            })
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 module.exports = api;
