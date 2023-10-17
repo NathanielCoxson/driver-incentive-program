@@ -1,5 +1,5 @@
 import React from 'react';
-import './Admin_Dashboard.css';
+import './AdminDashboard.css';
 import AdminSidebar from '../Sidebar/Admin_Sidebar';
 import { Link } from 'react-router-dom';
 

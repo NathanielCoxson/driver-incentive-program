@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Sponsor_Dashboard.css';
+import './SponsorDashboard.css';
 import SponsorSidebar from '../Sidebar/Sponsor_sidebar';
 import { Link } from 'react-router-dom';
 

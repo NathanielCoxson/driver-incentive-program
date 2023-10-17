@@ -6,7 +6,7 @@ function DriverSidebar() {
         <div className="sidebar">
             <ul>
                 <li><Link to="/driver_dashboard">Driver Home</Link></li>
-                <li><Link to="/driver_dashboard/driver_profile">Driver Profile</Link></li>
+                <li><Link to="/profile">Driver Profile</Link></li>
                 <li><Link to="/driver_dashboard/driver_point">Driver Point</Link></li>
                 <li><Link to="/driver_dashboard/driver_sponsor_organization">Driver's Sponsor Organization</Link></li>
                 <li><Link to="/driver_dashboard/driver_catalog">Driver Catalog</Link></li>
