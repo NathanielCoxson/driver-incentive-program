@@ -1,25 +1,39 @@
 import React, { useState } from 'react';
+import './RejectionReason.css';
+import { Link } from 'react-router-dom';
 
-function RejectionReason({ onClose, onReject }) {
-    const [reason, setReason] = useState('');
+function RejectionReason() {
+    const [rejectionReason, setRejectionReason] = useState('');
 
-    const handleSubmit = () => {
-        onReject(reason);
-        onClose();
+    const handleRejectWithReason = () => {
+        if (rejectionReason) {
+            alert(`Rejected with reason: ${rejectionReason}`);
+        }
     };
 
     return (
-        <div className="rejection-modal">
-            <h2>Provide a Reason for Rejection</h2>
-            <textarea
-                rows="4"
-                placeholder="Enter the reason for rejection..."
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-            />
-            <button onClick={handleSubmit}>Submit</button>
-            <button onClick={onClose}>Cancel</button>
-        </div>
+        <main>
+            <section className="hero">
+                <h2>Reject Reason</h2>
+                <p>Please provide a reason for rejecting the join request.</p>
+
+                <div className="rejection-form">
+                    <textarea
+                        placeholder="Reason for rejection..."
+                        value={rejectionReason}
+                        onChange={(e) => setRejectionReason(e.target.value)}
+                    />
+                </div>
+
+                <button onClick={handleRejectWithReason} className="cta-button">
+                    Reject
+                </button>
+
+                <Link to="/sponsor_dashboard" className="cta-button">
+                    Go Back
+                </Link>
+            </section>
+        </main>
     );
 }
 

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Sponsor_Dashboard.css';
 import SponsorSidebar from '../Sidebar/Sponsor_sidebar';
 import { Link } from 'react-router-dom';
-import RejectionReason from './RejectionReason'; 
+import RejectionReason from './RejectionReason';
 
 function SponsorDashboard() {
     const [joinRequests, setJoinRequests] = useState([
@@ -66,9 +66,9 @@ function SponsorDashboard() {
                                         <button onClick={() => acceptRequest(request.driverName)} className="cta-button">
                                             Accept
                                         </button>
-                                        <button onClick={() => rejectRequest(request.driverName)} className="cta-button">
+                                        <Link to="/sponsor_dashboard/rejection_reason" className="cta-button">
                                             Reject
-                                        </button>
+                                        </Link>
                                     </>
                                 ) : (
                                     <p>Accepted</p>
@@ -78,21 +78,6 @@ function SponsorDashboard() {
                     </div>
                 </section>
             </div>
-
-
-            {/* Define a route for the rejection reason page */}
-                <Route
-                    path="/sponsor_dashboard/reject_reason"
-                    render={() => (
-                        <RejectionReason
-                            onClose={() => {
-                                // Handle navigation when the rejection reason page is closed.
-                                setShowRejectionModal(false);
-                            }}
-                        onReject={handleRejectWithReason}
-                     />
-                 )}
-            />
         </main>
     );
 }
