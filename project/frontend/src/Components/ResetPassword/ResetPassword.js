@@ -56,6 +56,12 @@ function ResetPassword() {
       Token: params.get('token'),
     };
 
+    let PWCLog = {
+      LoginDate: loginDate,
+      Email: input.email.value,
+      ChangeType: "self"
+    }
+
     // Send update
     fetch(`${baseURL}/api/users/password`, {
       method: 'PUT',
@@ -68,7 +74,17 @@ function ResetPassword() {
         if (res.status === 400) setResponseMessage('Invalid input or token.');
         if (res.status === 404) setResponseMessage('Reset request not found.');
         if (res.status === 403) setResponseMessage("You don't have permission to perform this request.")
-        if (res.status === 204) setResponseMessage('Success!');
+        if (res.status === 204) {
+          setResponseMessage('Success!');
+          fetch(`${baseURL}/api/users/resetpassword`, {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(PWCLog)
+          })
+          .catch((err) => console.log(err));
+        }
       })
       .catch((err) => console.log(err));
   };
