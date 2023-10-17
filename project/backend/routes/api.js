@@ -10,7 +10,7 @@ const validation = require('../middlewares/validation');
  * Returns an object containing the latest release from the database: {
  * }
  */
-api.get('/about', validation.validateToken, async (req, res) => {
+api.get('/about', async (req, res) => {
     try {
         // Make db request
         const info = await req.app.locals.db.getLatestRelease();
@@ -102,7 +102,7 @@ api.post('/users/register', async (req, res) => {
                 req.app.locals.db.createUser(newUser)
                     // If successful, send success code
                     .then(result => {
-                        
+
                         if (result === 1) {
                             console.log(result, 'asdfasdf');
                             res.status(201).send();
@@ -130,10 +130,10 @@ api.post('/users/register', async (req, res) => {
  * the provided password is correct.
  */
 api.post("/users/login", async (req, res) => {
-    try{
+    try {
         const user = await req.app.locals.db.getUserByUsername(req.body.Username);
-        
-        if (user){
+
+        if (user) {
             bcrypt.compare(req.body.Password, user.Password, async (err, valid) => {
                 if (err) {
                     console.log(err);
@@ -149,7 +149,8 @@ api.post("/users/login", async (req, res) => {
                         return;
                     }
                     else {
-                        res.cookie('refreshToken', refreshToken, { maxAge: 60*60*1000, httpOnly: true });
+                        res.cookie('refreshToken', refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
+                        delete user.Password;
                         res.status(201).send({ ...user, accessToken });
                         return;
                     }
@@ -162,52 +163,48 @@ api.post("/users/login", async (req, res) => {
         } else {
             res.status(404).send();
         }
-    } catch (err){
+    } catch (err) {
         console.log(err);
         res.status(500).send();
     }
 });
 
-api.post("/users/refresh", async (req, res) => {
-    
-            // // Compare now with expiration date.
-            // let expiration = new Date(user.PasswordResetExpiration);
-            // let now = new Date();
+api.post("/users/logout", async (req, res) => {
+    try {
+        const cookies = req.cookies;
+        if (!cookies?.refreshToken) return res.sendStatus(204);
+        const refreshToken = cookies.refreshToken;
 
-            // // Hash the new password and store it if expiration hasn't passed and token is correct.
-            // if (now.getTime() < expiration.getTime() && user.PasswordResetToken === req.body.Token) {
-            //     bcrypt.hash(req.body.Password, 12, async (err, hash) => {
-            //         await req.app.locals.db.resetUserPassword(req.body.Email, hash);
-            //         res.status(204).send();
-            //         return;
-            //     });
-            // }
-            // // Forbidden request if expiration has passed or token is invalid.
-            // else {
-            //     // Wipe any reset request from the database if forbidden request is made.
-            //     await req.app.locals.db.clearPasswordReset(req.body.Email);
-            //     res.status(403).send();
-            //     return;
-            // }
+        const user = await req.app.locals.db.clearRefreshToken(refreshToken);
+        res.clearCookie('refreshToken', { httpOnly: true });
+        res.status(204).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+api.get("/users/refresh", async (req, res) => {
     try {
         // Check if refreshToken is present
-        console.log(req.cookies);
         if (!req.cookies.refreshToken) {
-            res.status(403).send();
+            res.status(401).send();
             return;
         }
-        
+
         // Get refresh token
         const refreshToken = req.cookies.refreshToken;
+        console.log(req.cookies);
         // Get user with refresh token
         const user = await req.app.locals.db.getUserByRefreshToken(refreshToken);
 
         // No user with refresh token in db
         if (!user) {
+            console.log('invalid refresh token');
             res.status(401).send();
             return;
         }
-    
+        console.log(user);
         // Check expiration of refresh token
         let expiration = new Date(user.RefreshTokenExpiration);
         let now = new Date();
@@ -223,8 +220,11 @@ api.post("/users/refresh", async (req, res) => {
             else {
                 // Save refresh token in db and cookies and send back access token
                 await req.app.locals.db.saveRefreshToken(user.Username, newToken.refreshToken);
-                res.cookie('refreshToken', newToken.refreshToken, { maxAge: 60*60*1000, httpOnly: true });
-                res.status(201).send({ accessToken: newToken.accessToken });
+                console.log(`New refresh token: ${newToken.refreshToken}`);
+                res.cookie('refreshToken', newToken.refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
+                delete user.Password;
+                delete user.RefreshTokenExpiration;
+                res.status(200).send({ ...user, accessToken: newToken.accessToken });
             }
         }
         // Invalid expiration date
@@ -377,13 +377,13 @@ api.post('/users/login', async (req, res) => {
     try {
         const body = req.body;
 
-        let newLogin = {...body}
+        let newLogin = { ...body }
         // Add user to database
         req.app.locals.db.createLogin(newLogin)
-        // If successful, send success code
-        .then(() => {
-            res.status(201).send();
-        })
+            // If successful, send success code
+            .then(() => {
+                res.status(201).send();
+            })
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -404,7 +404,7 @@ api.get('/sponsors', async (req, res) => {
             return;
         }
 
-        res.status(200).send({sponsors});
+        res.status(200).send({ sponsors });
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -488,7 +488,7 @@ api.post('/applications', async (req, res) => {
             Reason: body.Reason
         });
         const AID = (await req.app.locals.db.getUserApplications(user.Username)).find(app => app.SponsorName === sponsor.SponsorName).AID;
-        res.status(201).send({AID});
+        res.status(201).send({ AID });
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -509,7 +509,7 @@ api.get('/applications/users/:Username', async (req, res) => {
             return;
         }
 
-        res.status(200).send({applications});
+        res.status(200).send({ applications });
     } catch (err) {
         console.log(error);
         res.status(500).send();
@@ -549,7 +549,7 @@ api.delete('/applications/users/:Username', async (req, res) => {
         }
 
         else res.status(400).send();
-        
+
     } catch (err) {
         console.log(err);
         res.status(500).send();

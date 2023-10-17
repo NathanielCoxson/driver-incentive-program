@@ -2,7 +2,7 @@ import "./Navbar.css"
 import { Link } from 'react-router-dom';
 import useAuth from "../../hooks/useAuth";
 
-function Navbar(){
+function Navbar() {
     const { auth } = useAuth();
 
     return (<div className="Navbar"><header>
@@ -12,16 +12,9 @@ function Navbar(){
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/about">About Us</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
-
-                {
-                    auth?.Username &&
-                    <>
-                        <li><Link to="/profile">Profile</Link></li>       
-                        <li><Link to="/catalog">Catalog</Link></li>
-                        <li><Link to="/rewards">Rewards</Link></li>
-                    </>
-                }
-                
+                <li><Link to="/profile">Profile</Link></li>
+                <li><Link to="/catalog">Catalog</Link></li>
+                <li><Link to="/rewards">Rewards</Link></li>
             </ul>
         </nav>
     </header>

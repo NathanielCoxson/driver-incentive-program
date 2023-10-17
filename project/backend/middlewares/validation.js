@@ -15,7 +15,6 @@ async function validateToken(req, res, next) {
     // Validate the token
     jwt.verify(token, secret, (err, decoded) => {
         if (err) {
-            console.log(err);
             res.status(401).send();
         }
         else {

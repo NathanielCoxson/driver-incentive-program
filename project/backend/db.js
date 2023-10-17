@@ -315,10 +315,7 @@ async function saveRefreshToken(Username, RefreshToken) {
         const pool = await poolPromise;
 
         // Make request
-        let transaction;
         try {
-            transaction = pool.transaction();
-            await transaction.begin();
             const datetime = new Date();
             // Insert new token and timeout
             const update = await pool.request()
@@ -350,6 +347,21 @@ async function saveRefreshToken(Username, RefreshToken) {
     }
 }
 
+async function clearRefreshToken(RefreshToken) {
+    try {
+        // Connect
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('RefreshToken', sql.VarChar, RefreshToken)
+            // Update password and wipe the reset token to prevent further changes.
+            .query('UPDATE Users SET RefreshToken = NULL, RefreshTokenExpiration = NULL WHERE RefreshToken = @RefreshToken');
+        return result.rowsAffected;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 async function getUserByRefreshToken(RefreshToken) {
     try {
         // Connect
@@ -358,7 +370,7 @@ async function getUserByRefreshToken(RefreshToken) {
         const result = await pool.request()
             .input('RefreshToken', sql.UniqueIdentifier, RefreshToken)
             // Update password and wipe the reset token to prevent further changes.
-            .query('SELECT * FROM Users WHERE RefreshToken = @RefreshToken');
+            .query('SELECT UID, SID, Name, Role, Username, Password, Email, RefreshTokenExpiration FROM Users WHERE RefreshToken = @RefreshToken');
         return result.recordset[0];
     } catch (err) {
         console.log(err);
@@ -566,6 +578,7 @@ module.exports = {
     getUserPasswordResetToken,
     generatePasswordResetToken,
     saveRefreshToken,
+    clearRefreshToken,
     getUserByRefreshToken,
     resetUserPassword,
     clearPasswordReset,

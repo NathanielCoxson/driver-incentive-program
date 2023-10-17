@@ -235,7 +235,7 @@
       }
     },
     "users/refresh": {
-      "post": {
+      "get": {
         "tags": [
           "users" 
         ],
@@ -243,7 +243,7 @@
         "description": "Validates the refreshToken cookie sent in the request and will issue a new accessToken if it is valid and also store a new refresh token",
         "operationId": "saveRefreshToken",
         "responses": {
-          "201": {
+          "200": {
             "description": "Success",
             "content": {
               "application/json": {
@@ -258,9 +258,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Missing refresh token"
           },
           "401": {
             "description": "Unauthorized"

@@ -24,6 +24,7 @@ import Unauthorized from '../Unauthorized/Unauthorized';
 // import SponsorAddUser from '../AddUser/Sponsor_AddUser';
 // import SponsorAddDriver from '../AddUser/Sponsor_AddDriver';
 // import SponsorAddSponsor from '../AddUser/Sponsor_AddSponsor';
+import PersistLogin from '../PersistLogin/PersistLogin';
 
 function App() {
   return (
@@ -52,11 +53,14 @@ function App() {
         <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_sponsor" element= {<SponsorAddSponsor />} /> */}
 
         {/* private */}
-        <Route element={<RequireAuth allowedRoles={['driver', 'admin', 'sponsor']}/>}>
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/rewards" element={<Rewards />} />
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={['driver', 'admin', 'sponsor']} />}>
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/rewards" element={<Rewards />} />
+          </Route>
         </Route>
+
 
         {/* catch all*/}
         <Route path="*" element={<Missing />} />
