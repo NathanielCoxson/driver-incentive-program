@@ -4,6 +4,7 @@ import SponsorDashboard from "./SponsorDashboard";
 import useAuth from "../../hooks/useAuth";
 
 function Dashboard() {
+    // Pull auth object
     const { auth } = useAuth();
 
     return (
