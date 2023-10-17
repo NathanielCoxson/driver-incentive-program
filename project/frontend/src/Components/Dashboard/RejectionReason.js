@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 
 function RejectionReason() {
     const [rejectionReason, setRejectionReason] = useState('');
+    const [rejectionMessage, setRejectionMessage] = useState('');
 
     const handleRejectWithReason = () => {
         if (rejectionReason) {
-            alert(`Rejected with reason: ${rejectionReason}`);
+            setRejectionMessage(`Rejected with reason: ${rejectionReason}`);
         }
     };
 
@@ -27,6 +28,12 @@ function RejectionReason() {
                 <button onClick={handleRejectWithReason} className="cta-button">
                     Reject
                 </button>
+
+                {rejectionMessage && (
+                    <div className="rejection-message">
+                        <p>{rejectionMessage}</p>
+                    </div>
+                )}
 
                 <Link to="/sponsor_dashboard" className="cta-button">
                     Go Back
