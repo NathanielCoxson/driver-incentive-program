@@ -1,10 +1,9 @@
 import './Admin_AddUser.css'; // Update the CSS import
 import AdminSidebar from '../Sidebar/Admin_Sidebar';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 function AdminAddAdmin() { // Update the component name
     const [responseMessage, setResponseMessage] = useState('');
-    const [adminPinInput, setAdminPinInput] = useState(false);
 
     const baseURL = process.env.NODE_ENV === 'production'
         ? 'http://34.225.199.196/api/users/register' // Adjust the URL as needed
@@ -20,11 +19,7 @@ function AdminAddAdmin() { // Update the component name
 
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}/;
 
-    useEffect(() => {}, [adminPinInput]);
-
     function validateForm(form) {
-        const role = 'admin'; // Set the role to 'admin' for admin-added admins
-        const adminPin = form.adminPin ? form.adminPin.value : '';
         const password = form.password.value;
         const retypePassword = form.retypePassword.value;
 
@@ -35,11 +30,6 @@ function AdminAddAdmin() { // Update the component name
 
         if (password !== retypePassword) {
             setResponseMessage("Passwords do not match.");
-            return false;
-        }
-
-        if (!adminPin) {
-            setResponseMessage("Admin Pin is required for admin users.");
             return false;
         }
 
