@@ -5,7 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 
 function Login() {
-    const { setAuth } = useAuth();
+    const { setAuth, persist, setPersist } = useAuth();
     const [Username, setUsername] = useState('');
     const [Password, setPassword] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
@@ -49,6 +49,14 @@ function Login() {
         }
     };
 
+    const togglePersist = () => {
+        setPersist(prev => !prev);
+    };
+
+    useEffect(() => {
+        localStorage.setItem('persist', persist);
+    }, [persist]);
+
     return (
     <main>
         <section className="login-section">
@@ -75,8 +83,20 @@ function Login() {
                 />
                 <br />
                 <button type="submit" className="cta-button">Submit</button>
+
                 <div class="response" id="response">{responseMessage}</div>
+                <div className="persistCheck">
+                    <label htmlFor='persist'>Trust This Device?</label>
+                    <input 
+                        type="checkbox"
+                        id="persist"
+                        onChange={togglePersist}
+                        checked={persist}
+                    />
+                </div>
+                
             </form>
+           
             <div>
                 <div>
                     <span>Need an account? </span>

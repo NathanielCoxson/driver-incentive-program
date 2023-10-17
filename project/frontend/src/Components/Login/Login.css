@@ -1,3 +1,15 @@
 .login-form {
     padding: 1em;
 }
+
+.persistCheck {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1em;
+}
+
+.persistCheck input {
+    width: auto;
+}

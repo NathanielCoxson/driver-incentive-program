@@ -194,7 +194,6 @@ api.get("/users/refresh", async (req, res) => {
 
         // Get refresh token
         const refreshToken = req.cookies.refreshToken;
-        console.log(req.cookies);
         // Get user with refresh token
         const user = await req.app.locals.db.getUserByRefreshToken(refreshToken);
 
@@ -204,7 +203,6 @@ api.get("/users/refresh", async (req, res) => {
             res.status(401).send();
             return;
         }
-        console.log(user);
         // Check expiration of refresh token
         let expiration = new Date(user.RefreshTokenExpiration);
         let now = new Date();
