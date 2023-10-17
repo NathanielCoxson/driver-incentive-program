@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 function Login() {
     const [valid, setValid] = useState(false);
+    const [dashboardURL, setDashURL] = useState("");
 
     const baseURL = process.env.NODE_ENV === 'production' ?
         'http://34.225.199.196/api/users/login' :
@@ -27,12 +28,12 @@ function Login() {
             },
             body: JSON.stringify(user),
         })
-        .then(res => {
-            if (res.status === 200){
-                console.log('Success!')
-                document.cookie = "username=" + user.Username + "; " + 60*60*1000;
-                setValid(true)
-            };
+        .then((res) => res.json())
+        .then((data) => {
+            console.log('Success! - ' + data.Username + ' has logged in')
+            document.cookie = "username=" + data.Username + "; " + 60*60*1000;
+            setDashURL("/" + data.Role + "_dashboard")
+            setValid(true)
         })
         .catch(err => {
             console.log(err);
@@ -44,14 +45,14 @@ function Login() {
         <section className="login-section">
             <h2>Login</h2>
             <form className='login-form' onSubmit={handleSubmit}>
-                {valid && (<Navigate to="/dashboard"/>)}
+                {valid && (<Navigate to={dashboardURL}/>)}
                 <div>
-                    <label for="username">Username:</label>
+                    <label htmlFor="username">Username:</label>
                     <input type="text" id="username" name="username" required />
                 </div>
 
                 <div>
-                    <label for="password">Password:</label>
+                    <label htmlFor="password">Password:</label>
                     <input type="password" id="password" name="password" required />
                 </div>
                 <button type="submit" className="cta-button">Submit</button>

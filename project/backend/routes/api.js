@@ -125,7 +125,7 @@ api.post('/users/register', async (req, res) => {
  *  Username: String,
  *  Password: String
  * }
- * Returns an object of the user with the given username if 
+ * Returns an object of the user with the given user info if 
  * the provided password is correct.
  */
 api.post("/users/login", async (req, res) => {
@@ -137,17 +137,14 @@ api.post("/users/login", async (req, res) => {
                 .then(valid => {
                     console.log("Valid:", valid)
                     if (valid){
-                        res.status(201).send(user);
-                        return;
+                        res.status(201).json(user);
                     }else{
                         res.status(403).send();
-                        return;
                     }
                 })
                 .catch(err => {
                     console.error(err)
                     res.status(500).send()
-                    return;
                 })
         } else {
             res.status(404).send();
