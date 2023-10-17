@@ -17,8 +17,13 @@ function SponsorDashboard() {
         // Add more join requests as needed
     ]);
 
+    const [acceptedRequests, setAcceptedRequests] = useState([]); // Track accepted requests
+
     const acceptRequest = (driverName) => {
-        alert(`Accepted request from ${driverName}`);
+        setAcceptedRequests((prevAcceptedRequests) => [
+            ...prevAcceptedRequests,
+            driverName,
+        ]);
     };
 
     const [rejectionReason, setRejectionReason] = useState('');
@@ -56,25 +61,38 @@ function SponsorDashboard() {
                                 <p>
                                     <strong>Reason:</strong> {request.requestReason}
                                 </p>
-                                <button onClick={() => acceptRequest(request.driverName)} className="cta-button">
-                                    Accept
-                                </button>
-                                <button onClick={() => rejectRequest(request.driverName)} className="cta-button">
-                                    Reject
-                                </button>
+                                {!acceptedRequests.includes(request.driverName) ? (
+                                    <>
+                                        <button onClick={() => acceptRequest(request.driverName)} className="cta-button">
+                                            Accept
+                                        </button>
+                                        <button onClick={() => rejectRequest(request.driverName)} className="cta-button">
+                                            Reject
+                                        </button>
+                                    </>
+                                ) : (
+                                    <p>Accepted</p>
+                                )}
                             </div>
                         ))}
                     </div>
-
-                    {/* Rejection Reason Modal */}
-                    {showRejectionModal && (
-                        <RejectionReason
-                            onClose={() => setShowRejectionModal(false)}
-                            onReject={handleRejectWithReason}
-                        />
-                    )}
                 </section>
             </div>
+
+
+            {/* Define a route for the rejection reason page */}
+                <Route
+                    path="/sponsor_dashboard/reject_reason"
+                    render={() => (
+                        <RejectionReason
+                            onClose={() => {
+                                // Handle navigation when the rejection reason page is closed.
+                                setShowRejectionModal(false);
+                            }}
+                        onReject={handleRejectWithReason}
+                     />
+                 )}
+            />
         </main>
     );
 }

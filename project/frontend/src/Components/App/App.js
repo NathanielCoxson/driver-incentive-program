@@ -30,6 +30,7 @@ import AdminAddUser from '../AddUser/Admin_AddUser';
 import AdminAddDriver from '../AddUser/Admin_AddDriver';
 import AdminAddSponsor from '../AddUser/Admin_AddSponsor';
 import AdminAddAdmin from '../AddUser/Admin_AddAdmin';
+import RejectionReason from '../Dashboard/RejectionReason';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
           <Route path="/driver_dashboard/driver_catalog" element= {<DriverCatalog />} />
           <Route path="/driver_dashboard/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
           <Route path="/sponsor_dashboard" element= {<SponsorDashboard />} />
+          <Route path="/sponsor_dashboard/rejection_reason" element= {<RejectionReason />} />
           <Route path="/sponsor_dashboard/sponsor_profile" element= {<SponsorProfile />} />
           <Route path="/sponsor_dashboard/sponsor_organization" element= {<SponsorOrganization />} />
           <Route path="/sponsor_dashboard/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
