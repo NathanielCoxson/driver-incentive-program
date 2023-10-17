@@ -1,62 +1,104 @@
 import './Login.css'
-import { Link, Navigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import useAuth from '../../hooks/useAuth';
+import axios from '../../api/axios';
 
 function Login() {
-    const [valid, setValid] = useState(false);
+    const { setAuth, persist, setPersist } = useAuth();
+    const [Username, setUsername] = useState('');
+    const [Password, setPassword] = useState('');
+    const [responseMessage, setResponseMessage] = useState('');
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+    const LOGIN_URL = '/users/login';
     const [dashboardURL, setDashURL] = useState("");
 
-    const baseURL = process.env.NODE_ENV === 'production' ?
-        'http://34.225.199.196/api/users/login' :
-        'http://localhost:3001/api/users/login';
-
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        
-        const input = event.target;
-        let user = {
-            Username: input.username.value,
-            Password: input.password.value,
-        };
+    
+        try {
+            const response = await axios.post(LOGIN_URL,
+                JSON.stringify({Username, Password}),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: true
+                }
+            );
+            console.log(response.data);
+            setAuth(response?.data);
+            setUsername('');
+            setPassword('');
+            setDashURL("/" + response?.Role + "_dashboard");
+            navigate(from, { replace: true });
+        } catch (err) {
+            if (!err?.response) {
+                setResponseMessage('No Server Response');
+            }
+            else if (err.response?.status === 400) {
+                setResponseMessage('Missing username or password');
+            }
+            else if (err.response?.status === 401) {
+                setResponseMessage('Incorrect password');
+            }
+            else if (err.response?.status === 404) {
+                setResponseMessage('User not found');
+            }
+            else {
+                setResponseMessage('Login Failed');
+            }
+        }
+    };
 
-        let url = baseURL;
-        // Post to /api/users/register
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(user),
-        })
-        .then((res) => res.json())
-        .then((data) => {
-            console.log('Success! - ' + data.Username + ' has logged in')
-            document.cookie = "username=" + data.Username + "; " + 60*60*1000;
-            setDashURL("/" + data.Role + "_dashboard")
-            setValid(true)
-        })
-        .catch(err => {
-            console.log(err);
-            setValid(false)
-        });
-    }
+    const togglePersist = () => {
+        setPersist(prev => !prev);
+    };
 
-    return (<main>
+    useEffect(() => {
+        localStorage.setItem('persist', persist);
+    }, [persist]);
+
+    return (
+    <main>
         <section className="login-section">
             <h2>Login</h2>
-            <form className='login-form' onSubmit={handleSubmit}>
-                {valid && (<Navigate to={dashboardURL}/>)}
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input type="text" id="username" name="username" required />
-                </div>
-
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input type="password" id="password" name="password" required />
-                </div>
+            <form onSubmit={handleSubmit} className='login-form'>
+                <label htmlFor="username">Username:</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    required 
+                    onChange={event => setUsername(event.target.value)}
+                    value={Username}
+                />
+                <br />
+                <label htmlFor="password">Password:</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    required 
+                    onChange={event => setPassword(event.target.value)}
+                    value={Password}
+                />
+                <br />
                 <button type="submit" className="cta-button">Submit</button>
+
+                <div class="response" id="response">{responseMessage}</div>
+                <div className="persistCheck">
+                    <label htmlFor='persist'>Trust This Device?</label>
+                    <input 
+                        type="checkbox"
+                        id="persist"
+                        onChange={togglePersist}
+                        checked={persist}
+                    />
+                </div>
+                
             </form>
+           
             <div>
                 <div>
                     <span>Need an account? </span>

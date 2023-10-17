@@ -1,26 +1,31 @@
 import './About.css';
 import { useState, useEffect } from 'react';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function About() {
     const [release, setRelease] = useState({});
-
-    const fetchRelease = async () => {
-        // URL of the API endpoint
-        const apiUrl = process.env.NODE_ENV === 'production' ? 'http://34.225.199.196/api/about' : 'http://localhost:3001/api/about';
-        // Make the GET request
-        await fetch(apiUrl)
-            .then((response) => response.json())
-            .then((data) => {
-                // Handle the JSON response data here
-                setRelease(data);
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
-            });
-    }
+    const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
+        let isMounted = true;
+
+        const fetchRelease = async () => {
+            // Make the GET request
+            try {
+                const response = await axiosPrivate.get('/about');
+                isMounted && setRelease(response.data);
+            } catch (err) {
+                console.error("Error fetching data:", err);
+                navigate('/login', { state: { from: location }, replace: true });
+            }
+        }
         fetchRelease();
+        return () => {
+            isMounted = true;
+        }
     }, []);
 
     return (<main>

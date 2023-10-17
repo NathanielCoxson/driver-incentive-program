@@ -2,6 +2,7 @@
 const express = require('express'); // express server
 const bcrypt = require('bcrypt'); // password encrypting
 const api = express.Router(); // express router
+const validation = require('../middlewares/validation');
 
 // About routes
 /**
@@ -101,7 +102,7 @@ api.post('/users/register', async (req, res) => {
                 req.app.locals.db.createUser(newUser)
                     // If successful, send success code
                     .then(result => {
-                        
+
                         if (result === 1) {
                             console.log(result, 'asdfasdf');
                             res.status(201).send();
@@ -129,27 +130,106 @@ api.post('/users/register', async (req, res) => {
  * the provided password is correct.
  */
 api.post("/users/login", async (req, res) => {
-    console.log("login:", req.body)
-    try{
+    try {
         const user = await req.app.locals.db.getUserByUsername(req.body.Username);
-        if (user){
-            bcrypt.compare(req.body.Password, user.Password)
-                .then(valid => {
-                    console.log("Valid:", valid)
-                    if (valid){
-                        res.status(201).json(user);
-                    }else{
-                        res.status(403).send();
+
+        if (user) {
+            bcrypt.compare(req.body.Password, user.Password, async (err, valid) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).send();
+                    return;
+                }
+                if (valid) {
+                    const { error, accessToken, refreshToken } = await validation.generateJWT(user);
+                    const saved = await req.app.locals.db.saveRefreshToken(user.Username, refreshToken);
+                    if (error || !saved) {
+                        console.log('Error creating jwt.');
+                        res.status(500).send();
+                        return;
                     }
-                })
-                .catch(err => {
-                    console.error(err)
-                    res.status(500).send()
-                })
+                    else {
+                        res.cookie('refreshToken', refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
+                        delete user.Password;
+                        res.status(201).send({ ...user, accessToken });
+                        return;
+                    }
+                }
+                else {
+                    res.status(401).send();
+                    return;
+                }
+            });
         } else {
             res.status(404).send();
         }
-    } catch (err){
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+api.post("/users/logout", async (req, res) => {
+    try {
+        const cookies = req.cookies;
+        if (!cookies?.refreshToken) return res.sendStatus(204);
+        const refreshToken = cookies.refreshToken;
+
+        const user = await req.app.locals.db.clearRefreshToken(refreshToken);
+        res.clearCookie('refreshToken', { httpOnly: true });
+        res.status(204).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+api.get("/users/refresh", async (req, res) => {
+    try {
+        // Check if refreshToken is present
+        if (!req.cookies.refreshToken) {
+            res.status(401).send();
+            return;
+        }
+
+        // Get refresh token
+        const refreshToken = req.cookies.refreshToken;
+        // Get user with refresh token
+        const user = await req.app.locals.db.getUserByRefreshToken(refreshToken);
+
+        // No user with refresh token in db
+        if (!user) {
+            console.log('invalid refresh token');
+            res.status(401).send();
+            return;
+        }
+        // Check expiration of refresh token
+        let expiration = new Date(user.RefreshTokenExpiration);
+        let now = new Date();
+        // Valid expiration date
+        if (now.getTime() < expiration.getTime()) {
+            const newToken = await validation.generateJWT(user);
+            // Error creating token
+            if (newToken.error) {
+                console.log('Error creating jwt on refresh.');
+                res.status(500).send();
+            }
+            // Token created
+            else {
+                // Save refresh token in db and cookies and send back access token
+                await req.app.locals.db.saveRefreshToken(user.Username, newToken.refreshToken);
+                console.log(`New refresh token: ${newToken.refreshToken}`);
+                res.cookie('refreshToken', newToken.refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
+                delete user.Password;
+                delete user.RefreshTokenExpiration;
+                res.status(200).send({ ...user, accessToken: newToken.accessToken });
+            }
+        }
+        // Invalid expiration date
+        else {
+            res.status(401).send();
+        }
+    } catch (err) {
         console.log(err);
         res.status(500).send();
     }
@@ -295,13 +375,13 @@ api.post('/users/login', async (req, res) => {
     try {
         const body = req.body;
 
-        let newLogin = {...body}
+        let newLogin = { ...body }
         // Add user to database
         req.app.locals.db.createLogin(newLogin)
-        // If successful, send success code
-        .then(() => {
-            res.status(201).send();
-        })
+            // If successful, send success code
+            .then(() => {
+                res.status(201).send();
+            })
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -322,7 +402,7 @@ api.get('/sponsors', async (req, res) => {
             return;
         }
 
-        res.status(200).send({sponsors});
+        res.status(200).send({ sponsors });
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -406,7 +486,7 @@ api.post('/applications', async (req, res) => {
             Reason: body.Reason
         });
         const AID = (await req.app.locals.db.getUserApplications(user.Username)).find(app => app.SponsorName === sponsor.SponsorName).AID;
-        res.status(201).send({AID});
+        res.status(201).send({ AID });
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -427,7 +507,7 @@ api.get('/applications/users/:Username', async (req, res) => {
             return;
         }
 
-        res.status(200).send({applications});
+        res.status(200).send({ applications });
     } catch (err) {
         console.log(error);
         res.status(500).send();
@@ -467,7 +547,7 @@ api.delete('/applications/users/:Username', async (req, res) => {
         }
 
         else res.status(400).send();
-        
+
     } catch (err) {
         console.log(err);
         res.status(500).send();

@@ -308,6 +308,74 @@ async function generatePasswordResetToken(Email) {
         console.log(err);
     }
 }
+
+async function saveRefreshToken(Username, RefreshToken) {
+    try {
+        // Connect
+        const pool = await poolPromise;
+
+        // Make request
+        try {
+            const datetime = new Date();
+            // Insert new token and timeout
+            const update = await pool.request()
+                .input('Username', sql.VarChar(50), Username)
+                .input('RefreshToken', sql.UniqueIdentifier, RefreshToken)
+                .input('year', sql.Int, datetime.getUTCFullYear())
+                .input('month', sql.Int, datetime.getUTCMonth() + 1)
+                .input('day', sql.Int, datetime.getUTCDate())
+                .input('hour', sql.Int, datetime.getUTCHours())
+                .input('minute', sql.Int, datetime.getUTCMinutes())
+                .input('seconds', sql.Int, datetime.getUTCSeconds())
+                .input('milliseconds', sql.Int, datetime.getUTCMilliseconds())
+                .query("UPDATE Users \
+                        SET \
+                            RefreshToken = @RefreshToken, \
+                            RefreshTokenExpiration = DATEADD(hour, 1, DATETIMEFROMPARTS(@year, @month, @day, @hour, @minute, @seconds, @milliseconds)) \
+                        WHERE Username = @Username");
+            if (!update) return false;
+
+            return true;
+        } catch (err) {
+            await transaction.rollback();
+            console.log(err);
+            throw err;
+        }
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function clearRefreshToken(RefreshToken) {
+    try {
+        // Connect
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('RefreshToken', sql.VarChar, RefreshToken)
+            // Update password and wipe the reset token to prevent further changes.
+            .query('UPDATE Users SET RefreshToken = NULL, RefreshTokenExpiration = NULL WHERE RefreshToken = @RefreshToken');
+        return result.rowsAffected;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getUserByRefreshToken(RefreshToken) {
+    try {
+        // Connect
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('RefreshToken', sql.UniqueIdentifier, RefreshToken)
+            // Update password and wipe the reset token to prevent further changes.
+            .query('SELECT UID, SID, Name, Role, Username, Password, Email, RefreshTokenExpiration FROM Users WHERE RefreshToken = @RefreshToken');
+        return result.recordset[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
     
 /**
  * Updates the password of the user with the given email.
@@ -543,6 +611,9 @@ module.exports = {
     createUser,
     getUserPasswordResetToken,
     generatePasswordResetToken,
+    saveRefreshToken,
+    clearRefreshToken,
+    getUserByRefreshToken,
     resetUserPassword,
     clearPasswordReset,
     createLogin,
