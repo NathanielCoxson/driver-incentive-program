@@ -1,12 +1,10 @@
 import React from 'react';
-import SponsorSidebar from '../Sidebar/Sponsor_sidebar';
 
 function SponsorProfile() {
     const userName = "John Doe";
     return (
         <main>
             <div className="sidebar-container">
-                <SponsorSidebar /> 
                 <section class="hero">
                     <h2>Hello, {userName}.</h2>
                     <h2>Welcome to Your's Profile Dashboard</h2>

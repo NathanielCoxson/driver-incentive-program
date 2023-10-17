@@ -1,12 +1,10 @@
 import React from 'react';
-import AdminSidebar from '../Sidebar/Admin_Sidebar';
 
 function AdminProfile() {
     const userName = "John Doe";
     return (
         <main>
             <div className="sidebar-container">
-                <AdminSidebar /> 
                 <section class="hero">
                     <h2>Hello, {userName}.</h2>
                     <h2>Welcome to Your's Profile Dashboard</h2>

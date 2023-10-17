@@ -1,9 +1,10 @@
 import AdminDashboard from "./AdminDashboard";
 import DriverDashboard from "./DriverDashboard";
 import SponsorDashboard from "./SponsorDashboard";
+import DriverSidebar from "../Sidebar/Driver_Sidebar";
 import useAuth from "../../hooks/useAuth";
 
-function DashBoard() {
+function Dashboard() {
     const { auth } = useAuth();
 
     return (
@@ -15,4 +16,4 @@ function DashBoard() {
     );
 }
 
-export default DashBoard;
+export default Dashboard;

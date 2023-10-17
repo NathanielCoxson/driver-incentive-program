@@ -5,12 +5,12 @@ function DriverSidebar() {
     return (
         <div className="sidebar">
             <ul>
-                <li><Link to="/driver_dashboard">Driver Home</Link></li>
-                <li><Link to="/profile">Driver Profile</Link></li>
-                <li><Link to="/driver_dashboard/driver_point">Driver Point</Link></li>
-                <li><Link to="/driver_dashboard/driver_sponsor_organization">Driver's Sponsor Organization</Link></li>
-                <li><Link to="/driver_dashboard/driver_catalog">Driver Catalog</Link></li>
-                <li><Link to="/driver_dashboard/driver_messagebox">Message Box</Link></li>
+                <li><Link to="/dashboard">Driver Home</Link></li>
+                <li><Link to="profile">Driver Profile</Link></li>
+                <li><Link to="/dashboard/driver_point">Driver Point</Link></li>
+                <li><Link to="/dashboard/driver_sponsor_organization">Driver's Sponsor Organization</Link></li>
+                <li><Link to="/dashboard/catalog">Driver Catalog</Link></li>
+                <li><Link to="/dashboard/driver_messagebox">Message Box</Link></li>
             </ul>
         </div>
     );

@@ -1,7 +1,6 @@
 import './App.css';
 import Home from '../Home/Home';
 import About from '../About/About';
-import Catalog from '../Catalog/Driver_Catalog';
 import Contact from '../Contact/Contact';
 import Rewards from '../Rewards/Rewards';
 import Login from '../Login/Login';
@@ -15,7 +14,7 @@ import Missing from '../Missing/Missing';
 import Unauthorized from '../Unauthorized/Unauthorized';
 import DriverPoint from '../Point/Driver_Point';
 import DriverSponsorOrganization from '../Sponsor_Org/Driver_SponsorOrganization';
-import DriverCatalog from '../Catalog/Driver_Catalog';
+import Catalog from '../Catalog/Catalog';
 import JoinSponsorOrganization from '../Sponsor_Org/Join_SponsorOrganization';
 import SponsorOrganization from '../Sponsor_Org/Sponsor_Organization';
 import CreateSponsorOrganization from '../Sponsor_Org/Create_SponsorOrganization';
@@ -23,7 +22,8 @@ import SponsorAddUser from '../AddUser/Sponsor_AddUser';
 import SponsorAddDriver from '../AddUser/Sponsor_AddDriver';
 import SponsorAddSponsor from '../AddUser/Sponsor_AddSponsor';
 import PersistLogin from '../PersistLogin/PersistLogin';
-import DashBoard from '../Dashboard/DashBoard';
+import Dashboard from '../Dashboard/Dashboard';
+import DashboardLayout from '../Dashboard/DashboardLayout';
 
 function App() {
   return (
@@ -38,10 +38,7 @@ function App() {
         <Route path="/password-reset" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
-        <Route path="/driver_dashboard/driver_point" element={<DriverPoint />} />
-        <Route path="/driver_dashboard/driver_sponsor_organization" element={<DriverSponsorOrganization />} />
-        <Route path="/driver_dashboard/driver_catalog" element={<DriverCatalog />} />
-        <Route path="/driver_dashboard/driver_sponsor_organization/join_sponsor_organization" element={<JoinSponsorOrganization />} />
+
 
         <Route path="/sponsor_dashboard/sponsor_organization" element={<SponsorOrganization />} />
         <Route path="/sponsor_dashboard/sponsor_organization/join_sponsor_organization" element={<JoinSponsorOrganization />} />
@@ -53,10 +50,14 @@ function App() {
         {/* private */}
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth allowedRoles={['driver', 'admin', 'sponsor']} />}>
-            <Route path="/catalog" element={<Catalog />} />
-            <Route path="/profile" element={<DriverProfile />} />
-            <Route path="/rewards" element={<Rewards />} />
-            <Route path="/dashboard" element={<DashBoard />} />
+            <Route path="dashboard" element={<DashboardLayout />}>
+              <Route path="profile" element={<DriverProfile />} />
+              <Route path="catalog" element={<Catalog />} />
+              <Route path="driver_point" element={<DriverPoint />} />
+              <Route path="driver_sponsor_organization" element={<DriverSponsorOrganization />} />
+              <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
+              <Route path="" element={<Dashboard />} />
+            </Route>
           </Route>
         </Route>
 
