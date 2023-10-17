@@ -1,4 +1,4 @@
-import './Join_SponsorOrganization.css';
+import './JoinSponsorOrganization.css';
 import { useState, useEffect } from 'react';
 
 function JoinSponsorOrganization() {

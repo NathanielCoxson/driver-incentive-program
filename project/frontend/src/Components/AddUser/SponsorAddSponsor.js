@@ -1,7 +1,6 @@
-import './Sponsor_AddUser.css';
 import { useState } from 'react';
 
-function SponsorAddDriver() {
+function SponsorAddSponsor() {
     const [responseMessage, setResponseMessage] = useState('');
 
     const baseURL = process.env.NODE_ENV === 'production'
@@ -17,7 +16,6 @@ function SponsorAddDriver() {
         '- Contain one special character';
 
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
-
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -42,7 +40,7 @@ function SponsorAddDriver() {
             Username: input.username.value,
             Password: input.password.value,
             Name: input.name.value,
-            Role: 'driver', // Set the role to 'driver' for sponsor-added drivers
+            Role: 'sponsor', // Set the role to 'sponsor' for sponsor-added sponsors
             Email: input.email.value,
         };
 
@@ -55,16 +53,16 @@ function SponsorAddDriver() {
         })
             .then((res) => {
                 if (res.status === 400) setResponseMessage('Invalid Input');
-                if (res.status === 201) setResponseMessage('Driver added successfully!');
+                if (res.status === 201) setResponseMessage('Sponsor added successfully!');
             })
             .catch((err) => console.log(err));
     };
 
     return (
         <section className="hero">
-            <h2>Add Driver</h2>
-            <p>Please register the driver you want to add the system.</p>
-            <form id="addDriverForm" onSubmit={handleSubmit}>
+            <h2>Add Sponsor</h2>
+            <p>Please register the sponsor you want to add to the system.</p>
+            <form id="addSponsorForm" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="name">Name:</label>
                     <input type="text" id="name" name="name" required />
@@ -104,10 +102,10 @@ function SponsorAddDriver() {
                 <div className="password-validation" id="passwordValidation">
                     {responseMessage}
                 </div>
-                <button type="submit" className="cta-button">Add Driver</button>
+                <button type="submit" className="cta-button">Add Sponsor</button>
             </form>
         </section>
     );
 }
 
-export default SponsorAddDriver;
+export default SponsorAddSponsor;

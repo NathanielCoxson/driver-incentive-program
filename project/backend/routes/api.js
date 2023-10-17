@@ -467,7 +467,7 @@ api.post('/applications', async (req, res) => {
             res.status(404).send('Sponsor not found');
             return;
         }
-        if (user.Role !== 'driver') {
+        if (user.Role !== 'driver' && user.Role !== 'sponsor') {
             res.status(403).send('User is not a driver');
             return;
         }
