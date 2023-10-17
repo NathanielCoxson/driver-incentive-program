@@ -212,6 +212,10 @@
                     "Email": {
                       "type": "string",
                       "example": "testDriver@example.com"
+                    },
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOiI2M0M4QzZFMi0zRjczLTRFRTktOTgxOS0zMUVGMUZEMTJDN0EiLCJTSUQiOiJENEYxRTM4OC0zRDMwLTQzREUtQjI5RS03RDQ3REQ4RjU2MDYiLCJOYW1lIjoiTmF0aGFuIENveHNvbiIsIlJvbGUiOiJhZG1pbiIsIlVzZXJuYW1lIjoibmNveHNvbiIsIlBhc3N3b3JkIjoiJDJiJDEyJGhvOS9veVVWUDJpNzl4TDk4d05yRWU1Zi5XbHRqc0IvZjZsQnI0RmJDR2RNZG5zeHBKTHIuIiwiRW1haWwiOiJuY294c29uQGNsZW1zb24uZWR1IiwiUGFzc3dvcmRSZXNldFRva2VuIjpudWxsLCJQYXNzd29yZFJlc2V0RXhwaXJhdGlvbiI6bnVsbCwiUmVmcmVzaFRva2VuIjoiNEZEMTU5NjItN0MwQy00QjkwLUExN0MtMzU2RjkyMTg4QTNGIiwiUmVmcmVzaFRva2VuRXhwaXJhdGlvbiI6IjIwMjMtMTAtMTdUMDE6MzQ6MjIuODM3WiIsImlhdCI6MTY5NzUwMjg5MCwiZXhwIjoxNjk3NTAzMTkwfQ.Ke6d45BxtDkUMAj8z5v6W5lwQHMjj5Ot1yADg5RHels"
                     }
                   }
                 }
@@ -226,6 +230,40 @@
           },
           "404": {
             "description": "User not found"
+          }
+        }
+      }
+    },
+    "users/refresh": {
+      "post": {
+        "tags": [
+          "users" 
+        ],
+        "summary": "Refreshes a user's access token.",
+        "description": "Validates the refreshToken cookie sent in the request and will issue a new accessToken if it is valid and also store a new refresh token",
+        "operationId": "saveRefreshToken",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVSUQiOiI2M0M4QzZFMi0zRjczLTRFRTktOTgxOS0zMUVGMUZEMTJDN0EiLCJTSUQiOiJENEYxRTM4OC0zRDMwLTQzREUtQjI5RS03RDQ3REQ4RjU2MDYiLCJOYW1lIjoiTmF0aGFuIENveHNvbiIsIlJvbGUiOiJhZG1pbiIsIlVzZXJuYW1lIjoibmNveHNvbiIsIlBhc3N3b3JkIjoiJDJiJDEyJGhvOS9veVVWUDJpNzl4TDk4d05yRWU1Zi5XbHRqc0IvZjZsQnI0RmJDR2RNZG5zeHBKTHIuIiwiRW1haWwiOiJuY294c29uQGNsZW1zb24uZWR1IiwiUGFzc3dvcmRSZXNldFRva2VuIjpudWxsLCJQYXNzd29yZFJlc2V0RXhwaXJhdGlvbiI6bnVsbCwiUmVmcmVzaFRva2VuIjoiNEZEMTU5NjItN0MwQy00QjkwLUExN0MtMzU2RjkyMTg4QTNGIiwiUmVmcmVzaFRva2VuRXhwaXJhdGlvbiI6IjIwMjMtMTAtMTdUMDE6MzQ6MjIuODM3WiIsImlhdCI6MTY5NzUwMjg5MCwiZXhwIjoxNjk3NTAzMTkwfQ.Ke6d45BxtDkUMAj8z5v6W5lwQHMjj5Ot1yADg5RHels"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing refresh token"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }

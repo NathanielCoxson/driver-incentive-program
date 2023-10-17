@@ -1,18 +1,39 @@
 require('dotenv').config({path: "../.env"});
+const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
+const secret = process.env.DB_PWD;
 
 async function validateToken(req, res, next) {
-    const validationToken = process.env.DB_PWD;
-
     // If request is missing access token header.
     if (!req.headers.authorization) {
-        res.status(401).send("Access token is missing")
+        res.status(401).send("Access token is missing.")
     }
 
-    // Get the token from the header here.
-    const token = '';
+    const authHeader = req.headers.authorization;
+    const token = authHeader.split(' ')[1];
 
-    // Validate the token with the 
-    
+    // Validate the token
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            console.log(err);
+            res.status(401).send();
+        }
+        else {
+            req.User = decoded;
+            next();
+        }
+    });
 }
 
-module.exports = validateToken;
+async function generateJWT(User) {
+    try {
+        const payload = User;
+        const accessToken = jwt.sign(payload, secret, {expiresIn: "5m"});
+        return { error: false, accessToken, refreshToken: uuidv4() };
+    } catch (err) {
+        console.log(err);
+        return { error: true }
+    }
+}
+
+module.exports = {validateToken, generateJWT};
