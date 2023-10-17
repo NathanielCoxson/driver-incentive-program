@@ -566,6 +566,40 @@ async function deleteUsersApplications(Username) {
     }
 }
 
+/**
+     * Create a password change log entry into PWChanges with the given details
+     * Request Body: {
+     *  UID: Unique Identifier,
+     *  PWCDate: Date/Time,
+     *  ChangeType: String
+     * }
+     */
+async function createPWC(PWC){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, PWC.UID)
+            .input('PWCDate', sql.DateTime, PWC.PWCDate)
+            .input('ChangeType', sql.VarChar(50), PWC.ChangeType)
+            .query("\
+                INSERT INTO PWChanges(\
+                    PWCID,\
+                    UID,\
+                    PWCDate,\
+                    ChangeType) \
+                VALUES(\
+                    NEWID(),\
+                    @UID,\
+                    @PWCDate,\
+                    @ChangeType)");
+        return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -586,5 +620,6 @@ module.exports = {
     createApplication,
     getUserApplications,
     deleteApplication,
-    deleteUsersApplications
+    deleteUsersApplications,
+    createPWC
 }

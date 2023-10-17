@@ -126,7 +126,7 @@ api.post('/users/register', async (req, res) => {
  *  Username: String,
  *  Password: String
  * }
- * Returns an object of the user with the given username if 
+ * Returns an object of the user with the given user info if 
  * the provided password is correct.
  */
 api.post("/users/login", async (req, res) => {
@@ -548,6 +548,39 @@ api.delete('/applications/users/:Username', async (req, res) => {
 
         else res.status(400).send();
 
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+// User routes
+/**
+ * POST to <baseurl>/api/users/resetpassword
+ * Request Body {
+ *  LoginDate: Date/Time,
+ *  Email: String,
+ *  ChangeType: String
+ * }
+ * Create a password change log entry into PWChanges with the given details
+ */
+api.post('/users/resetpassword', async (req, res) => {
+    try {
+        const body = req.body;
+        const email = req.app.locals.db.getUserByEmail(body.Email.value)
+        .then(() => {
+            let newPWC = {
+                LoginDate: body.LoginDate.value,
+                Username: email,
+                Success: body.ChangeType.value
+            }
+            // Add PWC to database
+            req.app.locals.db.createPWC(newPWC)
+            // If successful, send success code
+            .then(() => {
+                res.status(201).send();
+            })
+        })
     } catch (err) {
         console.log(err);
         res.status(500).send();
