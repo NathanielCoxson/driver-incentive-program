@@ -1,7 +1,6 @@
 import AdminDashboard from "./AdminDashboard";
 import DriverDashboard from "./DriverDashboard";
 import SponsorDashboard from "./SponsorDashboard";
-import DriverSidebar from "../Sidebar/Driver_Sidebar";
 import useAuth from "../../hooks/useAuth";
 
 function Dashboard() {

@@ -1,6 +1,5 @@
 import React from 'react';
 import './Driver_Point.css';
-import DriverSidebar from '../Sidebar/Driver_Sidebar';
 
 function DriverPoint() {
     return (

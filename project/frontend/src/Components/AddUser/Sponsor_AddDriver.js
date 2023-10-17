@@ -1,5 +1,4 @@
 import './Sponsor_AddUser.css';
-import SponsorSidebar from '../Sidebar/Sponsor_sidebar';
 import { useState } from 'react';
 
 function SponsorAddDriver() {
@@ -54,65 +53,60 @@ function SponsorAddDriver() {
             },
             body: JSON.stringify(user),
         })
-        .then((res) => {
-            if (res.status === 400) setResponseMessage('Invalid Input');
-            if (res.status === 201) setResponseMessage('Driver added successfully!');
-        })
-        .catch((err) => console.log(err));
+            .then((res) => {
+                if (res.status === 400) setResponseMessage('Invalid Input');
+                if (res.status === 201) setResponseMessage('Driver added successfully!');
+            })
+            .catch((err) => console.log(err));
     };
 
     return (
-        <main>
-            <div className="sidebar-container">
-                <SponsorSidebar /> {/* Include the DriverSidebar component here */}
-                <section className="hero">
-                    <h2>Add Driver</h2>
-                    <p>Please register the driver you want to add the system.</p>
-                    <form id="addDriverForm" onSubmit={handleSubmit}>
-                        <div>
-                            <label htmlFor="name">Name:</label>
-                            <input type="text" id="name" name="name" required />
-                        </div>
+        <section className="hero">
+            <h2>Add Driver</h2>
+            <p>Please register the driver you want to add the system.</p>
+            <form id="addDriverForm" onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="name">Name:</label>
+                    <input type="text" id="name" name="name" required />
+                </div>
 
-                        <div>
-                            <label htmlFor="email">Email:</label>
-                            <input type="text" id="email" name="email" required />
-                        </div>
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input type="text" id="email" name="email" required />
+                </div>
 
-                        <div>
-                            <label htmlFor="username">Username:</label>
-                            <input type="text" id="username" name="username" required />
-                        </div>
+                <div>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
+                </div>
 
-                        <div>
-                            <label htmlFor="password">Password:</label>
-                            <input type="password" id="password" name="password" required />
-                        </div>
+                <div>
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+                </div>
 
-                        <div>
-                            <label htmlFor="retypePassword">Retype Password:</label>
-                            <input type="password" id="retypePassword" name="retypePassword" required />
-                        </div>
+                <div>
+                    <label htmlFor="retypePassword">Retype Password:</label>
+                    <input type="password" id="retypePassword" name="retypePassword" required />
+                </div>
 
-                        <div className="password-requirements">
-                            <p>Password requirements:</p>
-                            <ul>
-                                <li> At least eight characters long</li>
-                                <li> Contain one uppercase letter</li>
-                                <li> Contain one lowercase letter</li>
-                                <li> Contain one number</li>
-                                <li> Contain one special character</li>
-                            </ul>
-                        </div>
+                <div className="password-requirements">
+                    <p>Password requirements:</p>
+                    <ul>
+                        <li> At least eight characters long</li>
+                        <li> Contain one uppercase letter</li>
+                        <li> Contain one lowercase letter</li>
+                        <li> Contain one number</li>
+                        <li> Contain one special character</li>
+                    </ul>
+                </div>
 
-                        <div className="password-validation" id="passwordValidation">
-                            {responseMessage}
-                        </div>
-                        <button type="submit" className="cta-button">Add Driver</button>
-                    </form>
-                </section>
-            </div>
-        </main>
+                <div className="password-validation" id="passwordValidation">
+                    {responseMessage}
+                </div>
+                <button type="submit" className="cta-button">Add Driver</button>
+            </form>
+        </section>
     );
 }
 

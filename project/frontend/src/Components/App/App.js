@@ -2,7 +2,6 @@ import './App.css';
 import Home from '../Home/Home';
 import About from '../About/About';
 import Contact from '../Contact/Contact';
-import Rewards from '../Rewards/Rewards';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import DriverProfile from '../Profile/Driver_Profile';
