@@ -13,7 +13,6 @@ function Login() {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
     const LOGIN_URL = '/users/login';
-    const [dashboardURL, setDashURL] = useState("");
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -29,7 +28,6 @@ function Login() {
             setAuth(response?.data);
             setUsername('');
             setPassword('');
-            setDashURL("/" + response?.Role + "_dashboard");
             if (from === '/') navigate('/dashboard', { replace: true });
             else navigate(from, { replace: true });
         } catch (err) {

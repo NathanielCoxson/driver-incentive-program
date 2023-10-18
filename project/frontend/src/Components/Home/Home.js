@@ -1,5 +1,5 @@
 import './Home.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useLogout from '../../hooks/useLogout';
 import useAuth from '../../hooks/useAuth';
 import useRefreshToken from '../../hooks/uesRefreshToken';
@@ -9,13 +9,10 @@ function Home() {
     const logout = useLogout();
     const { auth, persist } = useAuth();
     const refresh = useRefreshToken();
-    const navigate = useNavigate();
 
     const handleLogout = async () => {
         await logout();
     }
-
-
 
     useEffect(() => {
         const tryRefresh = async () => {

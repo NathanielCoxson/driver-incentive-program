@@ -2,13 +2,11 @@ import { Outlet } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import useRefreshToken from '../../hooks/uesRefreshToken';
 import useAuth from '../../hooks/useAuth';
-import useLogout from '../../hooks/useLogout';
 
 function PersistLogin() {
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();
     const { auth, persist } = useAuth();
-    const logout = useLogout();
 
     useEffect(() => {
         let isMounted = true;
@@ -28,7 +26,7 @@ function PersistLogin() {
         !auth?.accessToken && persist ? verifyRefreshToken() : setIsLoading(false);
 
         return () => isMounted= false;
-    }, []);
+    }, [isLoading, auth?.accessToken, persist, refresh]);
 
     return (
         <>
