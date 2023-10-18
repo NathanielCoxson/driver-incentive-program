@@ -234,6 +234,21 @@
         }
       }
     },
+    "users/logout": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "Log a user out",
+        "description": "Clear's a user's refresh token from cookies and from the database to log them out.",
+        "operationId": "clearRefreshToken",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "users/refresh": {
       "get": {
         "tags": [
