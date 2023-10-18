@@ -10,7 +10,7 @@ import RequireAuth from '../RequireAuth/RequireAuth';
 import { Route, Routes } from 'react-router-dom';
 import Missing from '../Missing/Missing';
 import Unauthorized from '../Unauthorized/Unauthorized';
-import DriverPoint from '../Point/Driver_Point';
+import DriverPoints from '../Point/DriverPoints';
 import Catalog from '../Catalog/Catalog';
 import JoinSponsorOrganization from '../SponsorOrganization/JoinSponsorOrganization';
 import SponsorOrganization from '../SponsorOrganization/SponsorOrganization';
@@ -47,7 +47,7 @@ function App() {
 
               {/* driver */}
               <Route element={<RequireAuth allowedRoles={['driver', 'admin']} />}>
-                <Route path="driver_point" element={<DriverPoint />} />
+                <Route path="driver_points" element={<DriverPoints />} />
               </Route>
 
               {/* sponsor */}
