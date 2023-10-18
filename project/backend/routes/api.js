@@ -13,7 +13,4 @@ api.use('/sponsors', sponsors);
 api.use('/applications', applications);
 api.use('/about', about);
 
-
-
-
 module.exports = api;
