@@ -26,12 +26,12 @@ function Login() {
                     withCredentials: true
                 }
             );
-            console.log(response.data);
             setAuth(response?.data);
             setUsername('');
             setPassword('');
             setDashURL("/" + response?.Role + "_dashboard");
-            navigate(from, { replace: true });
+            if (from === '/') navigate('/dashboard', { replace: true });
+            else navigate(from, { replace: true });
         } catch (err) {
             if (!err?.response) {
                 setResponseMessage('No Server Response');
@@ -86,7 +86,7 @@ function Login() {
                 <br />
                 <button type="submit" className="cta-button">Submit</button>
 
-                <div class="response" id="response">{responseMessage}</div>
+                <div className="response" id="response">{responseMessage}</div>
                 <div className="persistCheck">
                     <label htmlFor='persist'>Trust This Device?</label>
                     <input 

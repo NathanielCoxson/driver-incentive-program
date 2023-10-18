@@ -14,34 +14,32 @@ function RejectionReason() {
     };
 
     return (
-        <main>
-            <section className="hero">
-                <h2>Reject Reason</h2>
-                <p>Please provide a reason for rejecting the join request.</p>
+        <section className="hero">
+            <h2>Reject Reason</h2>
+            <p>Please provide a reason for rejecting the join request.</p>
 
-                <div className="rejection-form">
-                    <textarea
-                        placeholder="Reason for rejection..."
-                        value={rejectionReason}
-                        onChange={(e) => setRejectionReason(e.target.value)}
-                    />
+            <div className="rejection-form">
+                <textarea
+                    placeholder="Reason for rejection..."
+                    value={rejectionReason}
+                    onChange={(e) => setRejectionReason(e.target.value)}
+                />
+            </div>
+
+            {isRejected ? (
+                <div className="rejection-message">
+                    <p>{rejectionMessage}</p>
                 </div>
+            ) : (
+                <button onClick={handleRejectWithReason} className="cta-button">
+                    Reject
+                </button>
+            )}
 
-                {isRejected ? (
-                    <div className="rejection-message">
-                        <p>{rejectionMessage}</p>
-                    </div>
-                ) : (
-                    <button onClick={handleRejectWithReason} className="cta-button">
-                        Reject
-                    </button>
-                )}
-
-                <Link to="/sponsor_dashboard" className="cta-button">
-                    Go Back
-                </Link>
-            </section>
-        </main>
+            <Link to="/dashboard" className="cta-button">
+                Go Back
+            </Link>
+        </section>
     );
 }
 

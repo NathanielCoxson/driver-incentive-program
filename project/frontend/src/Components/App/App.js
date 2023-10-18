@@ -1,30 +1,26 @@
 import './App.css';
 import Home from '../Home/Home';
 import About from '../About/About';
-import Catalog from '../Catalog/Driver_Catalog';
 import Contact from '../Contact/Contact';
-import Rewards from '../Rewards/Rewards';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
-import DriverProfile from '../Profile/Driver_Profile';
 import ResetPassword from '../ResetPassword/ResetPassword';
 import Layout from '../Layout/Layout';
 import RequireAuth from '../RequireAuth/RequireAuth';
 import { Route, Routes } from 'react-router-dom';
 import Missing from '../Missing/Missing';
 import Unauthorized from '../Unauthorized/Unauthorized';
-import DriverDashboard from '../Dashboard/Driver_Dashboard';
-import DriverPoint from '../Point/Driver_Point';
-import DriverSponsorOrganization from '../Sponsor_Org/Driver_SponsorOrganization';
-import DriverCatalog from '../Catalog/Driver_Catalog';
-import JoinSponsorOrganization from '../Sponsor_Org/Join_SponsorOrganization';
-import SponsorDashboard from '../Dashboard/Sponsor_Dashboard';
-import SponsorOrganization from '../Sponsor_Org/Sponsor_Organization';
-import CreateSponsorOrganization from '../Sponsor_Org/Create_SponsorOrganization';
-import SponsorAddUser from '../AddUser/Sponsor_AddUser';
-import SponsorAddDriver from '../AddUser/Sponsor_AddDriver';
-import SponsorAddSponsor from '../AddUser/Sponsor_AddSponsor';
+import DriverPoints from '../Point/DriverPoints';
+import Catalog from '../Catalog/Catalog';
+import JoinSponsorOrganization from '../SponsorOrganization/JoinSponsorOrganization';
+import SponsorOrganization from '../SponsorOrganization/SponsorOrganization';
+import CreateSponsorOrganization from '../SponsorOrganization/CreateSponsorOrganization';
 import PersistLogin from '../PersistLogin/PersistLogin';
+import Dashboard from '../Dashboard/Dashboard';
+import DashboardLayout from '../Dashboard/DashboardLayout';
+import Profile from '../Profile/Profile';
+import AddUser from '../AddUser/AddUser';
+import RejectionReason from '../Dashboard/RejectionReason';
 
 function App() {
   return (
@@ -39,30 +35,46 @@ function App() {
         <Route path="/password-reset" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
-        <Route path="/driver_dashboard" element= {<DriverDashboard />} />
-        <Route path="/driver_dashboard/driver_point" element= {<DriverPoint />} />
-        <Route path="/driver_dashboard/driver_sponsor_organization" element= {<DriverSponsorOrganization />} />
-        <Route path="/driver_dashboard/driver_catalog" element= {<DriverCatalog />} />
-        <Route path="/driver_dashboard/driver_sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
-        <Route path="/sponsor_dashboard" element= {<SponsorDashboard />} />
-        <Route path="/sponsor_dashboard/sponsor_organization" element= {<SponsorOrganization />} />
-        <Route path="/sponsor_dashboard/sponsor_organization/join_sponsor_organization" element= {<JoinSponsorOrganization />} />
-        <Route path="/sponsor_dashboard/sponsor_organization/create_sponsor_organization" element= {<CreateSponsorOrganization />} />
-        <Route path="/sponsor_dashboard/sponsor_add_user" element= {<SponsorAddUser />} />
-        <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_driver" element= {<SponsorAddDriver />} />
-        <Route path="/sponsor_dashboard/sponsor_add_user/sponsor_add_sponsor" element= {<SponsorAddSponsor />} />
-
         {/* private */}
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth allowedRoles={['driver', 'admin', 'sponsor']} />}>
-            <Route path="/catalog" element={<Catalog />} />
-            <Route path="/profile" element={<DriverProfile />} />
-            <Route path="/rewards" element={<Rewards />} />
+            <Route path="dashboard" element={<DashboardLayout />}> {/* All users have a dashboard */}
+              {/* universal */}
+              <Route path="profile" element={<Profile />} /> {/* All users have a profile */}
+              <Route path="sponsor_organization" element={<SponsorOrganization />} /> {/* Could be hidden for admins or not */}
+              <Route path="catalog" element={<Catalog />} /> {/* Sponsors can see their own catalog along with drivers */}
+              <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
+
+              {/* driver */}
+              <Route element={<RequireAuth allowedRoles={['driver', 'admin']} />}>
+                <Route path="driver_points" element={<DriverPoints />} />
+              </Route>
+
+              {/* sponsor */}
+              <Route element={<RequireAuth allowedRoles={['sponsor', 'admin']} />}>
+                <Route path="sponsor_add_user" element={<AddUser />} />
+                <Route path="sponsor_add_user/add_driver" element={<Register role='driver' />} />
+                <Route path="sponsor_add_user/add_sponsor" element={<Register role='sponsor' />} />
+                <Route path="create_sponsor_organization" element={<CreateSponsorOrganization />} />
+                <Route path="rejection_reason" element={<RejectionReason />} />
+              </Route>
+
+              {/* admin */}
+              <Route element={<RequireAuth allowedRoles={['admin']} />}>
+                <Route path="admin_add_user" element={<AddUser isAdmin={true} />} />
+                <Route path="admin_add_user/add_driver" element={<Register role='driver' />} />
+                <Route path="admin_add_user/add_sponsor" element={<Register role='sponsor' />} />
+                <Route path="admin_add_user/add_admin" element={<Register role='admin' />} />
+              </Route>
+
+              {/* catch all */}
+              <Route path="" element={<Dashboard />} />
+            </Route>
           </Route>
         </Route>
 
 
-        {/* catch all*/}
+        {/* catch all */}
         <Route path="*" element={<Missing />} />
       </Route>
     </Routes>

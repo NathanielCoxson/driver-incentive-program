@@ -1,15 +1,11 @@
 import './Register.css';
 import { useEffect, useState } from 'react';
+import axios from '../../api/axios';
 
-function Register() {
+function Register({ role }) {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
-    
 
-    const baseURL = process.env.NODE_ENV === 'production' ?
-        'http://34.225.199.196/api/users/register' :
-        'http://localhost:3001/api/users/register';
-    
     const passwordRequirementsMessage =
         'Password must be:\n' +
         '- At least eight characters long\n' +
@@ -26,11 +22,11 @@ function Register() {
         */
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
-    useEffect(() => {}, [adminPinInput]);
+    useEffect(() => { }, [adminPinInput]);
 
     function validateForm(form) {
         // const name = form.name.value;
-        const role = form.role.value;
+        const Role = role || form.role.value;
         const adminPin = form.adminPin ? form.adminPin.value : '';
         const password = form.password.value;
         const retypePassword = form.retypePassword.value;
@@ -48,7 +44,7 @@ function Register() {
         }
 
         // Additional validation for admin users
-        if (role === 'admin') {
+        if (Role === 'admin') {
             if (!adminPin) {
                 setResponseMessage("Admin Pin is required for admin users.")
                 return false;
@@ -60,13 +56,16 @@ function Register() {
     }
 
     // Submit handler function
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         // Prevent page reload on submit
         event.preventDefault();
         // Hide previous error message
         setResponseMessage('');
-        
+
         const input = event.target;
+        const Role = role ? role : input.role.value;
+
+
         if (!validateForm(input)) return;
 
         // Construct user object
@@ -74,32 +73,34 @@ function Register() {
             Username: input.username.value,
             Password: input.password.value,
             Name: input.name.value,
-            Role: input.role.value,
+            Role: Role,
             Email: input.email.value,
         };
-        let url = input.adminPin ? `${baseURL}?AdminPin=${encodeURIComponent(input.adminPin.value)}` : baseURL;
-        // Post to /api/users/register
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(user),
-        })
-        .then(res => {
-            if (res.status === 400) setResponseMessage('Invalid Input');
-            if (res.status === 500) setResponseMessage('Error creating your account please try again later.')
-            if (res.status === 201) setResponseMessage('Success!');
-            return res.json();
-        })
-        .then(res => {
-            // 409 Conflict reponse messages
-            if (res) {
-                if (res === 'Email already taken') setResponseMessage('That email has already been taken.')
-                if (res === 'Username already taken') setResponseMessage('That username has already been taken.')
-            } 
-        })
-        .catch(err => console.log(err));
+        try {
+            await axios.post('/users/register', user, {
+                params: input.adminPin && {
+                    AdminPin: input.adminPin.value
+                }
+            });
+            setResponseMessage('Success!');
+        } catch (err) {
+            if (!err?.response) {
+                setResponseMessage('No Server Response');
+            }
+            else if (err.response?.status === 400) {
+                setResponseMessage('Invalid Input');
+            }
+            else if (err.response?.status === 500) {
+                setResponseMessage('Error creating your account please try again later.');
+            }
+            else if (err.response?.status === 409) {
+                if (err.response.data === 'Email already taken') setResponseMessage('That email has already been taken.')
+                if (err.response.data === 'Username already taken') setResponseMessage('That username has already been taken.')
+            }
+            else {
+                setResponseMessage('Login Failed');
+            }
+        }
     }
 
     const handleSelectChange = (event) => {
@@ -107,69 +108,73 @@ function Register() {
     }
 
     return (
-        <main>
-            <section className="register-section">
-                <h2>Sign Up</h2>
-                <form id="signInForm" onSubmit={handleSubmit}>
-                    <div>
-                        <label for="name">Name:</label>
-                        <input type="text" id="name" name="name" required />
-                    </div>
+        <section className="hero">
+            {role
+                ? <h2>Add {role.charAt(0).toUpperCase() + role.slice(1)}</h2>
+                : <h2>Sign Up</h2>
+            }
 
-                    <div>
-                        <label for="email">Email:</label>
-                        <input type="text" id="email" name="email" required />
-                    </div>
+            <form id="signInForm" onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="name">Name:</label>
+                    <input type="text" id="name" name="name" required />
+                </div>
 
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input type="text" id="email" name="email" required />
+                </div>
+
+                {!role &&
                     <div>
-                        <label for="role">User Type:</label>
+                        <label htmlFor="role">User Type:</label>
                         <select onChange={handleSelectChange} id="role" name="role" required >
                             <option value="driver">Driver</option>
                             <option value="sponsor">Sponsor</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-
-                    {adminPinInput &&
-                        <div id="adminPinSection">
-                            <label for="adminPin">Admin Pin:</label>
-                            <input type="password" id="adminPin" name="adminPin" />
-                        </div>
-                    }
+                }
 
 
-                    <div>
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" required />
+                {(adminPinInput || role === 'admin') &&
+                    <div id="adminPinSection">
+                        <label htmlFor="adminPin">Admin Pin:</label>
+                        <input type="password" id="adminPin" name="adminPin" />
                     </div>
+                }
 
-                    <div>
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" required />
-                    </div>
+                <div>
+                    <label htmlFor="username">Username:</label>
+                    <input type="text" id="username" name="username" required />
+                </div>
 
-                    <div>
-                        <label for="retypePassword">Retype Password:</label>
-                        <input type="password" id="retypePassword" name="retypePassword" required />
-                    </div>
+                <div>
+                    <label htmlFor="password">Password:</label>
+                    <input type="password" id="password" name="password" required />
+                </div>
+
+                <div>
+                    <label htmlFor="retypePassword">Retype Password:</label>
+                    <input type="password" id="retypePassword" name="retypePassword" required />
+                </div>
 
 
-                    <div className="password-requirements">
-                        <p>Password requirements:</p>
-                            <ul>
-                                <li> At least eight characters long</li>
-                                <li> Contain one uppercase letter</li>
-                                <li> Contain one lowercase letter</li>
-                                <li> Contain one number</li>
-                                <li> Contain one special character</li>
-                            </ul>
-                    </div>
+                <div className="password-requirements">
+                    <p>Password requirements:</p>
+                    <ul>
+                        <li> At least eight characters long</li>
+                        <li> Contain one uppercase letter</li>
+                        <li> Contain one lowercase letter</li>
+                        <li> Contain one number</li>
+                        <li> Contain one special character</li>
+                    </ul>
+                </div>
 
-                    <div class="password-validation" id="passwordValidation">{responseMessage}</div>
-                    <button type="submit" class="cta-button">Sign Up</button>
-                </form>
-            </section>
-        </main>
+                <div className="password-validation" id="passwordValidation">{responseMessage}</div>
+                <button type="submit" className="cta-button">Sign Up</button>
+            </form>
+        </section>
     );
 };
 

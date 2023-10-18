@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -76,6 +80,7 @@ main {
   color: #fff;
   padding: 40px;
   border-radius: 10px;
+  width: 100%;
 }
 h2 {
   font-size: 28px;
@@ -186,8 +191,6 @@ input {
   background-color: #0077b6;
   color: #fff;
   padding: 10px;
-  margin-top: 40px;
-  margin-right: 40px;
   border-radius: 10px;
 }
 
