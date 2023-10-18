@@ -55,11 +55,14 @@ api.post('/users/register', async (req, res) => {
             (body.Role !== 'driver' && body.Role !== 'sponsor' && body.Role !== 'admin'), // Role validation
             !passwordRegex.test(body.Password), // Password validation
             !emailRegex.test(body.Email), // Email validation
-            (query.AdminPin && query.AdminPin !== adminPin), // AdminPin is correct if provided
             (body.Role === 'admin' && query.AdminPin !== adminPin), // Admin role has correct pin
             (query.SponsorName === 'Admins' || query.SponsorName === 'None') // Restricted sponsor names
         ]
 
+        if(query.AdminPin && query.AdminPin !== adminPin) {
+            res.status(403).send();
+            return;
+        }
         // Bad request
         if (conditions.includes(true)) {
             res.status(400).send();

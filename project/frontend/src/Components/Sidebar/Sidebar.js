@@ -33,8 +33,8 @@ function Sidebar() {
                     <>
                         <li><Link to=".">Admin Home</Link></li>
                         <li><Link to="profile">Admin Profile</Link></li>
-                        <li><Link to="/admin_dashboard/admin_add_user">Add User</Link></li>
-                        <li><Link to="/admin_dashboard/admin_messagebox">Message Box</Link></li>
+                        <li><Link to="admin_add_user">Add User</Link></li>
+                        <li><Link to="admin_messagebox">Message Box</Link></li>
                     </>
                 }
             </ul>
