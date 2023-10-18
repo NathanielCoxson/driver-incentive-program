@@ -9,8 +9,8 @@ async function validateToken(req, res, next) {
         res.status(401).send("Access token is missing.")
     }
 
-    const authHeader = req.headers.authorization;
-    const token = authHeader.split(' ')[1];
+    const authHeader = req.headers?.authorization;
+    const token = authHeader?.split(' ')[1];
 
     // Validate the token
     jwt.verify(token, secret, (err, decoded) => {

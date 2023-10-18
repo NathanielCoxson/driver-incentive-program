@@ -260,10 +260,17 @@ users.get("/refresh", async (req, res) => {
  * GET <baseurl>/api/users/:Username
  * Returns the user with the given Username from the database.
  */
-users.get('/:Username', async (req, res) => {
+users.get('/:Username', validation.validateToken, async (req, res) => {
     try {
         // Bad request
-        if (!req.params.Username) res.status(400).send();
+        if (!req.params.Username) {
+            res.status(400).send();
+            return;
+        }
+        if (req.User.Username !== req.params.Username) {
+            res.status(401).send();
+            return;
+        }
 
         // Query
         const user = await req.app.locals.db.getUserByUsername(req.params.Username);
