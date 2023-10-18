@@ -15,17 +15,18 @@ function Home() {
         await logout();
     }
 
-    const tryRefresh = async () => {
-        try {
-            await refresh();
-        } catch (err) {
-            console.log(err);
-        }
-    }
+
 
     useEffect(() => {
+        const tryRefresh = async () => {
+            try {
+                await refresh();
+            } catch (err) {
+                console.log(err);
+            }
+        }
         if (!auth?.accessToken && persist) tryRefresh();
-    }, []);
+    }, [persist, auth?.accessToken, refresh]);
 
     return (
         <main>
