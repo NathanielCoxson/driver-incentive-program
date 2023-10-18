@@ -73,3 +73,9 @@
     - Email (String)
     - PasswordResetToken
     - PasswordResetExpiration
+
+- Profiles
+    - *PID (Profile ID)
+    - &UID (User ID)
+    - Vehicle (String)
+    - Phone Number (String)
