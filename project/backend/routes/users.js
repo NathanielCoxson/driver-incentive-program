@@ -1,5 +1,7 @@
 const express = require('express');
 const users = express.Router();
+const validation = require('../middlewares/validation'); // token validation and creation
+const bcrypt = require('bcrypt'); // password encrypting
 
 // User routes
 /**
@@ -220,7 +222,6 @@ users.get("/refresh", async (req, res) => {
 
         // No user with refresh token in db
         if (!user) {
-            console.log('invalid refresh token');
             res.status(401).send();
             return;
         }
@@ -239,7 +240,6 @@ users.get("/refresh", async (req, res) => {
             else {
                 // Save refresh token in db and cookies and send back access token
                 await req.app.locals.db.saveRefreshToken(user.Username, newToken.refreshToken);
-                console.log(`New refresh token: ${newToken.refreshToken}`);
                 res.cookie('refreshToken', newToken.refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
                 delete user.Password;
                 delete user.RefreshTokenExpiration;

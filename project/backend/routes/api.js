@@ -1,8 +1,6 @@
 // Router for <baseURL>/api
 const express = require('express'); // express server
-const bcrypt = require('bcrypt'); // password encrypting
 const api = express.Router(); // express router
-const validation = require('../middlewares/validation');
 
 // Endpoint routers
 const users = require('./users');
@@ -28,49 +26,9 @@ api.get('/about', async (req, res) => {
     }
 });
 
-// Sponsor routes
-/**
- * GET <baseurl>/api/sponsors
- * Returns an object with a sponsors property that contains a list of sponsor objects.
- */
-api.get('/sponsors', async (req, res) => {
-    try {
-        const sponsors = await req.app.locals.db.getSponsors();
 
-        if (sponsors.length === 0) {
-            res.status(404).send();
-            return;
-        }
 
-        res.status(200).send({ sponsors });
-    } catch (err) {
-        console.log(err);
-        res.status(500).send();
-    }
-});
 
-/**
- * GET <baseurl>/api/sponsors/:SponsorName
- * Returns the sponsor with the given sponsor name from the database.
- */
-api.get('/sponsors/:SponsorName', async (req, res) => {
-    try {
-        // Bad request
-        if (!req.params.SponsorName) res.status(400).send();
-
-        // Query
-        const result = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
-
-        // Success
-        if (result) res.status(200).send(result);
-
-        // Not found
-        else res.status(404).send();
-    } catch (err) {
-        console.log(err);
-        res.status(500).send();
-    }
-});
 
 // Applications Routes
 /**
