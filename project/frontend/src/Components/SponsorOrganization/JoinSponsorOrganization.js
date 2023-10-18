@@ -102,7 +102,7 @@ function JoinSponsorOrganization() {
                         required
                         onChange={event => setSponsorName(event.target.value)}
                     >
-                        {options.map(option => <option value={option.value}>{option.label}</option>)}
+                        {options.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
                     </select>
                 </div>
 

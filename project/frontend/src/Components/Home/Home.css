@@ -1,11 +1,29 @@
-.sign-in-button {
+.home-button {
+    all: unset;
     display: inline-block;
-    margin-top: 20px;
     padding: 10px 20px;
     background-color: #f77f00;
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
-    margin-left: 10px; 
+    text-align: center;
+}
+
+.home-buttons {
+    display: inline-flex;
+    gap: 1em;
+    cursor: pointer;
+}
+
+.home-section * {
+    margin: 0;
+}
+
+.home-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3em;
 }

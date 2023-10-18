@@ -9,7 +9,7 @@ function SponsorOrganization() {
     return (
         <section className="hero">
             <h2>Welcome to Your Sponsor Organization Dashboard</h2>
-            <div class="sponsor-info">
+            <div className="sponsor-info">
                 <p><strong>Sponsor Company:</strong> ABC Motors</p>
                 <p>Looking for a Sponsor?</p>
                 <Link to="../join_sponsor_organization" className="cta-button">Join a Sponsor Organization</Link>

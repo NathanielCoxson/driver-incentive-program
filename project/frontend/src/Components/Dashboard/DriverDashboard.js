@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './DriverDashboard.css';
-import { Outlet, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function DriverDashboard() {
     // Simulated invitation data

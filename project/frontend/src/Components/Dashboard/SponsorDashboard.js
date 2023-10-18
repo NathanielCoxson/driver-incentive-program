@@ -44,7 +44,7 @@ function SponsorDashboard() {
         <section className="hero">
             <h2>Welcome to Your Dashboard</h2>
             <p>Welcome to your sponsor dashboard. Here you can access various features and information.</p>
-            <Link to="/sponsor_dashboard" className="cta-button">
+            <Link to="/dashboard" className="cta-button">
                 Explore
             </Link>
 
@@ -65,7 +65,7 @@ function SponsorDashboard() {
                                 <button onClick={() => acceptRequest(request.driverName)} className="cta-button">
                                     Accept
                                 </button>
-                                <Link to="/sponsor_dashboard/rejection_reason" className="cta-button">
+                                <Link to="/dashboard/rejection_reason" className="cta-button">
                                     Reject
                                 </Link>
                             </>

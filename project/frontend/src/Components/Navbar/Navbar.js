@@ -1,7 +1,10 @@
 import "./Navbar.css"
 import { Link } from 'react-router-dom';
+import useAuth from "../../hooks/useAuth";
+import { useEffect } from "react";
 
 function Navbar() {
+    const { auth } = useAuth();
 
     return (
         <div className="Navbar">
@@ -10,11 +13,9 @@ function Navbar() {
                 <nav>
                     <ul>
                         <li><Link to="/">Home</Link></li>
+                        {auth?.Username && <li><Link to='/dashboard'>Dashboard</Link></li>}
                         <li><Link to="/about">About Us</Link></li>
                         <li><Link to="/contact">Contact</Link></li>
-                        <li><Link to="/profile">Profile</Link></li>
-                        <li><Link to="/catalog">Catalog</Link></li>
-                        <li><Link to="/rewards">Rewards</Link></li>
                     </ul>
                 </nav>
             </header>
