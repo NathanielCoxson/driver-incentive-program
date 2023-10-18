@@ -24,7 +24,7 @@ function Home() {
     }
 
     useEffect(() => {
-        if (persist) tryRefresh();
+        if (!auth?.accessToken && persist) tryRefresh();
     }, []);
 
     return (
