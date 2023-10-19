@@ -138,14 +138,14 @@ function Register({ role }) {
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-                }
+                )}
 
                 {(adminPinInput || role === 'admin') && (
                     <div id="adminPinSection">
                         <label htmlFor="adminPin">Admin Pin:</label>
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
-                }
+                )}
 
                 <div>
                     <label htmlFor="username">Username:</label>
