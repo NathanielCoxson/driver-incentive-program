@@ -111,7 +111,7 @@ function Register({ role }) {
                 <h2>Add {role.charAt(0).toUpperCase() + role.slice(1)}</h2>
             ) : (
                 <h2>Sign Up</h2>
-            }
+            )}
 
             <form id="signInForm" onSubmit={handleSubmit}>
                 <div>
