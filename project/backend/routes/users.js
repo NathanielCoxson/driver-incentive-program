@@ -188,7 +188,6 @@ users.post("/logout", async (req, res) => {
         const cookies = req.cookies;
         if (!cookies?.refreshToken) return res.sendStatus(204);
         const refreshToken = cookies.refreshToken;
-
         const user = await req.app.locals.db.clearRefreshToken(refreshToken);
         res.clearCookie('refreshToken', { httpOnly: true });
         res.status(204).send();
