@@ -5,6 +5,8 @@ import axios from '../../api/axios';
 function Register({ role }) {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [vehicleInfo, setVehicleInfo] = useState(''); // Added for driver role
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
@@ -13,25 +15,16 @@ function Register({ role }) {
         '- Contain one lowercase letter\n' +
         '- Contain one number\n' +
         '- Contain one special character';
-    /*
-            Has minimum 8 characters in length. Adjust it by modifying {8,}
-            At least one uppercase English letter. You can remove this condition by removing (?=.*?[A-Z])
-            At least one lowercase English letter.  You can remove this condition by removing (?=.*?[a-z])
-            At least one digit. You can remove this condition by removing (?=.*?[0-9])
-            At least one special character,  You can remove this condition by removing (?=.*?[#?!@$%^&*-])
-        */
+
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
-    useEffect(() => { }, [adminPinInput]);
+    useEffect(() => {}, [adminPinInput]);
 
     function validateForm(form) {
-        // const name = form.name.value;
         const Role = role || form.role.value;
         const adminPin = form.adminPin ? form.adminPin.value : '';
         const password = form.password.value;
         const retypePassword = form.retypePassword.value;
-
-        // Password validation rules (same as previous example)
 
         if (!password.match(passwordRegex)) {
             setResponseMessage(passwordRequirementsMessage);
@@ -43,75 +36,81 @@ function Register({ role }) {
             return false;
         }
 
-        // Additional validation for admin users
         if (Role === 'admin') {
             if (!adminPin) {
-                setResponseMessage("Admin Pin is required for admin users.")
+                setResponseMessage("Admin Pin is required for admin users.");
                 return false;
             }
-            // You can add further validation for the admin pin here if needed.
         }
 
         return true;
     }
 
-    // Submit handler function
     const handleSubmit = async (event) => {
-        // Prevent page reload on submit
         event.preventDefault();
-        // Hide previous error message
         setResponseMessage('');
 
         const input = event.target;
         const Role = role ? role : input.role.value;
 
-
         if (!validateForm(input)) return;
 
-        // Construct user object
         let user = {
             Username: input.username.value,
             Password: input.password.value,
             Name: input.name.value,
             Role: Role,
             Email: input.email.value,
+            PhoneNumber: phoneNumber, // Added phone number
         };
+
+        if (Role === 'driver') {
+            user.VehicleInfo = vehicleInfo; // Added vehicle information for driver role
+        }
+
         try {
             await axios.post('/users/register', user, {
                 params: input.adminPin && {
-                    AdminPin: input.adminPin.value
-                }
+                    AdminPin: input.adminPin.value,
+                },
             });
             setResponseMessage('Success!');
         } catch (err) {
             if (!err?.response) {
                 setResponseMessage('No Server Response');
-            }
-            else if (err.response?.status === 400) {
+            } else if (err.response?.status === 400) {
                 setResponseMessage('Invalid Input');
-            }
-            else if (err.response?.status === 500) {
-                setResponseMessage('Error creating your account please try again later.');
-            }
-            else if (err.response?.status === 409) {
-                if (err.response.data === 'Email already taken') setResponseMessage('That email has already been taken.')
-                if (err.response.data === 'Username already taken') setResponseMessage('That username has already been taken.')
-            }
-            else {
+            } else if (err.response?.status === 500) {
+                setResponseMessage('Error creating your account. Please try again later.');
+            } else if (err.response?.status === 409) {
+                if (err.response.data === 'Email already taken') setResponseMessage('That email has already been taken.');
+                if (err.response.data === 'Username already taken') setResponseMessage('That username has already been taken.');
+            } else {
                 setResponseMessage('Login Failed');
             }
         }
-    }
+    };
 
     const handleSelectChange = (event) => {
-        setAdminPinInput(event.target.value === 'admin' ? true : false);
-    }
+        setAdminPinInput(event.target.value === 'admin');
+    };
+
+    // Additional function to handle phone number change
+    const handlePhoneNumberChange = (event) => {
+        setPhoneNumber(event.target.value);
+    };
+
+    // Additional function to handle vehicle info change (for driver role)
+    const handleVehicleInfoChange = (event) => {
+        setVehicleInfo(event.target.value);
+    };
 
     return (
         <section className="hero">
-            {role
-                ? <h2>Add {role.charAt(0).toUpperCase() + role.slice(1)}</h2>
-                : <h2>Sign Up</h2>
+            {role ? (
+                <h2>Add {role.charAt(0).toUpperCase() + role.slice(1)}</h2>
+            ) : (
+                <h2>Sign Up</h2>
             }
 
             <form id="signInForm" onSubmit={handleSubmit}>
@@ -125,7 +124,12 @@ function Register({ role }) {
                     <input type="text" id="email" name="email" required />
                 </div>
 
-                {!role &&
+                <div>
+                    <label htmlFor="PhoneNumber">Phone Number:</label>
+                    <input type="text" id="PhoneNumber" name="PhoneNumber" required onChange={handlePhoneNumberChange} />
+                </div>
+
+                {!role && (
                     <div>
                         <label htmlFor="role">User Type:</label>
                         <select onChange={handleSelectChange} id="role" name="role" required >
@@ -136,8 +140,7 @@ function Register({ role }) {
                     </div>
                 }
 
-
-                {(adminPinInput || role === 'admin') &&
+                {(adminPinInput || role === 'admin') && (
                     <div id="adminPinSection">
                         <label htmlFor="adminPin">Admin Pin:</label>
                         <input type="password" id="adminPin" name="adminPin" />
@@ -159,6 +162,12 @@ function Register({ role }) {
                     <input type="password" id="retypePassword" name="retypePassword" required />
                 </div>
 
+                {role === 'driver' && (
+                    <div>
+                        <label htmlFor="vehicleInfo">Vehicle Information:</label>
+                        <input type="text" id="vehicleInfo" name="vehicleInfo" required onChange={handleVehicleInfoChange} />
+                    </div>
+                )}
 
                 <div className="password-requirements">
                     <p>Password requirements:</p>
@@ -176,6 +185,6 @@ function Register({ role }) {
             </form>
         </section>
     );
-};
+}
 
 export default Register;
