@@ -11,7 +11,7 @@ function SponsorProfile() {
             <div className="profile-info">
                 <p><strong>Username:</strong> {auth?.Username}</p>
                 <p><strong>Sponsor Company:</strong> ABC Motors</p>
-                <p><strong>Phone Number:</strong> (123) 456-7890</p>
+                <p><strong>Email:</strong> example@email.com</p>
             </div>
         </section>
     );

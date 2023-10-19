@@ -12,8 +12,9 @@ function DriverProfile() {
             <div className="profile-info">
                 <p><strong>Username:</strong> {auth?.Username}</p>
                 <p><strong>Vehicle:</strong> Toyota Camry</p>
-                <p><strong>Sponsor Company:</strong> ABC Motors</p>
-                <p><strong>Phone Number:</strong> (123) 456-7890</p>
+                <p><strong>Sponsor Company:</strong> ABC</p>
+                <p><strong>Email:</strong> {auth?.Email}</p>
+            
             </div>
         </section>
     );
