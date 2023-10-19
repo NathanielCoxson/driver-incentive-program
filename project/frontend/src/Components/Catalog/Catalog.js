@@ -23,7 +23,7 @@ function Catalog() {
 
     return (
         <section className="hero">
-            {auth?.Role === 'sponsor'
+            {auth?.Role === 'sponsor' || auth?.Role === 'admin'
                 ? <h2>Welcome to Your Sponsor's Catalog Preview</h2>
                 : <h2>Welcome to Your Driver's Catalog</h2>
             }
@@ -38,7 +38,9 @@ function Catalog() {
                     })}
                 </div>
             </div>
-            {auth?.Role === 'sponsor' && <Link to='./settings' className='cta-button'>Settings</Link>}
+            {(auth?.Role === 'sponsor' || auth?.Role === 'admin') 
+                && <Link to='./settings' className='cta-button'>Settings</Link>
+            }
         </section>
     )
 }
