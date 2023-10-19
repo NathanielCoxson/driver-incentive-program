@@ -38,7 +38,7 @@ function Catalog() {
                     })}
                 </div>
             </div>
-            <Link to='./settings' className='cta-button'>Settings</Link>
+            {auth?.Role === 'sponsor' && <Link to='./settings' className='cta-button'>Settings</Link>}
         </section>
     )
 }
