@@ -146,6 +146,13 @@ function Register({ role }) {
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
                 )}
+                
+                {role === 'driver' && (
+                    <div>
+                        <label htmlFor="vehicleInfo">Vehicle Information:</label>
+                        <input type="text" id="vehicleInfo" name="vehicleInfo" required onChange={handleVehicleInfoChange} />
+                    </div>
+                )}
 
                 <div>
                     <label htmlFor="username">Username:</label>
@@ -161,13 +168,6 @@ function Register({ role }) {
                     <label htmlFor="retypePassword">Retype Password:</label>
                     <input type="password" id="retypePassword" name="retypePassword" required />
                 </div>
-
-                {role === 'driver' && (
-                    <div>
-                        <label htmlFor="vehicleInfo">Vehicle Information:</label>
-                        <input type="text" id="vehicleInfo" name="vehicleInfo" required onChange={handleVehicleInfoChange} />
-                    </div>
-                )}
 
                 <div className="password-requirements">
                     <p>Password requirements:</p>
