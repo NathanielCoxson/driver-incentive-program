@@ -9,7 +9,6 @@ function PersistLogin() {
     const { auth, persist } = useAuth();
 
     useEffect(() => {
-        console.log("Refreshing");
         let isMounted = true;
 
         const verifyRefreshToken = async () => {

@@ -12,8 +12,12 @@ function Catalog() {
     useEffect(() => {
         const getItems = async () => {
             try {
-                const response = await axios.get("https://itunes.apple.com/search?term=c418&media=music&entity=musicTrack&limit=6");
-                setItems(response.data.results);
+                let results = [];
+                let response = await axios.get("https://itunes.apple.com/search?term=bts&media=music&entity=musicTrack&limit=6");
+                results = [...results, ...response.data.results];
+                response = await axios.get("https://itunes.apple.com/search?term=c418&media=music&entity=musicTrack&limit=6");
+                results = [...results, ...response.data.results];
+                setItems(results);
             } catch (err) {
                 console.log(err);
             }
