@@ -13,10 +13,14 @@ function Catalog() {
         const getItems = async () => {
             try {
                 let results = [];
-                let response = await axios.get("https://itunes.apple.com/search?term=bts&media=music&entity=musicTrack&limit=6");
-                results = [...results, ...response.data.results];
-                response = await axios.get("https://itunes.apple.com/search?term=c418&media=music&entity=musicTrack&limit=6");
-                results = [...results, ...response.data.results];
+                let response = await axios.get('/catalogs');
+                let searches = response.data.searches;
+                console.log(searches);
+                for (let i = 0; i < searches.length; i++) {
+                    let search = searches[i];
+                    response = await axios.get(`https://itunes.apple.com/search?term=${search.term}&media=${search.media}&entity=musicTrack&limit=${search.limit}`);
+                    results = [...results, ...response.data.results];
+                }
                 setItems(results);
             } catch (err) {
                 console.log(err);
@@ -26,7 +30,7 @@ function Catalog() {
     }, []);
 
     return (
-        <section className="hero">
+        <section className="hero catalog-section">
             {auth?.Role === 'sponsor' || auth?.Role === 'admin'
                 ? <h2>Welcome to Your Sponsor's Catalog Preview</h2>
                 : <h2>Welcome to Your Driver's Catalog</h2>

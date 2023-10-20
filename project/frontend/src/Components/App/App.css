@@ -99,6 +99,9 @@ p {
   border-radius: 5px;
   font-weight: bold;
 }
+.cta-button:hover {
+  cursor: pointer;
+}
 .sign-in-button {
   display: inline-block;
   margin-top: 20px;
