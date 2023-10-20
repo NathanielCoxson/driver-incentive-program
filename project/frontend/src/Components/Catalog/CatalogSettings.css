@@ -79,10 +79,6 @@ div.search-terms-input .cta-button {
     border-bottom: 1px solid black;
 }
 
-.catalog-settings tr:first-child {
-    border-bottom: unset;
-}
-
 .catalog-settings tr:last-child {
     border-bottom: unset;
 }
