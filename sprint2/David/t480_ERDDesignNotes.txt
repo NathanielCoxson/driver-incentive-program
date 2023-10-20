@@ -79,3 +79,7 @@
     - &UID (User ID)
     - Vehicle (String)
     - PhoneNumber (String)
+
+- SponsorsUsers
+    - &SID (Sponsor ID)
+    - &UID (User ID)
