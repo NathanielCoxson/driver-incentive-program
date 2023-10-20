@@ -89,6 +89,7 @@ p {
   font-size: 18px;
 }
 .cta-button {
+  all: unset;
   display: inline-block;
   margin-top: 20px;
   padding: 10px 20px;

@@ -28,7 +28,7 @@ function CatalogSettings() {
     }
 
     return (
-        <section className="hero">
+        <section className="hero catalog-settings">
             <h2>Catalog Settings</h2>
             <form id="catalog-settings-form" onSubmit={handleSubmit}>
                 <div className='search-terms-input'>
@@ -61,7 +61,62 @@ function CatalogSettings() {
 
             </form>
 
+            <table>
+                <tr>
+                    <th>Term</th>
+                    <th>Media type</th>
+                    <th>Limit</th>
+                </tr>
+                <tr>
+                    <td contentEditable></td>
+                    <td>
+                        <div className='media-selections-wrapper'>
+                        <div className='media-selections'>
+                            <div className='media-option'>
+                                <label htmlFor='music'>Music:</label>
+                                <input type='radio' id='music' name='media-type1' value='music'></input>
+                            </div>
 
+                            <div className='media-option'>
+                                <label htmlFor='music'>Movie:</label>
+                                <input type='radio' id='movie' name='media-type1' value='movie'></input>
+                            </div>
+
+                            <div className='media-option'>
+                                <label htmlFor='music'>Audiobook:</label>
+                                <input type='radio' id='audiobook' name='media-type1' value='audiobook'></input>
+                            </div>
+                        </div>
+                        </div>
+                    </td>
+                    <td contentEditable></td>
+                </tr>
+                <tr>
+                    <td contentEditable></td>
+                    <td>
+                        <div className='media-selections-wrapper'>
+                        <div className='media-selections'>
+                            <div className='media-option'>
+                                <label htmlFor='music'>Music:</label>
+                                <input type='radio' id='music' name='media-type2' value='music'></input>
+                            </div>
+
+                            <div className='media-option'>
+                                <label htmlFor='music'>Movie:</label>
+                                <input type='radio' id='movie' name='media-type2' value='movie'></input>
+                            </div>
+
+                            <div className='media-option'>
+                                <label htmlFor='music'>Audiobook:</label>
+                                <input type='radio' id='audiobook' name='media-type2' value='audiobook'></input>
+                            </div>
+                        </div>
+                        </div>
+                    </td>
+                    <td contentEditable></td>
+                </tr>
+            </table>
+            
 
         </section>
     )

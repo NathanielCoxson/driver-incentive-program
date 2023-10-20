@@ -53,3 +53,80 @@ div.term-input-container {
 div.search-terms-input .cta-button {
     margin: 0;
 }
+
+.catalog-settings table {
+    background-color: hsl(201, 100%, 28%);
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    border-radius: 1em;
+}
+
+.catalog-settings th {
+    background-color: #f77f00;
+    padding: 0.5em 0;
+}
+
+.catalog-settings th:first-child {
+    border-radius: 1em 0 0 0;
+}
+
+.catalog-settings th:last-child {
+    border-radius: 0 1em 0 0;
+}
+
+.catalog-settings tr {
+    border-bottom: 1px solid black;
+}
+
+.catalog-settings tr:first-child {
+    border-bottom: unset;
+}
+
+.catalog-settings tr:last-child {
+    border-bottom: unset;
+}
+
+/* .catalog-settings tr:hover {
+    background-color: #f77f00;
+    cursor: default;
+} */
+
+.catalog-settings td {
+    padding: 0.5em 1em;
+    overflow: hidden;
+    vertical-align: center;
+    border-right: 1px solid black;
+    border-radius: 1em;
+}
+
+.catalog-settings td:last-child {
+    border: unset;
+}
+
+section.catalog-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+div.media-selections {
+    display: flex;
+    flex-direction: column;
+}
+
+div.media-option {
+    display: inline-flex;
+    justify-content: right;
+    gap: 1em;
+}
+
+.media-option input {
+    margin: 0;
+    width: 20px;
+}
+
+div.media-selections-wrapper {
+    display: flex;
+    justify-content: center;
+}
