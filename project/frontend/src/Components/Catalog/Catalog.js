@@ -15,7 +15,6 @@ function Catalog() {
                 let results = [];
                 let response = await axios.get('/catalogs');
                 let searches = response.data.searches;
-                console.log(searches);
                 for (let i = 0; i < searches.length; i++) {
                     let search = searches[i];
                     response = await axios.get(`https://itunes.apple.com/search?term=${search.term}&media=${search.media}&entity=musicTrack&limit=${search.limit}`);
