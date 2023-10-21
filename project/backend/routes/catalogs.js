@@ -8,11 +8,13 @@ catalogs.get('/', async (req, res) => {
             {
                 term: 'c418',
                 media: 'music',
+                entity: 'musicTrack',
                 limit: 5
             },
             {
                 term: 'bts',
                 media: 'music',
+                entity: 'album',
                 limit: 5
             }
         ]

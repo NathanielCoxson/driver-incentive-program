@@ -49,6 +49,17 @@ function CatalogSettings() {
     const handleMediaTypeChange = (event) => {
         let items = [...searches];
         items[event.target.name.split(' ')[1]].media = event.target.value;
+        
+        // Set entity to default select option on media change.
+        if (event.target.value === 'music') items[event.target.name.split(' ')[1]].entity = 'musicTrack';
+        else if (event.target.value === 'movie') items[event.target.name.split(' ')[1]].entity = 'movie';
+        else if (event.target.value === 'audiobook') items[event.target.name.split(' ')[1]].entity = 'audiobook';
+        setSearches(items);
+    };
+
+    const handleEntityTypeChange = (event) => {
+        let items = [...searches];
+        items[event.target.name.split(' ')[1]].entity = event.target.value;
         setSearches(items);
     };
 
@@ -96,6 +107,7 @@ function CatalogSettings() {
                         <tr>
                             <th>Term</th>
                             <th>Media type</th>
+                            <th>Entity type</th>
                             <th>Limit</th>
                         </tr>
                     </thead>
@@ -152,6 +164,30 @@ function CatalogSettings() {
                                                 </div>
                                             </div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <label htmlFor={`entity ${i}`}></label>
+                                        <select name={`entity ${i}`} defaultValue={search.entity} onChange={handleEntityTypeChange}>
+                                            {search.media === 'music' &&
+                                                <>
+                                                    <option value='musicTrack'>Track</option>
+                                                    <option value='musicArtist'>Artist</option>
+                                                    <option value='album'>Album</option>
+                                                </>
+                                            }
+                                            {search.media === 'movie' &&
+                                                <>
+                                                    <option value='movie'>Movie</option>
+                                                    <option value='movieArtist'>Artist</option>
+                                                </>
+                                            }
+                                            {search.media === 'audiobook' &&
+                                                <>
+                                                    <option value='audiobook'>Audiobook</option>
+                                                    <option value='audiobookAuthor'>Author</option>
+                                                </>
+                                            }
+                                        </select>
                                     </td>
                                     <td>
                                         <label htmlFor={`limit ${i}`}></label>
