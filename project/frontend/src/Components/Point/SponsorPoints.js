@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './DriverPoints.css';
+import './SponsorPoints.css';
 
 function SponsorPoints() {
     const [drivers, setDrivers] = useState([
@@ -32,16 +32,20 @@ function SponsorPoints() {
             <div className="driver-list">
                 {drivers.map((driver, index) => (
                     <div key={index} className="driver-entry">
-                        <h3>{driver.name}</h3>
-                        <p>Points: {driver.points}</p>
-                        <input
-                            type="text"
-                            value={pointsChange}
-                            onChange={(e) => setPointsChange(e.target.value)}
-                            placeholder="Enter points change (e.g., add,10 or reduce,5)"
-                        />
-                        <button onClick={() => handlePointsChange('add', index)}>Add</button>
-                        <button onClick={() => handlePointsChange('reduce', index)}>Reduce</button>
+                        <div className="driver-info">
+                            <h3>{driver.name}</h3>
+                            <p>Points: {driver.points}</p>
+                        </div>
+                        <div className="adjustment-controls">
+                            <input
+                                type="text"
+                                value={pointsChange}
+                                onChange={(e) => setPointsChange(e.target.value)}
+                                placeholder="Enter points change (e.g., add,10 or reduce,5)"
+                            />
+                            <button onClick={() => handlePointsChange('add', index)}>Add</button>
+                            <button onClick={() => handlePointsChange('reduce', index)}>Reduce</button>
+                        </div>
                     </div>
                 ))}
             </div>
