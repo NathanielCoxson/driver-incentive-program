@@ -148,9 +148,9 @@ function Register({ role }) {
                     </div>
                 )}
                 
-                console.log('Role:', role);
+               
 
-                {(role === 'driver') && (
+                {(role !== 'sponsor') && (
                     <div>
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
                         
