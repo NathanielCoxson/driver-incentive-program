@@ -7,13 +7,15 @@ function SponsorPoints() {
         { name: 'Driver 2', points: 75 },
         { name: 'Driver 3', points: 120 },
     ]);
+    const [selectedDriver, setSelectedDriver] = useState('');
     const [pointsChange, setPointsChange] = useState('');
 
-    const handlePointsChange = (action, driverIndex) => {
+    const handlePointsChange = (action) => {
         const updatedDrivers = [...drivers];
+        const driverIndex = drivers.findIndex((driver) => driver.name === selectedDriver);
         const [pointsAction, pointsValue] = pointsChange.split(',');
 
-        if (!isNaN(pointsValue)) {
+        if (!isNaN(pointsValue) && driverIndex !== -1) {
             if (action === 'add') {
                 updatedDrivers[driverIndex].points += parseInt(pointsValue, 10);
             } else if (action === 'reduce') {
@@ -38,22 +40,31 @@ function SponsorPoints() {
                             <h3>{driver.name}</h3>
                             <p>Points: {driver.points}</p>
                         </div>
-                        <div className="adjustment-controls">
-                            <input
-                                type="text"
-                                value={pointsChange}
-                                onChange={(e) => {
-                                    if (/^\d+$/.test(e.target.value) || e.target.value === '') {
-                                        setPointsChange(e.target.value);
-                                    }
-                                }}
-                                placeholder="Enter points change (numbers only)"
-                            />
-                            <button onClick={() => handlePointsChange('add', index)}>Add</button>
-                            <button onClick={() => handlePointsChange('reduce', index)}>Reduce</button>
-                        </div>
                     </div>
                 ))}
+            </div>
+
+            <div className="points-adjustment">
+                <select value={selectedDriver} onChange={(e) => setSelectedDriver(e.target.value)} className="driver-dropdown">
+                    <option value="">Select a Driver</option>
+                    {drivers.map((driver) => (
+                        <option key={driver.name} value={driver.name}>
+                            {driver.name}
+                        </option>
+                    ))}
+                </select>
+                <input
+                    type="text"
+                    value={pointsChange}
+                    onChange={(e) => {
+                        if (/^\d+$/.test(e.target.value) || e.target.value === '') {
+                            setPointsChange(e.target.value);
+                        }
+                    }}
+                    placeholder="Enter points change (numbers only)"
+                />
+                <button onClick={() => handlePointsChange('add')}>Add</button>
+                <button onClick={() => handlePointsChange('reduce')}>Reduce</button>
             </div>
         </section>
     );
