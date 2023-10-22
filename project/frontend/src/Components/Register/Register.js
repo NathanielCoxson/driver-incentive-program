@@ -103,7 +103,7 @@ function Register({ role }) {
 
     // Additional function to handle vehicle info change (for driver role)
     const handleVehicleInfoChange = (event) => {
-        setVehicleInfo(event.target.value === 'driver');
+        setVehicleInfo(event.target.value);
     };
 
     return (
