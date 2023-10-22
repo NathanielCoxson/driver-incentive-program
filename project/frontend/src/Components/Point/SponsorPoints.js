@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './DriverPoints.css';
+import './SponsorPoints.css';
 
 function SponsorPoints() {
     const [drivers, setDrivers] = useState([
@@ -13,14 +13,16 @@ function SponsorPoints() {
         const updatedDrivers = [...drivers];
         const [pointsAction, pointsValue] = pointsChange.split(',');
 
-        if (action === 'add') {
-            updatedDrivers[driverIndex].points += parseInt(pointsValue, 10);
-        } else if (action === 'reduce') {
-            updatedDrivers[driverIndex].points -= parseInt(pointsValue, 10);
-        }
+        if (!isNaN(pointsValue)) {
+            if (action === 'add') {
+                updatedDrivers[driverIndex].points += parseInt(pointsValue, 10);
+            } else if (action === 'reduce') {
+                updatedDrivers[driverIndex].points -= parseInt(pointsValue, 10);
+            }
 
-        setPointsChange('');
-        setDrivers(updatedDrivers);
+            setPointsChange('');
+            setDrivers(updatedDrivers);
+        }
     };
 
     return (
@@ -40,8 +42,12 @@ function SponsorPoints() {
                             <input
                                 type="text"
                                 value={pointsChange}
-                                onChange={(e) => setPointsChange(e.target.value)}
-                                placeholder="Enter points change (e.g., add,10 or reduce,5)"
+                                onChange={(e) => {
+                                    if (/^\d+$/.test(e.target.value) || e.target.value === '') {
+                                        setPointsChange(e.target.value);
+                                    }
+                                }}
+                                placeholder="Enter points change (numbers only)"
                             />
                             <button onClick={() => handlePointsChange('add', index)}>Add</button>
                             <button onClick={() => handlePointsChange('reduce', index)}>Reduce</button>
