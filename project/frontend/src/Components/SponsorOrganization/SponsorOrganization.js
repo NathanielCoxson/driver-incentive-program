@@ -7,6 +7,7 @@ function SponsorOrganization() {
     const { auth } = useAuth();
 
     // Simulated organization data, replace with actual data
+    const driverOrganizations = auth?.DriverOrganizations || [];
     const sponsorOrganizations = [
         { id: 1, name: 'Organization 1' },
         { id: 2, name: 'Organization 2' },
@@ -29,16 +30,18 @@ function SponsorOrganization() {
                         <p>Select Your Sponsor Organization:</p>
                         <select value={selectedOrganization} onChange={handleOrganizationChange} className="sponsor-organization-dropdown">
                             <option value="">Select an Organization</option>
-                            {sponsorOrganizations.map((organization) => (
-                                <option key={organization.id} value={organization.name}>
-                                    {organization.name}
-                                </option>
-                            ))}
+                            {driverOrganizations.length === 0 ? (
+                                <option value="joinOrganization">Please join an organization</option>
+                            ) : (
+                                driverOrganizations.map((organization) => (
+                                    <option key={organization.id} value={organization.name}>
+                                        {organization.name}
+                                    </option>
+                                ))
+                            )}
                         </select>
                     </>
-                ) : (
-                    <p>Please join an organization</p>
-                )}
+                ) : null}
 
                 <p>Looking for a Sponsor?</p>
                 <Link to="../join_sponsor_organization" className="cta-button">
