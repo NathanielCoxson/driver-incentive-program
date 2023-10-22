@@ -145,7 +145,7 @@ function Register({ role }) {
                         <label htmlFor="adminPin">Admin Pin:</label>
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
-                }
+                )}
 
                 {role === 'driver' && (
                     <div>
@@ -158,7 +158,7 @@ function Register({ role }) {
                             onChange={handleVehicleInfoChange} // Handle changes
                         />
                     </div>
-                }
+                )}
 
                 <div>
                     <label htmlFor="username">Username:</label>
