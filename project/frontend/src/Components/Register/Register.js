@@ -98,8 +98,9 @@ function Register() {
     }
 
     const handleSelectChange = (event) => {
-        setAdminPinInput(event.target.value === 'admin');
-        setVehicleInfo(event.target.value === 'driver');
+        const selectedValue = event.target.value;
+        setAdminPinInput(selectedValue === 'admin');
+        setVehicleInfo(selectedValue === 'driver');
     };
 
     return (
@@ -124,10 +125,10 @@ function Register() {
 
                 <div>
                     <label htmlFor="role">User Type:</label>
-                    <select onChange={handleSelectChange} id="role" name="role" required>
-                        <option value="driver">Driver</option>
+                    <select onChange={handleSelectChange} id="role" name="role" required >
                         <option value="sponsor">Sponsor</option>
                         <option value="admin">Admin</option>
+                        <option value="driver">Driver</option>
                     </select>
                 </div>
 
