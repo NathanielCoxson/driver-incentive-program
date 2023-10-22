@@ -31,6 +31,10 @@
     {
       "name": "about",
       "description": "Operations for releases"
+    },
+    {
+      "name": "catalogs",
+      "description": "Operations about catalogs"
     }
   ],
   "paths": {
@@ -640,6 +644,219 @@
           },
           "404": {
             "description": "Application not found"
+          }
+        }
+      }
+    },
+    "/catalogs/:SponsorName": {
+      "get": {
+        "tags": [
+          "catalogs"
+        ],
+        "summary": "Retrieve the catalog searches for a sponsor.",
+        "description": "Returns a list of preset API queries to construct the sponsor's catalog.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the sponsor whose catalog is to be returned.",
+            "required": "true"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "searches": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "CSID": "2F005544-62B3-4E95-BA6F-664CA466183C",
+                          "term": "music artist name",
+                          "media": "music",
+                          "entity": "musicTrack",
+                          "limit": 5
+                        },
+                        {
+                          "CSID": "2F005544-62B3-4E95-BA6F-664CA466183C",
+                          "term": "movie name",
+                          "media": "movie",
+                          "entity": "movie",
+                          "limit": 2
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sponsor not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "catalogs"
+        ],
+        "summary": "Adds new search queries to a sponsor catalog.",
+        "description": "Adds one or more new search queries to a sponsor's catalog.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the sponsor.",
+            "required": "true"
+          }
+        ],
+        "requestBody": {
+          "description": "The array of new queries to add.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "searches": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "term": "music artist name",
+                        "media": "music",
+                        "entity": "musicTrack",
+                        "limit": 5
+                      },
+                      {
+                        "term": "movie name",
+                        "media": "movie",
+                        "entity": "movie",
+                        "limit": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Sponsor not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "catalogs"
+        ],
+        "summary": "Update a sponsor's catalog.",
+        "description": "Updates the catalog settings of a sponsor.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the sponsor.",
+            "required": "true"
+          }
+        ],
+        "requestBody": {
+          "description": "The updated array of search queries.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "searches": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "CSID": "2F005544-62B3-4E95-BA6F-664CA466183C",
+                        "term": "music artist name",
+                        "media": "music",
+                        "entity": "musicTrack",
+                        "limit": 5
+                      },
+                      {
+                        "CSID": "2F005544-62B3-4E95-BA6F-664CA466183C",
+                        "term": "movie name",
+                        "media": "movie",
+                        "entity": "movie",
+                        "limit": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Sponsor not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "catalogs"
+        ],
+        "summary": "Delete a search query from a sponsor's catalog.",
+        "description": "Delete one or more search queries from a sponsor catalog's settings.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the sponsor.",
+            "required": "true"
+          }
+        ],
+        "requestBody": {
+          "description": "The list of search queries to delete.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "searches": {
+                    "type": "array",
+                    "example": [
+                      "2F005544-62B3-4E95-BA6F-664CA466183C",
+                      "8EE59120-A598-4E99-BBA8-AF5C19F3EE29"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Sponsor not found"
           }
         }
       }
