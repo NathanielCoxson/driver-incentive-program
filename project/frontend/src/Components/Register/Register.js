@@ -94,12 +94,9 @@ function Register({ role }) {
 
     const handleSelectChange = (event) => {
         setAdminPinInput(event.target.value === 'admin');
-    };
-
-    // Additional function to handle vehicle info change (for driver role)
-    const handleVehicleInfoChange = (event) => {
         setVehicleInfo(event.target.value === 'driver');
     };
+
 
     return (
         <section className="hero">
