@@ -30,7 +30,7 @@ function SponsorOrganization() {
         <section className="hero">
             <h2>Welcome to Your Sponsor Organization Dashboard</h2>
             <div className="sponsor-info">
-                {auth?.Role === 'driver' && auth?.HasSponsorOrganization ? (
+                {auth?.Role === 'driver' && (
                     <>
                         <p>Select Your Sponsor Organization:</p>
                         <select value={selectedOrganization} onChange={handleOrganizationChange} className="sponsor-organization-dropdown">
