@@ -35,7 +35,9 @@ function DriverPoints() {
                     <div className="organization-dropdown">
                         <label htmlFor="organizationSelect">Select Organization: </label>
                         <select id="organizationSelect" value={selectedOrganization} onChange={handleOrganizationChange}>
-                            <option value="">No Organization</option>
+                            {hasOrganizations ? (
+                                <option value="">No Organization</option>
+                            ) : null}
                             {sponsorOrganizations.map((organization) => (
                                 <option key={organization.id} value={organization.name}>
                                     {organization.name}
