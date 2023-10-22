@@ -150,7 +150,7 @@ function Register({ role }) {
                 
                
 
-                {(role !== 'sponsor') && (
+                {(role === "driver") && (
                     <div>
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
                         
