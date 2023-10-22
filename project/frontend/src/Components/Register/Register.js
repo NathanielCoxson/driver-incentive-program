@@ -6,7 +6,7 @@ function Register({ role }) {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [vehicleInfo, setVehicleInfo] = useState(true); 
+    const [vehicleInfo, setVehicleInfo] = useState(''); // Initialize as an empty string
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
@@ -89,12 +89,11 @@ function Register({ role }) {
                 setResponseMessage('Login Failed');
             }
         }
-    };
+    }
 
     const handleSelectChange = (event) => {
         setAdminPinInput(event.target.value === 'admin');
     };
-
 
     // Additional function to handle phone number change
     const handlePhoneNumberChange = (event) => {
@@ -112,7 +111,7 @@ function Register({ role }) {
                 <h2>Add {role.charAt(0).toUpperCase() + role.slice(1)}</h2>
             ) : (
                 <h2>Sign Up</h2>
-            )}
+            }
 
             <form id="signInForm" onSubmit={handleSubmit}>
                 <div>
@@ -139,22 +138,27 @@ function Register({ role }) {
                             <option value="admin">Admin</option>
                         </select>
                     </div>
-                )}
+                }
 
                 {(adminPinInput || role === 'admin') && (
                     <div id="adminPinSection">
                         <label htmlFor="adminPin">Admin Pin:</label>
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
-                )}
-                
-                {handleVehicleInfoChange || role === 'driver' && (
+                }
+
+                {role === 'driver' && (
                     <div>
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
-                        <input type="text" id="vehicleInfo" name="vehicleInfo" />
+                        <input
+                            type="text"
+                            id="vehicleInfo"
+                            name="vehicleInfo"
+                            value={vehicleInfo} // Bind the value to the state
+                            onChange={handleVehicleInfoChange} // Handle changes
+                        />
                     </div>
-                )}
-
+                }
 
                 <div>
                     <label htmlFor="username">Username:</label>
