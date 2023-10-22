@@ -5,7 +5,7 @@ import axios from '../../api/axios';
 function Register({ role }) {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
-    const [vehicleInfo, setVehicleInfo] = useState(false); // Initialize as an empty object
+    const [vehicleInfo, setVehicleInfo] = useState(''); // Initialize as an empty object
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
