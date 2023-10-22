@@ -5,7 +5,6 @@ import axios from '../../api/axios';
 function Register({ role }) {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState('');
     const [vehicleInfo, setVehicleInfo] = useState(false); // Initialize as an empty object
 
     const passwordRequirementsMessage =
@@ -24,6 +23,7 @@ function Register({ role }) {
     function validateForm(form) {
         const Role = role || form.role.value;
         const adminPin = form.adminPin ? form.adminPin.value : '';
+        const vehicleInfo = form.vehicleInfo ? form.vehicleInfo.value : '';
         const password = form.password.value;
         const retypePassword = form.retypePassword.value;
 
@@ -40,6 +40,13 @@ function Register({ role }) {
         if (Role === 'admin') {
             if (!adminPin) {
                 setResponseMessage("Admin Pin is required for admin users.");
+                return false;
+            }
+        }
+
+        if (Role === 'driver') {
+            if (!vehicleInfo) {
+                setResponseMessage("Driver need to enter vehicle information");
                 return false;
             }
         }
@@ -142,7 +149,7 @@ function Register({ role }) {
                 
                
 
-                {(role === 'driver') && (
+                {(Role === 'driver') && (
                     <div>
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>      
                         <input type="text" id="vehicleInfo" name="vehicleInfo" />
