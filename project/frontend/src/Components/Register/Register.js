@@ -62,7 +62,7 @@ function Register({ role }) {
             Name: input.name.value,
             Role: Role,
             Email: input.email.value,
-            PhoneNumber: phoneNumber, // Added phone number
+            PhoneNumber: input.phoneNumber, // Added phone number
         };
 
         if (Role === 'driver') {
@@ -103,7 +103,7 @@ function Register({ role }) {
 
     // Additional function to handle vehicle info change (for driver role)
     const handleVehicleInfoChange = (event) => {
-        setVehicleInfo({ ...vehicleInfo, [event.target.name]: event.target.value });
+        setVehicleInfo(event.target.value == 'driver');
     };
 
     return (
@@ -148,9 +148,10 @@ function Register({ role }) {
                     </div>
                 )}
                 
-                {(role) && (
+                {(role === 'driver') && (
                     <div>
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
+                        
                         <input
                             type="text"
                             id="vehicleInfo"
