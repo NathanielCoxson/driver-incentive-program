@@ -18,6 +18,7 @@ function Register({ role }) {
 
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
+    useEffect(() => {}, [vehicleInfo]);
     useEffect(() => {}, [adminPinInput]);
 
     function validateForm(form) {
