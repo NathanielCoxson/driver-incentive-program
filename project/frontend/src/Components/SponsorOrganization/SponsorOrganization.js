@@ -24,11 +24,9 @@ function SponsorOrganization() {
         <section className="hero">
             <h2>Welcome to Your Sponsor Organization Dashboard</h2>
             <div className="sponsor-info">
-                {auth?.Role === 'driver' ? (
+                {auth?.Role === 'driver' && auth?.HasSponsorOrganization ? (
                     <>
-                        <p>
-                            {auth.HasSponsorOrganization ? 'Select Your Sponsor Organization:' : 'Please join an organization:'}
-                        </p>
+                        <p>Select Your Sponsor Organization:</p>
                         <select value={selectedOrganization} onChange={handleOrganizationChange} className="sponsor-organization-dropdown">
                             <option value="">Select an Organization</option>
                             {sponsorOrganizations.map((organization) => (
@@ -38,7 +36,9 @@ function SponsorOrganization() {
                             ))}
                         </select>
                     </>
-                ) : null}
+                ) : (
+                    <p>Please join an organization</p>
+                )}
 
                 <p>Looking for a Sponsor?</p>
                 <Link to="../join_sponsor_organization" className="cta-button">
