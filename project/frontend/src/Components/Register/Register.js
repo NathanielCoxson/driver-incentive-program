@@ -6,7 +6,7 @@ function Register({ role }) {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [vehicleInfo, setVehicleInfo] = useState(false); // Initialize as an empty object
+    const [vehicleInfo, setVehicleInfo] = useState(''); // Initialize as an empty object
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
