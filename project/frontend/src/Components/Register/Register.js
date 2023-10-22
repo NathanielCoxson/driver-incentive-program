@@ -2,10 +2,10 @@ import './Register.css';
 import { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 
-function Register({ role }) {
+function Register() {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
-    const [vehicleInfo, setVehicleInfo] = useState(''); // Initialize as an empty object
+    const [vehicleInfoInput, setVehicleInfoInput] = useState(false);
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
@@ -17,13 +17,13 @@ function Register({ role }) {
 
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
-    useEffect(() => {}, [vehicleInfo]);
     useEffect(() => {}, [adminPinInput]);
+    useEffect(() => {}, [vehicleInfoInput]);
 
     function validateForm(form) {
-        const Role = role || form.role.value;
-        const adminPin = form.adminPin ? form.adminPin.value : '';
-        const vehicleInfo = form.vehicleInfo ? form.vehicleInfo.value : '';
+        const role = form.role.value;
+        const adminPin = form.adminPin.value;
+        const vehicleInfo = form.vehicleInfo.value;
         const password = form.password.value;
         const retypePassword = form.retypePassword.value;
 
@@ -37,16 +37,16 @@ function Register({ role }) {
             return false;
         }
 
-        if (Role === 'admin') {
+        if (role === 'admin') {
             if (!adminPin) {
                 setResponseMessage("Admin Pin is required for admin users.");
                 return false;
             }
         }
 
-        if (Role === 'driver') {
+        if (role === 'driver') {
             if (!vehicleInfo) {
-                setResponseMessage("Driver need to enter vehicle information");
+                setResponseMessage("Driver needs to enter vehicle information");
                 return false;
             }
         }
@@ -59,7 +59,7 @@ function Register({ role }) {
         setResponseMessage('');
 
         const input = event.target;
-        const Role = role ? role : input.role.value;
+        const role = input.role.value;
 
         if (!validateForm(input)) return;
 
@@ -67,13 +67,17 @@ function Register({ role }) {
             Username: input.username.value,
             Password: input.password.value,
             Name: input.name.value,
-            Role: Role,
+            Role: role,
             Email: input.email.value,
-            PhoneNumber: input.phoneNumber, // Added phone number
+            PhoneNumber: input.phoneNumber.value, // Added phone number
         };
 
-        if (Role === 'driver') {
-            user.VehicleInfo = vehicleInfo; // Added vehicle information for driver role
+        if (role === 'admin') {
+            user.AdminPin = input.adminPin.value;
+        }
+
+        if (role === 'driver') {
+            user.VehicleInfo = input.vehicleInfo.value;
         }
 
         try {
@@ -100,78 +104,59 @@ function Register({ role }) {
     }
 
     const handleSelectChange = (event) => {
-        setAdminPinInput(event.target.value === 'admin');
-        setVehicleInfo(event.target.value === 'driver');
+        const selectedRole = event.target.value;
+        setAdminPinInput(selectedRole === 'admin');
+        setVehicleInfoInput(selectedRole === 'driver');
     };
-
 
     return (
         <section className="hero">
-            {role ? (
-                <h2>Add {role.charAt(0).toUpperCase() + role.slice(1)}</h2>
-            ) : (
-                <h2>Sign Up</h2>
-            )}
-
+            <h2>Sign Up</h2>
             <form id="signInForm" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="name">Name:</label>
                     <input type="text" id="name" name="name" required />
                 </div>
-
                 <div>
                     <label htmlFor="email">Email:</label>
                     <input type="text" id="email" name="email" required />
                 </div>
-
                 <div>
                     <label htmlFor="PhoneNumber">Phone Number:</label>
                     <input type="text" id="PhoneNumber" name="PhoneNumber" required />
                 </div>
-
-                {!role && (
-                    <div>
-                        <label htmlFor="role">User Type:</label>
-                        <select onChange={handleSelectChange} id="role" name="role" required >
-                            <option value="driver">Driver</option>
-                            <option value="sponsor">Sponsor</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                )}
-
-                {(adminPinInput || role === 'admin') && (
+                <div>
+                    <label htmlFor="role">User Type:</label>
+                    <select onChange={handleSelectChange} id="role" name="role" required>
+                        <option value="driver">Driver</option>
+                        <option value="sponsor">Sponsor</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                {adminPinInput && (
                     <div id="adminPinSection">
                         <label htmlFor="adminPin">Admin Pin:</label>
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
                 )}
-                
-               
-                {console.log("Role:", role)}
-                {(role === 'driver') && (
+                {vehicleInfoInput && (
                     <div id="vehicleInfoSection">
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
                         <input type="text" id="vehicleInfo" name="vehicleInfo" />
                     </div>
                 )}
-
-
                 <div>
                     <label htmlFor="username">Username:</label>
                     <input type="text" id="username" name="username" required />
                 </div>
-
                 <div>
                     <label htmlFor="password">Password:</label>
                     <input type="password" id="password" name="password" required />
                 </div>
-
                 <div>
                     <label htmlFor="retypePassword">Retype Password:</label>
                     <input type="password" id="retypePassword" name="retypePassword" required />
                 </div>
-
                 <div className="password-requirements">
                     <p>Password requirements:</p>
                     <ul>
@@ -182,7 +167,6 @@ function Register({ role }) {
                         <li> Contain one special character</li>
                     </ul>
                 </div>
-
                 <div className="password-validation" id="passwordValidation">{responseMessage}</div>
                 <button type="submit" className="cta-button">Sign Up</button>
             </form>
