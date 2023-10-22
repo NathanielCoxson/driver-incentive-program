@@ -17,9 +17,14 @@ function DriverPoints() {
         const selectedOrgName = event.target.value;
         setSelectedOrganization(selectedOrgName);
 
-        // Find the points for the selected organization
-        const organization = sponsorOrganizations.find((org) => org.name === selectedOrgName);
-        setPoints(organization ? organization.points : 0);
+        if (selectedOrgName === '') {
+            // When "No Organization" is selected
+            setPoints(0);
+        } else {
+            // Find the points for the selected organization
+            const organization = sponsorOrganizations.find((org) => org.name === selectedOrgName);
+            setPoints(organization ? organization.points : 0);
+        }
     };
 
     const hasOrganizations = sponsorOrganizations.length > 0;
@@ -31,18 +36,20 @@ function DriverPoints() {
             <h2>Points</h2>
 
             <div className="points-info">
-                {hasOrganizations && (
-                    <div className="organization-dropdown">
-                        <label htmlFor="organizationSelect">Select Organization: </label>
-                        <select id="organizationSelect" value={selectedOrganization} onChange={handleOrganizationChange}>
-                            <option value="">No Organization</option>
-                            {sponsorOrganizations.map((organization) => (
-                                <option key={organization.id} value={organization.name}>
-                                    {organization.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                <div className="organization-dropdown">
+                    <label htmlFor="organizationSelect">Select Organization: </label>
+                    <select id="organizationSelect" value={selectedOrganization} onChange={handleOrganizationChange}>
+                        <option value="">No Organization</option>
+                        {hasOrganizations && sponsorOrganizations.map((organization) => (
+                            <option key={organization.id} value={organization.name}>
+                                {organization.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+
+                {selectedOrganization === '' && (
+                    <p>Please join an organization</p>
                 )}
 
                 {selectedOrganization && (
