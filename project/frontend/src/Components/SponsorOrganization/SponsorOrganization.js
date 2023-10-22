@@ -20,6 +20,12 @@ function SponsorOrganization() {
                         <Link to="../create_sponsor_organization" className="cta-button"> Create An Sponsor Organization</Link>
                     </>
                 }
+                {auth?.Role === 'driver' &&
+                    <>
+                        < p > Or View My Organization:</p>
+                        <Link to="../view_sponsor_organization" className="cta-button"> View Sponsor Organization</Link>
+                    </>
+                }
 
             </div>
         </section >
