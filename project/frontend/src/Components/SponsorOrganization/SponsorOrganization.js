@@ -7,7 +7,6 @@ function SponsorOrganization() {
     const { auth } = useAuth();
 
     // Simulated organization data, replace with actual data
-    const driverOrganizations = auth?.DriverOrganizations || [];
     const sponsorOrganizations = [
         { id: 1, name: 'Organization 1' },
         { id: 2, name: 'Organization 2' },
@@ -25,20 +24,18 @@ function SponsorOrganization() {
         <section className="hero">
             <h2>Welcome to Your Sponsor Organization Dashboard</h2>
             <div className="sponsor-info">
-                {auth?.Role === 'driver' && auth?.HasSponsorOrganization ? (
+                {auth?.Role === 'driver' ? (
                     <>
-                        <p>Select Your Sponsor Organization:</p>
+                        <p>
+                            {auth.HasSponsorOrganization ? 'Select Your Sponsor Organization:' : 'Please join an organization:'}
+                        </p>
                         <select value={selectedOrganization} onChange={handleOrganizationChange} className="sponsor-organization-dropdown">
                             <option value="">Select an Organization</option>
-                            {driverOrganizations.length === 0 ? (
-                                <option value="joinOrganization">Please join an organization</option>
-                            ) : (
-                                driverOrganizations.map((organization) => (
-                                    <option key={organization.id} value={organization.name}>
-                                        {organization.name}
-                                    </option>
-                                ))
-                            )}
+                            {sponsorOrganizations.map((organization) => (
+                                <option key={organization.id} value={organization.name}>
+                                    {organization.name}
+                                </option>
+                            ))}
                         </select>
                     </>
                 ) : null}
