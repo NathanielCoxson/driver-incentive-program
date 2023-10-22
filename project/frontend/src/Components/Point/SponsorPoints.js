@@ -34,14 +34,16 @@ function SponsorPoints() {
             <h2>Points Adjustment</h2>
 
             <div className="driver-list">
-                {drivers.map((driver, index) => (
-                    <div key={index} className="driver-entry">
-                        <div className="driver-info">
-                            <h3>{driver.name}</h3>
+                <div className="points-container">
+                    {drivers.map((driver, index) => (
+                        <div key={index} className="driver-entry">
+                            <div className="driver-info">
+                                <h3>{driver.name}</h3>
+                            </div>
                             <p>Points: {driver.points}</p>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
 
             <div className="points-adjustment">
@@ -63,8 +65,8 @@ function SponsorPoints() {
                     }}
                     placeholder="Enter points change (numbers only)"
                 />
-                <button onClick={() => handlePointsChange('add') } className="cta-nutton">Add</button>
-                <button onClick={() => handlePointsChange('reduce')} className="cta-nutton">Reduce</button>
+                <button onClick={() => handlePointsChange('add')} className="cta-button">Add</button>
+                <button onClick={() => handlePointsChange('reduce')} className="cta-button">Reduce</button>
             </div>
         </section>
     );
