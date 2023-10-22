@@ -147,17 +147,19 @@ function Register({ role }) {
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
                 )}
-
-                <div>
-                    <label htmlFor="vehicleInfo">Vehicle Information:</label>
-                    <input
-                        type="text"
-                        id="vehicleInfo"
-                        name="vehicleInfo"
-                        value={vehicleInfo} // Bind the value to the state
-                        onChange={handleVehicleInfoChange} // Handle changes
-                    />
-                </div>
+                
+                {(role === 'driver') && (
+                    <div>
+                        <label htmlFor="vehicleInfo">Vehicle Information:</label>
+                        <input
+                            type="text"
+                            id="vehicleInfo"
+                            name="vehicleInfo"
+                            value={vehicleInfo} // Bind the value to the state
+                            onChange={handleVehicleInfoChange} // Handle changes
+                        />
+                    </div>
+                )}
 
 
                 <div>
