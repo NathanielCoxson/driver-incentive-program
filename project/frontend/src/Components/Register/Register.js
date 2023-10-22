@@ -5,7 +5,7 @@ import axios from '../../api/axios';
 function Register() {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
-    const [vehicleInfoInput, setVehicleInfoInput] = useState(false);
+    const [vehicleInfo, setVehicleInfo] = useState(false); // Initialize as false
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
@@ -17,13 +17,11 @@ function Register() {
 
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
+    useEffect(() => {}, [vehicleInfo]);
     useEffect(() => {}, [adminPinInput]);
-    useEffect(() => {}, [vehicleInfoInput]);
 
     function validateForm(form) {
-        const role = form.role.value;
-        const adminPin = form.adminPin.value;
-        const vehicleInfo = form.vehicleInfo.value;
+        const adminPin = form.adminPin ? form.adminPin.value : '';
         const password = form.password.value;
         const retypePassword = form.retypePassword.value;
 
@@ -37,15 +35,16 @@ function Register() {
             return false;
         }
 
-        if (role === 'admin') {
+        if (adminPinInput) {
             if (!adminPin) {
                 setResponseMessage("Admin Pin is required for admin users.");
                 return false;
             }
         }
 
-        if (role === 'driver') {
-            if (!vehicleInfo) {
+        if (vehicleInfo) {
+            const vehicleInfoValue = form.vehicleInfo ? form.vehicleInfo.value : '';
+            if (!vehicleInfoValue) {
                 setResponseMessage("Driver needs to enter vehicle information");
                 return false;
             }
@@ -59,7 +58,6 @@ function Register() {
         setResponseMessage('');
 
         const input = event.target;
-        const role = input.role.value;
 
         if (!validateForm(input)) return;
 
@@ -67,25 +65,21 @@ function Register() {
             Username: input.username.value,
             Password: input.password.value,
             Name: input.name.value,
-            Role: role,
+            Role: adminPinInput ? 'admin' : vehicleInfo ? 'driver' : 'sponsor',
             Email: input.email.value,
-            PhoneNumber: input.phoneNumber.value, // Added phone number
+            PhoneNumber: input.phoneNumber, // Added phone number
         };
 
-        if (role === 'admin') {
+        if (adminPinInput) {
             user.AdminPin = input.adminPin.value;
         }
 
-        if (role === 'driver') {
+        if (vehicleInfo) {
             user.VehicleInfo = input.vehicleInfo.value;
         }
 
         try {
-            await axios.post('/users/register', user, {
-                params: input.adminPin && {
-                    AdminPin: input.adminPin.value,
-                },
-            });
+            await axios.post('/users/register', user);
             setResponseMessage('Success!');
         } catch (err) {
             if (!err?.response) {
@@ -104,27 +98,30 @@ function Register() {
     }
 
     const handleSelectChange = (event) => {
-        const selectedRole = event.target.value;
-        setAdminPinInput(selectedRole === 'admin');
-        setVehicleInfoInput(selectedRole === 'driver');
+        setAdminPinInput(event.target.value === 'admin');
+        setVehicleInfo(event.target.value === 'driver');
     };
 
     return (
         <section className="hero">
             <h2>Sign Up</h2>
+
             <form id="signInForm" onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="name">Name:</label>
                     <input type="text" id="name" name="name" required />
                 </div>
+
                 <div>
                     <label htmlFor="email">Email:</label>
                     <input type="text" id="email" name="email" required />
                 </div>
+
                 <div>
                     <label htmlFor="PhoneNumber">Phone Number:</label>
                     <input type="text" id="PhoneNumber" name="PhoneNumber" required />
                 </div>
+
                 <div>
                     <label htmlFor="role">User Type:</label>
                     <select onChange={handleSelectChange} id="role" name="role" required>
@@ -133,30 +130,36 @@ function Register() {
                         <option value="admin">Admin</option>
                     </select>
                 </div>
+
                 {adminPinInput && (
                     <div id="adminPinSection">
                         <label htmlFor="adminPin">Admin Pin:</label>
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
                 )}
-                {vehicleInfoInput && (
+
+                {vehicleInfo && (
                     <div id="vehicleInfoSection">
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
                         <input type="text" id="vehicleInfo" name="vehicleInfo" />
                     </div>
                 )}
+
                 <div>
                     <label htmlFor="username">Username:</label>
                     <input type="text" id="username" name="username" required />
                 </div>
+
                 <div>
                     <label htmlFor="password">Password:</label>
                     <input type="password" id="password" name="password" required />
                 </div>
+
                 <div>
                     <label htmlFor="retypePassword">Retype Password:</label>
                     <input type="password" id="retypePassword" name="retypePassword" required />
                 </div>
+
                 <div className="password-requirements">
                     <p>Password requirements:</p>
                     <ul>
@@ -167,6 +170,7 @@ function Register() {
                         <li> Contain one special character</li>
                     </ul>
                 </div>
+
                 <div className="password-validation" id="passwordValidation">{responseMessage}</div>
                 <button type="submit" className="cta-button">Sign Up</button>
             </form>
