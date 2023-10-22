@@ -24,7 +24,7 @@ function SponsorOrganization() {
         <section className="hero">
             <h2>Welcome to Your Sponsor Organization Dashboard</h2>
             <div className="sponsor-info">
-                {auth?.Role === 'driver' ? (
+                {auth?.Role === 'driver' && auth?.HasSponsorOrganization ? (
                     <>
                         <p>Select Your Sponsor Organization:</p>
                         <select value={selectedOrganization} onChange={handleOrganizationChange} className="sponsor-organization-dropdown">
@@ -34,10 +34,11 @@ function SponsorOrganization() {
                                     {organization.name}
                                 </option>
                             ))}
-                            <option value="Please join an organization">Please join an organization</option>
                         </select>
                     </>
-                ) : null}
+                ) : (
+                    <p>Please join an organization</p>
+                )}
 
                 <p>Looking for a Sponsor?</p>
                 <Link to="../join_sponsor_organization" className="cta-button">
