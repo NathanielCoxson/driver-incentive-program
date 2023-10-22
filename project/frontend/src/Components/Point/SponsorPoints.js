@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './SponsorPoints.css';
+import './DriverPoints.css';
 
 function SponsorPoints() {
     const [drivers, setDrivers] = useState([
