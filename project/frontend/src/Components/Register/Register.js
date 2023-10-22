@@ -6,7 +6,7 @@ function Register({ role }) {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [vehicleInfo, setVehicleInfo] = useState(); // Added for driver role
+    const [vehicleInfo, setVehicleInfo] = useState(true); 
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
@@ -148,17 +148,10 @@ function Register({ role }) {
                     </div>
                 )}
                 
-                {role === 'driver' && (
+                {handleVehicleInfoChange || role === 'driver' && (
                     <div>
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
-                        <input
-                            type="text"
-                            id="vehicleInfo"
-                            name="vehicleInfo"
-                            required
-                            value={vehicleInfo} // Bind the value to the state
-                            onChange={handleVehicleInfoChange} // Handle changes
-                        />
+                        <input type="text" id="vehicleInfo" name="vehicleInfo" />
                     </div>
                 )}
 
