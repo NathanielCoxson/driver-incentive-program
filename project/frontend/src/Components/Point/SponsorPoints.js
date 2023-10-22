@@ -63,8 +63,8 @@ function SponsorPoints() {
                     }}
                     placeholder="Enter points change (numbers only)"
                 />
-                <button onClick={() => handlePointsChange('add')}>Add</button>
-                <button onClick={() => handlePointsChange('reduce')}>Reduce</button>
+                <button onClick={() => handlePointsChange('add') } className="cta-nutton">Add</button>
+                <button onClick={() => handlePointsChange('reduce')} className="cta-nutton">Reduce</button>
             </div>
         </section>
     );
