@@ -8,16 +8,22 @@ function SponsorOrganization() {
 
     // Simulated organization data, replace with actual data
     const sponsorOrganizations = [
-        { id: 1, name: 'Organization 1' },
-        { id: 2, name: 'Organization 2' },
-        { id: 3, name: 'Organization 3' },
+        { id: 1, name: 'Organization 1', profile: 'Profile for Organization 1' },
+        { id: 2, name: 'Organization 2', profile: 'Profile for Organization 2' },
+        { id: 3, name: 'Organization 3', profile: 'Profile for Organization 3' },
     ];
 
     const [selectedOrganization, setSelectedOrganization] = useState('');
+    const [organizationProfile, setOrganizationProfile] = useState('');
 
     // Handle organization selection
     const handleOrganizationChange = (event) => {
-        setSelectedOrganization(event.target.value);
+        const selectedOrgName = event.target.value;
+        setSelectedOrganization(selectedOrgName);
+
+        // Find the profile for the selected organization
+        const profile = sponsorOrganizations.find((org) => org.name === selectedOrgName)?.profile;
+        setOrganizationProfile(profile || '');
     };
 
     return (
@@ -38,6 +44,13 @@ function SponsorOrganization() {
                     </>
                 ) : (
                     <p>Please join an organization</p>
+                )}
+
+                {selectedOrganization && (
+                    <div className="organization-profile">
+                        <h3>Organization Profile:</h3>
+                        <p>{organizationProfile}</p>
+                    </div>
                 )}
 
                 <p>Looking for a Sponsor?</p>
