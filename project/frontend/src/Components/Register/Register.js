@@ -148,7 +148,7 @@ function Register({ role }) {
                 )}
                 
                
-                console.log("Role:", role);
+                {console.log("Role:", role)}
                 {(role === 'driver') && (
                     <div id="vehicleInfoSection">
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
