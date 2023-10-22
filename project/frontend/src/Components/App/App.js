@@ -11,6 +11,7 @@ import { Route, Routes } from 'react-router-dom';
 import Missing from '../Missing/Missing';
 import Unauthorized from '../Unauthorized/Unauthorized';
 import DriverPoints from '../Point/DriverPoints';
+import SponsorPoints from '../Point/SponsorPoints';
 import ViewSponsorOrganization from '../SponsorOrganization/ViewSponsorOrganization';
 import Catalog from '../Catalog/Catalog';
 import JoinSponsorOrganization from '../SponsorOrganization/JoinSponsorOrganization';
@@ -58,6 +59,7 @@ function App() {
                 <Route path="sponsor_add_user/add_driver" element={<Register role='driver' />} />
                 <Route path="sponsor_add_user/add_sponsor" element={<Register role='sponsor' />} />
                 <Route path="create_sponsor_organization" element={<CreateSponsorOrganization />} />
+                <Route path="sponsor_points" element={<SponsorPoints />} />
                 <Route path="rejection_reason" element={<RejectionReason />} />
               </Route>
 
