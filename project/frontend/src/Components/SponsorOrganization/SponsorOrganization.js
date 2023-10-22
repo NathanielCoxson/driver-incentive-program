@@ -42,9 +42,7 @@ function SponsorOrganization() {
                             ))}
                         </select>
                     </>
-                ) : (
-                    <p>Please join an organization</p>
-                )}
+                ) }
 
                 {selectedOrganization && (
                     <div className="organization-profile">
