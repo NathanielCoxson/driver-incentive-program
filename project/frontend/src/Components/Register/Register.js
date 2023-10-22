@@ -148,8 +148,8 @@ function Register({ role }) {
                 )}
                 
                
-
-                {(vehicleInfo || role === 'driver') && (
+                console.log("Role:", role);
+                {(role === 'driver') && (
                     <div id="vehicleInfoSection">
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
                         <input type="text" id="vehicleInfo" name="vehicleInfo" />
