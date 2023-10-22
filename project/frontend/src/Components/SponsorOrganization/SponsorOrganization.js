@@ -26,9 +26,7 @@ function SponsorOrganization() {
             <div className="sponsor-info">
                 {auth?.Role === 'driver' ? (
                     <>
-                        <p>
-                            {auth.HasSponsorOrganization ? 'Select Your Sponsor Organization:' : 'Please join an organization:'}
-                        </p>
+                        <p>Select Your Sponsor Organization:</p>
                         <select value={selectedOrganization} onChange={handleOrganizationChange} className="sponsor-organization-dropdown">
                             <option value="">Select an Organization</option>
                             {sponsorOrganizations.map((organization) => (
@@ -36,6 +34,7 @@ function SponsorOrganization() {
                                     {organization.name}
                                 </option>
                             ))}
+                            <option value="Please join an organization">Please join an organization</option>
                         </select>
                     </>
                 ) : null}
