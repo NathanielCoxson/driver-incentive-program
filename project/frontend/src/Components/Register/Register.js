@@ -149,7 +149,7 @@ function Register({ role }) {
                 
                
 
-                {(VehicleInfo || role === 'driver') && (
+                {(vehicleInfo || role === 'driver') && (
                     <div>
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>      
                         <input type="text" id="vehicleInfo" name="vehicleInfo" />
