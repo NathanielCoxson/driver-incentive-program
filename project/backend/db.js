@@ -90,7 +90,7 @@ async function getUserByUsername(Username) {
         // Make request
         const result = await pool.request()
             .input('username', Username)
-            .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Username = @username");
+            .query("SELECT Users.UID, Sponsors.SponsorName, Users.Name, Users.Role, Users.Username, Users.Password, Users.Email FROM (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID WHERE Users.Username = @Username");
         // Return user object
         return result.recordset[0];
     } catch (err) {
@@ -118,7 +118,7 @@ async function getUserByEmail (Email) {
         // Make request
         const result = await pool.request()
             .input('Email', sql.VarChar(300), Email)
-            .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Email = @Email");
+            .query("SELECT Users.UID, Sponsors.SponsorName, Users.Name, Users.Role, Users.Username, Users.Password, Users.Email FROM (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID WHERE Users.Email = @Email");
         // Return user object
         return result.recordset[0];
     } catch (err) {
@@ -175,23 +175,23 @@ async function createUser(User) {
                 .input('Username', sql.VarChar(50), User.Username)
                 .input('Password', sql.VarChar(100), User.Password)
                 .input('Email', sql.VarChar(300), User.Email)
-                .query("\
-                    INSERT INTO Users(\
-                        UID,\
-                        SID,\
-                        Name,\
-                        Role,\
-                        Username,\
-                        Password,\
-                        Email) \
-                    VALUES(\
-                        NEWID(),\
-                        NULL,\
-                        @Name,\
-                        @Role,\
-                        @Username,\
-                        @Password,\
-                        @Email)");
+                .query("DECLARE @usid uniqueidentifier;\
+                        SET @usid = NEWID();\
+                        INSERT INTO Users(\
+                                        UID,\
+                                        Name,\
+                                        Role,\
+                                        Username,\
+                                        Password,\
+                                        Email)\
+                                    VALUES(\
+                                        @usid,\
+                                        @Name,\
+                                        @Role,\
+                                        @Username,\
+                                        @Password,\
+                                        @Email);");
+                        
         }
         else {
             result = await pool.request()
@@ -201,23 +201,23 @@ async function createUser(User) {
                 .input('Username', sql.VarChar(50), User.Username)
                 .input('Password', sql.VarChar(100), User.Password)
                 .input('Email', sql.VarChar(300), User.Email)
-                .query("\
-                    INSERT INTO Users(\
-                        UID,\
-                        SID,\
-                        Name,\
-                        Role,\
-                        Username,\
-                        Password,\
-                        Email) \
-                    VALUES(\
-                        NEWID(),\
-                        @SID,\
-                        @Name,\
-                        @Role,\
-                        @Username,\
-                        @Password,\
-                        @Email)");
+                .query("DECLARE @usid uniqueidentifier;\
+                        SET @usid = NEWID();\
+                        INSERT INTO Users(\
+                                        UID,\
+                                        Name,\
+                                        Role,\
+                                        Username,\
+                                        Password,\
+                                        Email)\
+                                    VALUES(\
+                                        @usid,\
+                                        @Name,\
+                                        @Role,\
+                                        @Username,\
+                                        @Password,\
+                                        @Email);\
+                        INSERT INTO SponsorsUsers VALUES (CAST(@SID AS uniqueidentifier), @usid);");
         }
         return result.rowsAffected[0];
     } catch (err) {
@@ -370,7 +370,7 @@ async function getUserByRefreshToken(RefreshToken) {
         const result = await pool.request()
             .input('RefreshToken', sql.UniqueIdentifier, RefreshToken)
             // Update password and wipe the reset token to prevent further changes.
-            .query('SELECT UID, SID, Name, Role, Username, Password, Email, RefreshTokenExpiration FROM Users WHERE RefreshToken = @RefreshToken');
+            .query('SELECT Users.UID, Sponsors.SID, Users.Name, Users.Role, Users.Username, Users.Password, Users.Email, Users.RefreshTokenExpiration FROM (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID WHERE RefreshToken = @RefreshToken');
         return result.recordset[0];
     } catch (err) {
         console.log(err);
