@@ -16,6 +16,8 @@ function Login() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        
     
         try {
             const response = await axios.post(LOGIN_URL,
@@ -30,6 +32,20 @@ function Login() {
             setPassword('');
             if (from === '/') navigate('/dashboard', { replace: true });
             else navigate(from, { replace: true });
+            let loginDate = new Date();
+            let LoginAttempt = {
+                LoginDate: loginDate.getUTCDate(),
+                Username: Username,
+                Success: true
+            }
+            fetch(`${baseURL}/api/users/loginattempt`, {
+                method: 'POST',
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(LoginAttempt)
+              })
+              .catch((err) => console.log(err));
         } catch (err) {
             if (!err?.response) {
                 setResponseMessage('No Server Response');
@@ -46,6 +62,20 @@ function Login() {
             else {
                 setResponseMessage('Login Failed');
             }
+            let loginDate = new Date();
+            let LoginAttempt = {
+                LoginDate: loginDate.getUTCDate(),
+                Username: Username,
+                Success: false
+            }
+            fetch(`${baseURL}/api/users/loginattempt`, {
+                method: 'POST',
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(LoginAttempt)
+              })
+              .catch((err) => console.log(err));
         }
     };
 
