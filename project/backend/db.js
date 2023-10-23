@@ -698,6 +698,23 @@ async function deleteCatalogSearchQuery(CID, CSID) {
     }
 }
 
+async function getUsersSponsors(UID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .query("SELECT Sponsors.SponsorName \
+                    FROM SponsorsUsers \
+                    JOIN Sponsors ON Sponsors.SID = SponsorsUsers.SID \
+                    WHERE UID = @UID");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -723,5 +740,6 @@ module.exports = {
     getSponsorCatalog,
     addCatalogSearchQuery,
     updateSearchQuery,
-    deleteCatalogSearchQuery
+    deleteCatalogSearchQuery,
+    getUsersSponsors
 }

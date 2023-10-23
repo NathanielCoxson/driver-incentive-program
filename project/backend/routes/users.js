@@ -117,6 +117,7 @@ users.post('/register', async (req, res) => {
 users.post("/login", async (req, res) => {
     try {
         const user = await req.app.locals.db.getUserByUsername(req.body.Username);
+        const sponsors = await req.app.locals.db.getUsersSponsors(user.UID);
 
         if (user) {
             bcrypt.compare(req.body.Password, user.Password, async (err, valid) => {
@@ -136,7 +137,7 @@ users.post("/login", async (req, res) => {
                     else {
                         res.cookie('refreshToken', refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
                         delete user.Password;
-                        res.status(201).send({ ...user, accessToken });
+                        res.status(201).send({ ...user, accessToken, sponsors });
                         return;
                     }
                 }
@@ -218,7 +219,9 @@ users.get("/refresh", async (req, res) => {
         const refreshToken = req.cookies.refreshToken;
         // Get user with refresh token
         const user = await req.app.locals.db.getUserByRefreshToken(refreshToken);
-
+        const sponsors = await req.app.locals.db.getUsersSponsors(user.UID);
+        console.log(user);
+        console.log(sponsors);
         // No user with refresh token in db
         if (!user) {
             res.status(401).send();
@@ -242,7 +245,7 @@ users.get("/refresh", async (req, res) => {
                 res.cookie('refreshToken', newToken.refreshToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
                 delete user.Password;
                 delete user.RefreshTokenExpiration;
-                res.status(200).send({ ...user, accessToken: newToken.accessToken });
+                res.status(200).send({ ...user, accessToken: newToken.accessToken, sponsors });
             }
         }
         // Invalid expiration date
