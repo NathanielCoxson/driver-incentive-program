@@ -17,27 +17,14 @@ function SponsorDashboard() {
         // Add more join requests as needed
     ]);
 
-    const [acceptedRequests, setAcceptedRequests] = useState([]); // Track accepted requests
-
-    const acceptRequest = (driverName) => {
-        setAcceptedRequests((prevAcceptedRequests) => [
-            ...prevAcceptedRequests,
-            driverName,
-        ]);
-    };
-
-    const [rejectionReason, setRejectionReason] = useState('');
-    const [showRejectionModal, setShowRejectionModal] = useState(false); // State to control the rejection modal
-
-    const rejectRequest = (driverName) => {
-        setShowRejectionModal(true);
-    };
-
-    const handleRejectWithReason = (reason) => {
-        if (reason) {
-            alert(`Rejected with reason: ${reason}`);
-        }
-        setShowRejectionModal(false);
+    const acceptOrRejectRequest = (driverName, accepted) => {
+        const updatedRequests = joinRequests.map((request) => {
+            if (request.driverName === driverName) {
+                return { ...request, status: accepted ? 'Accepted' : 'Rejected' };
+            }
+            return request;
+        });
+        setJoinRequests(updatedRequests);
     };
 
     return (
@@ -58,16 +45,18 @@ function SponsorDashboard() {
                         <p>
                             <strong>Reason:</strong> {request.requestReason}
                         </p>
-                        {acceptedRequests.includes(request.driverName) ? (
+                        {request.status === 'Accepted' ? (
                             <p>Accepted</p>
+                        ) : request.status === 'Rejected' ? (
+                            <p>Rejected</p>
                         ) : (
                             <>
-                                <button onClick={() => acceptRequest(request.driverName)} className="cta-button">
+                                <button onClick={() => acceptOrRejectRequest(request.driverName, true)} className="cta-button">
                                     Accept
                                 </button>
-                                <Link to="/dashboard/rejection_reason" className="cta-button">
+                                <button onClick={() => acceptOrRejectRequest(request.driverName, false)} className="cta-button">
                                     Reject
-                                </Link>
+                                </button>
                             </>
                         )}
                     </div>

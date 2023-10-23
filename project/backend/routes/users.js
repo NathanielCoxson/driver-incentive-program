@@ -167,7 +167,7 @@ users.post("/login", async (req, res) => {
  *  Success: String
  * }
  */
-users.post('/login', async (req, res) => {
+users.post('/loginattempt', async (req, res) => {
     try {
         const body = req.body;
 
