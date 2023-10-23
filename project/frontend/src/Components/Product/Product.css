@@ -1,0 +1,22 @@
+div.product-card {
+    background-color: hsl(201, 100%, 28%);
+    display: inline-flex;
+    justify-content: left;
+    align-items: center;
+    gap: 1em;
+    border-radius: 0.5em;
+    padding: 1em;
+}
+
+.product-card * {
+    margin: 0;
+}
+
+div.product-text-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-text-wrapper {
+    text-align: left;
+}

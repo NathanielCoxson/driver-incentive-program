@@ -63,7 +63,10 @@ async function getSponsorByName(SponsorName) {
         // Make request
         const result = await pool.request()
             .input('name', sql.VarChar(100), SponsorName)
-            .query('SELECT * FROM Sponsors WHERE SponsorName = @name');
+            .query('SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
+                    FROM Sponsors \
+                    JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
+                    WHERE SponsorName = @name');
         return result.recordset[0];
     } catch (err) {
         console.log(err);
@@ -111,7 +114,7 @@ async function getUserByUsername(Username) {
  * }
  * @param {String} Username 
  */
-async function getUserByEmail (Email) {
+async function getUserByEmail(Email) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -225,7 +228,7 @@ async function createUser(User) {
     }
 
 }
-    
+
 /**
  * Retrieves the user from the database with the specified username.
  * Response: {
@@ -253,8 +256,8 @@ async function getUserPasswordResetToken(Email) {
         console.log(err);
     }
 }
-    
-    
+
+
 /**
  * Sets a password reset token and timeout value for the user with the specific email 
  * in the database, as well as returns the token to be used by the caller.
@@ -376,7 +379,7 @@ async function getUserByRefreshToken(RefreshToken) {
         console.log(err);
     }
 }
-    
+
 /**
  * Updates the password of the user with the given email.
  * @param {String} Email 
@@ -397,7 +400,7 @@ async function resetUserPassword(Email, Password) {
         console.log(err);
     }
 }
-    
+
 /**
  * Sets PasswordResetToken and PasswordResetExpiration to NULL for the user with the given email.
  * @param {String} Email 
@@ -417,7 +420,7 @@ async function clearPasswordReset(Email) {
         console.log(err);
     }
 }
-        
+
 /**
  * Create a log entry into Logins with the given details
  * Request Body: {
@@ -452,7 +455,7 @@ async function createLogin(Login) {
         console.log(err);
     }
 }
-    
+
 /**
  * Insert's a new driver application in the Applications table
  * Application example: {
@@ -515,7 +518,7 @@ async function getUserApplications(Username) {
                 JOIN Sponsors ON Sponsors.SID = Applications.SID \
                 WHERE Users.Username = @Username"
             );
-        
+
         return result.recordset;
     } catch (err) {
         console.log(err);
@@ -574,7 +577,7 @@ async function deleteUsersApplications(Username) {
      *  ChangeType: String
      * }
      */
-async function createPWC(PWC){
+async function createPWC(PWC) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -595,6 +598,118 @@ async function createPWC(PWC){
                     @PWCDate,\
                     @ChangeType)");
         return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getSponsorCatalog(SponsorName) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('SponsorName', sql.VarChar(50), SponsorName)
+            .query("\
+                SELECT CSID, term, media, entity, limit \
+                FROM CatalogSearches \
+                JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
+                JOIN Sponsors ON Sponsors.SID = Catalogs.SID \
+                WHERE Sponsors.SponsorName = @SponsorName");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function addCatalogSearchQuery(CID, Search) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('CID', sql.UniqueIdentifier, CID)
+            .input('term', sql.VarChar(50), Search.term)
+            .input('media', sql.VarChar(50), Search.media)
+            .input('entity', sql.VarChar(50), Search.entity)
+            .input('limit', sql.Int, Search.limit)
+            .query("\
+                INSERT INTO CatalogSearches (CID, term, media, entity, limit, CSID) \
+                VALUES(@CID, @term, @media, @entity, @limit, NEWID())");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function updateSearchQuery(SID, CID, Searches) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        let transaction;
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
+            await new sql.Request(transaction)
+                .input("SID", sql.UniqueIdentifier, SID)
+                .query("DELETE CatalogSearches \
+                        FROM CatalogSearches \
+                        JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
+                        JOIN Sponsors ON Sponsors.SID = Catalogs.SID \
+                        WHERE Sponsors.SID = @SID");
+            for (const search of Searches) {
+                await pool.request()
+                    .input('CID', sql.UniqueIdentifier, CID)
+                    .input('term', sql.VarChar(50), search.term)
+                    .input('media', sql.VarChar(50), search.media)
+                    .input('entity', sql.VarChar(50), search.entity)
+                    .input('limit', sql.Int, search.limit)
+                    .query("\
+                        INSERT INTO CatalogSearches (CID, CSID, term, media, entity, limit) \
+                        VALUES(@CID, NEWID(), @term, @media, @entity, @limit)");
+            }
+            await transaction.commit();
+            return true;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function deleteCatalogSearchQuery(CID, CSID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('CID', sql.UniqueIdentifier, CID)
+            .input('CSID', sql.UniqueIdentifier, CSID)
+            .query("\
+                DELETE CatalogSearches \
+                FROM CatalogSearches \
+                JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
+                WHERE Catalogs.CID = @CID AND CSID = @CSID");
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getUsersSponsors(UID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .query("SELECT Sponsors.SponsorName \
+                    FROM SponsorsUsers \
+                    JOIN Sponsors ON Sponsors.SID = SponsorsUsers.SID \
+                    WHERE UID = @UID");
+        return result.recordset;
     } catch (err) {
         console.log(err);
     }
@@ -621,5 +736,10 @@ module.exports = {
     getUserApplications,
     deleteApplication,
     deleteUsersApplications,
-    createPWC
+    createPWC,
+    getSponsorCatalog,
+    addCatalogSearchQuery,
+    updateSearchQuery,
+    deleteCatalogSearchQuery,
+    getUsersSponsors
 }
