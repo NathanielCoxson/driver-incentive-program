@@ -2,11 +2,10 @@ import './Register.css';
 import { useEffect, useState } from 'react';
 import axios from '../../api/axios';
 
-function Register({ role }) {
+function Register() {
     const [responseMessage, setResponseMessage] = useState('');
     const [adminPinInput, setAdminPinInput] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [vehicleInfo, setVehicleInfo] = useState(''); // Added for driver role
+    const [vehicleInfo, setVehicleInfo] = useState(false); // Initialize as false
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
@@ -18,10 +17,10 @@ function Register({ role }) {
 
     const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/;
 
+    useEffect(() => {}, [vehicleInfo]);
     useEffect(() => {}, [adminPinInput]);
 
     function validateForm(form) {
-        const Role = role || form.role.value;
         const adminPin = form.adminPin ? form.adminPin.value : '';
         const password = form.password.value;
         const retypePassword = form.retypePassword.value;
@@ -36,9 +35,17 @@ function Register({ role }) {
             return false;
         }
 
-        if (Role === 'admin') {
+        if (adminPinInput) {
             if (!adminPin) {
                 setResponseMessage("Admin Pin is required for admin users.");
+                return false;
+            }
+        }
+
+        if (vehicleInfo) {
+            const vehicleInfoValue = form.vehicleInfo ? form.vehicleInfo.value : '';
+            if (!vehicleInfoValue) {
+                setResponseMessage("Driver needs to enter vehicle information");
                 return false;
             }
         }
@@ -51,7 +58,6 @@ function Register({ role }) {
         setResponseMessage('');
 
         const input = event.target;
-        const Role = role ? role : input.role.value;
 
         if (!validateForm(input)) return;
 
@@ -59,21 +65,21 @@ function Register({ role }) {
             Username: input.username.value,
             Password: input.password.value,
             Name: input.name.value,
-            Role: Role,
+            Role: adminPinInput ? 'admin' : vehicleInfo ? 'driver' : 'sponsor',
             Email: input.email.value,
-            PhoneNumber: phoneNumber, // Added phone number
+            PhoneNumber: input.phoneNumber, // Added phone number
         };
 
-        if (Role === 'driver') {
-            user.VehicleInfo = vehicleInfo; // Added vehicle information for driver role
+        if (adminPinInput) {
+            user.AdminPin = input.adminPin.value;
+        }
+
+        if (vehicleInfo) {
+            user.VehicleInfo = input.vehicleInfo.value;
         }
 
         try {
-            await axios.post('/users/register', user, {
-                params: input.adminPin && {
-                    AdminPin: input.adminPin.value,
-                },
-            });
+            await axios.post('/users/register', user);
             setResponseMessage('Success!');
         } catch (err) {
             if (!err?.response) {
@@ -89,29 +95,17 @@ function Register({ role }) {
                 setResponseMessage('Login Failed');
             }
         }
-    };
+    }
 
     const handleSelectChange = (event) => {
-        setAdminPinInput(event.target.value === 'admin');
-    };
-
-    // Additional function to handle phone number change
-    const handlePhoneNumberChange = (event) => {
-        setPhoneNumber(event.target.value);
-    };
-
-    // Additional function to handle vehicle info change (for driver role)
-    const handleVehicleInfoChange = (event) => {
-        setVehicleInfo(event.target.value);
+        const selectedValue = event.target.value;
+        setAdminPinInput(selectedValue === 'admin');
+        setVehicleInfo(selectedValue === 'driver');
     };
 
     return (
         <section className="hero">
-            {role ? (
-                <h2>Add {role.charAt(0).toUpperCase() + role.slice(1)}</h2>
-            ) : (
-                <h2>Sign Up</h2>
-            )}
+            <h2>Sign Up</h2>
 
             <form id="signInForm" onSubmit={handleSubmit}>
                 <div>
@@ -126,31 +120,29 @@ function Register({ role }) {
 
                 <div>
                     <label htmlFor="PhoneNumber">Phone Number:</label>
-                    <input type="text" id="PhoneNumber" name="PhoneNumber" required onChange={handlePhoneNumberChange} />
+                    <input type="text" id="PhoneNumber" name="PhoneNumber" required />
                 </div>
 
-                {!role && (
-                    <div>
-                        <label htmlFor="role">User Type:</label>
-                        <select onChange={handleSelectChange} id="role" name="role" required >
-                            <option value="driver">Driver</option>
-                            <option value="sponsor">Sponsor</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                    </div>
-                )}
+                <div>
+                    <label htmlFor="role">User Type:</label>
+                    <select onChange={handleSelectChange} id="role" name="role" required >
+                        <option value="sponsor">Sponsor</option>
+                        <option value="admin">Admin</option>
+                        <option value="driver">Driver</option>
+                    </select>
+                </div>
 
-                {(adminPinInput || role === 'admin') && (
+                {adminPinInput && (
                     <div id="adminPinSection">
                         <label htmlFor="adminPin">Admin Pin:</label>
                         <input type="password" id="adminPin" name="adminPin" />
                     </div>
                 )}
-                
-                {role === 'driver' && (
-                    <div>
+
+                {vehicleInfo && (
+                    <div id="vehicleInfoSection">
                         <label htmlFor="vehicleInfo">Vehicle Information:</label>
-                        <input type="text" id="vehicleInfo" name="vehicleInfo" required onChange={handleVehicleInfoChange} />
+                        <input type="text" id="vehicleInfo" name="vehicleInfo" />
                     </div>
                 )}
 
