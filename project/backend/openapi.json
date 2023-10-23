@@ -655,6 +655,7 @@
         ],
         "summary": "Retrieve the catalog searches for a sponsor.",
         "description": "Returns a list of preset API queries to construct the sponsor's catalog.",
+        "operationId": "getSponsorCatalog",
         "parameters": [
           {
             "in": "path",
@@ -685,7 +686,7 @@
                           "limit": 5
                         },
                         {
-                          "CSID": "2F005544-62B3-4E95-BA6F-664CA466183C",
+                          "CSID": "64C4FE0F-AC6D-4144-B2A2-5BBDBF6196B5",
                           "term": "movie name",
                           "media": "movie",
                           "entity": "movie",
@@ -709,6 +710,7 @@
         ],
         "summary": "Adds new search queries to a sponsor catalog.",
         "description": "Adds one or more new search queries to a sponsor's catalog.",
+        "operationId": "addCatalogSearchQuery",
         "parameters": [
           {
             "in": "path",
@@ -753,6 +755,9 @@
           "201": {
             "description": "Success"
           },
+          "400": {
+            "description": "Bad request"
+          },
           "404": {
             "description": "Sponsor not found"
           }
@@ -764,6 +769,7 @@
         ],
         "summary": "Update a sponsor's catalog.",
         "description": "Updates the catalog settings of a sponsor.",
+        "operationId": "updateSearchQuery",
         "parameters": [
           {
             "in": "path",
@@ -793,7 +799,7 @@
                         "limit": 5
                       },
                       {
-                        "CSID": "2F005544-62B3-4E95-BA6F-664CA466183C",
+                        "CSID": "64C4FE0F-AC6D-4144-B2A2-5BBDBF6196B5",
                         "term": "movie name",
                         "media": "movie",
                         "entity": "movie",
@@ -810,6 +816,9 @@
           "204": {
             "description": "Success"
           },
+          "400": {
+            "description": "Bad request"
+          },
           "404": {
             "description": "Sponsor not found"
           }
@@ -821,6 +830,7 @@
         ],
         "summary": "Delete a search query from a sponsor's catalog.",
         "description": "Delete one or more search queries from a sponsor catalog's settings.",
+        "operationId": "deleteCatalogSearchQuery",
         "parameters": [
           {
             "in": "path",
@@ -854,6 +864,9 @@
         "responses": {
           "200": {
             "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
           },
           "404": {
             "description": "Sponsor not found"
