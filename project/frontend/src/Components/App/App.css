@@ -36,6 +36,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -47,34 +48,41 @@ body {
   padding: 0;
   background-color: #f2f2f2;
 }
+
 header {
   background-color: #333;
   color: #fff;
   padding: 20px 0;
   text-align: center;
 }
+
 h1 {
   margin: 0;
   font-size: 36px;
 }
+
 nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
 nav li {
   display: inline;
   margin-right: 20px;
 }
+
 nav a {
   text-decoration: none;
   color: #fff;
   font-weight: bold;
 }
+
 main {
   text-align: center;
   padding: 20px;
 }
+
 .hero {
   background-color: #0077b6;
   color: #fff;
@@ -82,12 +90,15 @@ main {
   border-radius: 10px;
   width: 100%;
 }
+
 h2 {
   font-size: 28px;
 }
+
 p {
   font-size: 18px;
 }
+
 .cta-button {
   all: unset;
   display: inline-block;
@@ -99,9 +110,11 @@ p {
   border-radius: 5px;
   font-weight: bold;
 }
+
 .cta-button:hover {
   cursor: pointer;
 }
+
 .sign-in-button {
   display: inline-block;
   margin-top: 20px;
@@ -111,14 +124,16 @@ p {
   text-decoration: none;
   border-radius: 5px;
   font-weight: bold;
-  margin-left: 10px; 
+  margin-left: 10px;
 }
+
 .login-section {
   background-color: #0077b6;
   color: #fff;
   padding: 40px;
   border-radius: 10px;
 }
+
 .register-section {
   background-color: #0077b6;
   color: #fff;
@@ -139,9 +154,11 @@ p {
   margin-top: 30px;
   margin-bottom: 20px;
   margin-left: 20px;
-  margin-right: 20px; 
-  display: flex; /* Add display:flex to align the breadcrumb items */
-  align-items: center; /* Vertically align items in the breadcrumb */
+  margin-right: 20px;
+  display: flex;
+  /* Add display:flex to align the breadcrumb items */
+  align-items: center;
+  /* Vertically align items in the breadcrumb */
 
 }
 
@@ -158,7 +175,7 @@ p {
 
 
 .breadcrumb li:last-child {
-  color: orange; 
+  color: orange;
   font-weight: bold;
   text-align: center;
 }
@@ -166,8 +183,9 @@ p {
 .breadcrumb a::after {
   content: " >> ";
   color: #fff;
-  font-weight: bold; 
+  font-weight: bold;
 }
+
 label {
   display: block;
   font-weight: bold;
@@ -216,4 +234,25 @@ footer {
   color: #fff;
   text-align: center;
   padding: 10px 0;
+}
+
+.loader {
+  width: 30px;
+  height: 30px;
+  border: 4px solid #FFF;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }

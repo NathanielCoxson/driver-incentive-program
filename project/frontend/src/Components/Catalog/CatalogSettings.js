@@ -1,16 +1,29 @@
 import './CatalogSettings.css';
 import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function CatalogSettings() {
     const [responseMessage, setResponseMessage] = useState('');
     const [searches, setSearches] = useState([]);
     const [removing, setRemoving] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
+    const { SponsorName } = useParams();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setResponseMessage("Saving...");
+        setIsLoading(true);
+        try {
+            const response = await axiosPrivate.put(`/catalogs/${SponsorName}`, { searches });
+            console.log(response);
+        } catch (err) {
+            console.log(err);
+            setResponseMessage('Error saving searches, please try again.')
+        }
+        setIsLoading(false);
         console.log(searches);
         setResponseMessage('Success!');
     };
@@ -19,7 +32,7 @@ function CatalogSettings() {
         let isMounted = false;
         const fetchSearches = async () => {
             try {
-                const response = await axiosPrivate.get('/catalogs');
+                const response = await axiosPrivate.get(`/catalogs/${SponsorName}`);
                 setSearches(response.data.searches);
             } catch (err) {
                 console.log(err);
@@ -27,7 +40,7 @@ function CatalogSettings() {
         }
         if (!isMounted) fetchSearches();
         return () => isMounted = true;
-    }, [axiosPrivate]);
+    }, [axiosPrivate, SponsorName]);
 
     const handleTermChange = (event) => {
         let items = [...searches];
@@ -195,11 +208,11 @@ function CatalogSettings() {
                         <button type='button' className='cta-button' onClick={toggleRemove}>{removing ? 'Stop Deleting' : 'Start Deleting'}</button>
                         <button className='cta-button'>Save</button>
                     </div>
-                    <Link to='../catalog' className='cta-button'>Back</Link>
+                    <button type="button" onClick={() => navigate(-1)} className='cta-button'>Back</button>
                     <div>{responseMessage}</div>
                 </div>
             </form>
-
+            {isLoading && <span className='loader'></span>}
         </section>
     )
 }

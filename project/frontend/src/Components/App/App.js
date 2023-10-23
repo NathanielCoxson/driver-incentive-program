@@ -46,6 +46,8 @@ function App() {
               <Route path="catalog" element={<Catalog />} /> {/* Sponsors can see their own catalog along with drivers */}
               <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
 
+              <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
+
               {/* driver */}
               <Route element={<RequireAuth allowedRoles={['driver', 'admin']} />}>
                 <Route path="driver_points" element={<DriverPoints />} />
@@ -58,7 +60,7 @@ function App() {
                 <Route path="sponsor_add_user/add_sponsor" element={<Register role='sponsor' />} />
                 <Route path="create_sponsor_organization" element={<CreateSponsorOrganization />} />
                 <Route path="rejection_reason" element={<RejectionReason />} />
-                <Route path="catalog/settings" element={<CatalogSettings />} />
+                <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
               </Route>
 
               {/* admin */}

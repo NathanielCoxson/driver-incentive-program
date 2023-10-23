@@ -63,7 +63,10 @@ async function getSponsorByName(SponsorName) {
         // Make request
         const result = await pool.request()
             .input('name', sql.VarChar(100), SponsorName)
-            .query('SELECT * FROM Sponsors JOIN Catalogs ON Catalogs.SID = Sponsors.SID WHERE SponsorName = @name');
+            .query('SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
+                    FROM Sponsors \
+                    JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
+                    WHERE SponsorName = @name');
         return result.recordset[0];
     } catch (err) {
         console.log(err);
@@ -639,22 +642,38 @@ async function addCatalogSearchQuery(CID, Search) {
     }
 }
 
-async function updateSearchQuery(CSID, Search) {
+async function updateSearchQuery(SID, CID, Searches) {
     try {
         // Connect to pool
         const pool = await poolPromise;
-        // Make request
-        const result = await pool.request()
-            .input('CSID', sql.UniqueIdentifier, CSID)
-            .input('term', sql.VarChar(50), Search.term)
-            .input('media', sql.VarChar(50), Search.media)
-            .input('entity', sql.VarChar(50), Search.entity)
-            .input('limit', sql.Int, Search.limit)
-            .query("\
-                UPDATE CatalogSearches \
-                SET term = @term, media = @media, entity = @entity, limit = @limit \
-                WHERE CSID = @CSID");
-        return result.recordset;
+        let transaction;
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
+            await new sql.Request(transaction)
+                .input("SID", sql.UniqueIdentifier, SID)
+                .query("DELETE CatalogSearches \
+                        FROM CatalogSearches \
+                        JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
+                        JOIN Sponsors ON Sponsors.SID = Catalogs.SID \
+                        WHERE Sponsors.SID = @SID");
+            for (const search of Searches) {
+                await pool.request()
+                    .input('CID', sql.UniqueIdentifier, CID)
+                    .input('term', sql.VarChar(50), search.term)
+                    .input('media', sql.VarChar(50), search.media)
+                    .input('entity', sql.VarChar(50), search.entity)
+                    .input('limit', sql.Int, search.limit)
+                    .query("\
+                        INSERT INTO CatalogSearches (CID, CSID, term, media, entity, limit) \
+                        VALUES(@CID, NEWID(), @term, @media, @entity, @limit)");
+            }
+            await transaction.commit();
+            return true;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
     } catch (err) {
         console.log(err);
     }

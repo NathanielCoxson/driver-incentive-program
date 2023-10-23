@@ -53,9 +53,15 @@ catalogs.put('/:SponsorName', async (req, res) => {
             res.status(400).send();
             return;
         }
-        let result = [];
-        for (const search of req.body.searches) {
-            await req.app.locals.db.updateSearchQuery(search?.CSID, search);
+        const sponsor = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
+        if (!sponsor) {
+            res.status(404).send();
+            return;
+        }
+        const result = await req.app.locals.db.updateSearchQuery(sponsor.SID, sponsor.CID, req.body.searches);
+        if (!result) {
+            res.status(500).send();
+            return;
         }
         res.status(204).send({ searches: result });
     } catch (err) {
