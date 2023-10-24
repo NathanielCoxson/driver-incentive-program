@@ -421,4 +421,42 @@ users.post('/resetpassword', async (req, res) => {
     }
 });
 
+/**
+ * POST to <baseurl>/api/users/profiles/:Username
+ * Updates the profile with the given details
+ * Request Body {
+ *  Vehicle: String,
+ *  PhoneNumber: String
+ * }
+ */
+users.post('/profiles/:Username', async (req, res) => {
+    try {
+        // Bad request
+        if (!req.params.Username) res.status(400).send();
+
+        // Query
+        const user = await req.app.locals.db.getUserByUsername(req.params.Username);
+
+        // Success
+        if (user) {
+            const body = req.body
+
+        .then(() => {
+            // Update application with the given information
+            req.app.locals.db.updateProfile(user.UID, body.Vehicles, body.PhoneNumber)
+            // If successful, send success code
+            .then(() => {
+                res.status(201).send();
+            })
+        })
+        }
+
+        // Not found
+        else res.status(404).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+})
+
 module.exports = users;

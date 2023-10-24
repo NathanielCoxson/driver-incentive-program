@@ -635,13 +635,13 @@ async function processApplication(AID, ApplicationStatus){
 }
 
 /**
-     * Create a password change log entry into PWChanges with the given details
-     * Request Body: {
-     *  UID: Unique Identifier,
-     *  PWCDate: Date/Time,
-     *  ChangeType: String
-     * }
-     */
+ * Create a password change log entry into PWChanges with the given details
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  PWCDate: Date/Time,
+ *  ChangeType: String
+ * }
+ */
 async function createPWC(PWC) {
     try {
         // Connect to pool
@@ -780,15 +780,37 @@ async function getUsersSponsors(UID) {
 }
 
 /**
-     * Create a transcation for the given user, sponsor, quantity, and reason
-     * Request Body: {
-     *  UID: Unique Identifier,
-     *  SID: Unique Identifier,
-     *  TransactionDate: Date/Time,
-     *  TransactionAmount: Int,
-     *  Reason: String
-     * }
-     */
+ * Get the list of drivers for a given SID
+ * @param {UniqueIdentifier} SID
+ * @Return Array
+ */
+async function getSponsorsDrivers(SID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("SELECT Users.UID, Users.Name, Users.Role, Users.Username, Email\
+                    FROM Users \
+                    INNER JOIN Users ON Users.UID = SponsorsUsers.UID \
+                    WHERE SponsorsUsers.SID = @SID AND Users.Role = 'driver'");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Create a transcation for the given user, sponsor, quantity, and reason
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  SID: Unique Identifier,
+ *  TransactionDate: Date/Time,
+ *  TransactionAmount: Int,
+ *  Reason: String
+ * }
+ */
 async function createTransaction(Transaction){
     try {
         // Connect to pool
@@ -816,6 +838,32 @@ async function createTransaction(Transaction){
                     @TransactionAmount,\
                     @Reason)");
         return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Edit the Profile information for the user with the given UID, returns the number of rows affected
+ * @param {UniqueIdentifier} UID
+ * @param {String} Vehicle
+ * @param {String} PhoneNumber
+ * @returns Number
+ */
+async function updateProfile(UID, Vehicle, PhoneNumber){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('@UID', sql.UniqueIdentifier, UID)
+            .input('@Vehicle'. sql.VarChar(50), Vehicle)
+            .input('@PhoneNumber'. sql.VarChar(50), PhoneNumber)
+            .query("UPDATE Profiles \
+                    SET Vehicle = @Vehicle, PhoneNumber = @PhoneNumber \
+                    WHERE UID = @UID");
+
+        return result.rowsAffected[0];
     } catch (err) {
         console.log(err);
     }
@@ -850,5 +898,7 @@ module.exports = {
     getUsersSponsors,
     createTransaction,
     processApplication,
-    getSponsorApplications
+    getSponsorApplications,
+    updateProfile,
+    getSponsorsDrivers
 }

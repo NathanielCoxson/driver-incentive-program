@@ -170,4 +170,33 @@ applications.post('/process', async(req, res) => {
     }
 });
 
+/**
+ * GET <baseurl>/api/sponsors/drivers/:SponsorName
+ * Returns the list of drivers in the given sponsor organization
+ */
+applications.get('/drivers/:SponsorName', async (req, res) => {
+    try {
+        // Bad request
+        if (!req.params.SponsorName) res.status(400).send();
+
+        // Query for sponsor
+        const sponsor = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
+
+        if(sponsor){
+            // Query for drivers
+            const result = await req.app.locals.db.getSponsorsDrivers(sponsor.SID);
+
+            if (result.length === 0) {
+                res.status(404).send();
+                return;
+            }
+            res.status(200).send({ result });
+        }
+        else res.status(404).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 module.exports = applications;
