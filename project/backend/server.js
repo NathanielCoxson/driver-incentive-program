@@ -35,7 +35,11 @@ const app = express();
 // Enables CORS (cross-origin resource sharing) between frontend and backend
 // since they are on different ports.
 // Allowed origins include localhost and our EC2 ip.
-const allowedOrigins = ['http://localhost:3000', 'http://34.225.199.196'];
+const allowedOrigins = [
+    'http://localhost:3000', 
+    'http://34.225.199.196',
+    'https://ec2-34-225-199-196.compute-1.amazonaws'
+];
 app.use(cors({
     origin: (origin, callback) => {
         if (!origin) return callback(null, true);
