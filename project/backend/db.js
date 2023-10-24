@@ -600,6 +600,48 @@ async function createPWC(PWC){
     }
 }
 
+/**
+     * Create a transcation for the given user, sponsor, quantity, and reason
+     * Request Body: {
+     *  UID: Unique Identifier,
+     *  SID: Unique Identifier,
+     *  TransactionDate: Date/Time,
+     *  TransactionAmount: Int,
+     *  Reason: String
+     * }
+     */
+async function createTransaction(Transaction){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, Transaction.UID)
+            .input('SID', sql.UniqueIdentifier, Transaction.SID)
+            .input('TransactionDate', sql.DateTime, PWC.TransactionDate)
+            .input('TransactionAmount', sql.Int, Transaction.TransactionAmount)
+            .input('Reason', sql.VarChar(100), PWC.ChangeType)
+            .query("\
+                INSERT INTO Transactions(\
+                    TID,\
+                    UID,\
+                    SID,\
+                    TransactionDate,\
+                    TransactionAmount,\
+                    Reason) \
+                VALUES(\
+                    NEWID(),\
+                    @UID,\
+                    @SID,\
+                    @TransactionDate,\
+                    @TransactionAmount,\
+                    @Reason)");
+        return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -621,5 +663,6 @@ module.exports = {
     getUserApplications,
     deleteApplication,
     deleteUsersApplications,
-    createPWC
+    createPWC,
+    createTransaction
 }

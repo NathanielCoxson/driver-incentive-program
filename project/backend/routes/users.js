@@ -155,7 +155,7 @@ users.post("/login", async (req, res) => {
 });
 
 /**
- * POST to <baseurl>/api/users/login
+ * POST to <baseurl>/api/users/loginattempt
  * Request Body {
  *  LoginDate: Date/Time
  *  Username: String,
@@ -386,7 +386,7 @@ users.put('/password', async (req, res) => {
 /**
  * POST to <baseurl>/api/users/resetpassword
  * Request Body {
- *  LoginDate: Date/Time,
+ *  PWCDate: Date/Time,
  *  Email: String,
  *  ChangeType: String
  * }
@@ -398,7 +398,7 @@ users.post('/resetpassword', async (req, res) => {
         const email = req.app.locals.db.getUserByEmail(body.Email.value)
         .then(() => {
             let newPWC = {
-                LoginDate: body.LoginDate.value,
+                PWCDate: body.PWCDate.value,
                 Username: email,
                 Success: body.ChangeType.value
             }
