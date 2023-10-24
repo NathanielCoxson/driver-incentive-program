@@ -16,7 +16,7 @@ function PersistLogin() {
                 await refresh();
             } 
             catch (err) {
-                console.log(err);
+                if (process.env.NODE_ENV === 'development') console.log(err);
             }
             finally {
                 isMounted && setIsLoading(false);

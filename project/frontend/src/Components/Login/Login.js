@@ -36,9 +36,9 @@ function Login() {
             // Send successful login attempt
             let loginDate = new Date();
             let LoginAttempt = {
-                LoginDate: loginDate.getUTCDate(),
+                LoginDate: loginDate.toISOString().slice(0, 19).replace('T', ' '),
                 Username: Username,
-                Success: true
+                Success: 'true'
             }
             await axios.post('/users/loginattempt', LoginAttempt);
         } catch (err) {
@@ -62,9 +62,9 @@ function Login() {
             try {
                 let loginDate = new Date();
                 let LoginAttempt = {
-                    LoginDate: loginDate.getUTCDate(),
+                    LoginDate: (loginDate).toISOString().slice(0, 19).replace('T', ' '),
                     Username: Username,
-                    Success: false
+                    Success: 'false'
                 }
                 await axios.post('/users/loginattempt', LoginAttempt);
             } catch (err) {

@@ -58,7 +58,7 @@ function ResetPassword() {
 
     let PWCDate = new Date();
     let PWCLog = {
-      PWCDate: PWCDate.getUTCDate(),
+      PWCDate: PWCDate.toISOString().slice(0, 19).replace('T', ' '),
       Email: input.email.value,
       ChangeType: "self"
     }
