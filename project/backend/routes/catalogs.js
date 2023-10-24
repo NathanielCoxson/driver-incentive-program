@@ -4,7 +4,12 @@ const validation = require('../middlewares/validation');
 
 catalogs.get('/:SponsorName', async (req, res) => {
     try {
-        const result = await req.app.locals.db.getSponsorCatalog(req.params.SponsorName);
+        const sponsor = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
+        if (!sponsor) {
+            res.status(404).send();
+            return;
+        }
+        const result = await req.app.locals.db.getSponsorCatalog(sponsor.CID);
         if (result.length === 0) {
             res.status(404).send();
             return;

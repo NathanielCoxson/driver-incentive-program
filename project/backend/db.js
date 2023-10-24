@@ -603,19 +603,18 @@ async function createPWC(PWC) {
     }
 }
 
-async function getSponsorCatalog(SponsorName) {
+async function getSponsorCatalog(CID) {
     try {
         // Connect to pool
         const pool = await poolPromise;
         // Make request
         const result = await pool.request()
-            .input('SponsorName', sql.VarChar(50), SponsorName)
+            .input('CID', sql.UniqueIdentifier, CID)
             .query("\
                 SELECT CSID, term, media, entity, limit \
                 FROM CatalogSearches \
                 JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
-                JOIN Sponsors ON Sponsors.SID = Catalogs.SID \
-                WHERE Sponsors.SponsorName = @SponsorName");
+                WHERE Catalogs.CID = @CID");
         return result.recordset;
     } catch (err) {
         console.log(err);
