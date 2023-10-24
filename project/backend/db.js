@@ -780,6 +780,28 @@ async function getUsersSponsors(UID) {
 }
 
 /**
+ * Get the list of drivers for a given SID
+ * @param {UniqueIdentifier} SID
+ * @Return Array
+ */
+async function getSponsorsDrivers(SID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("SELECT Users.UID, Users.Name, Users.Role, Users.Username, Email\
+                    FROM Users \
+                    INNER JOIN Users ON Users.UID = SponsorsUsers.UID \
+                    WHERE SponsorsUsers.SID = @SID AND Users.Role = 'driver'");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
  * Create a transcation for the given user, sponsor, quantity, and reason
  * Request Body: {
  *  UID: Unique Identifier,
@@ -877,5 +899,6 @@ module.exports = {
     createTransaction,
     processApplication,
     getSponsorApplications,
-    updateProfile
+    updateProfile,
+    getSponsorsDrivers
 }
