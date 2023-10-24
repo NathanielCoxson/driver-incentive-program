@@ -17,14 +17,12 @@ function CatalogSettings() {
         setResponseMessage("Saving...");
         setIsLoading(true);
         try {
-            const response = await axiosPrivate.put(`/catalogs/${SponsorName}`, { searches });
-            console.log(response);
+            await axiosPrivate.put(`/catalogs/${SponsorName}`, { searches });
         } catch (err) {
             console.log(err);
             setResponseMessage('Error saving searches, please try again.')
         }
         setIsLoading(false);
-        console.log(searches);
         setResponseMessage('Success!');
     };
 
