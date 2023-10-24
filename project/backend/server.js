@@ -38,7 +38,7 @@ const app = express();
 const allowedOrigins = [
     'http://localhost:3000', 
     'http://34.225.199.196',
-    'https://ec2-34-225-199-196.compute-1.amazonaws'
+    'http://ec2-34-225-199-196.compute-1.amazonaws.com'
 ];
 app.use(cors({
     origin: (origin, callback) => {
