@@ -78,7 +78,28 @@ applications.get('/users/:Username', async (req, res) => {
 
         res.status(200).send({ applications });
     } catch (err) {
-        console.log(error);
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * GET to <baseurl>/api/applications/users/:Username
+ * Retrieves the applications to the Sponsor with the provided SponsorName.
+ */
+applications.get('/sponsors/:SponsorName', async (req, res) => {
+    const SponsorName = req.params.SponsorName;
+
+    try {
+        const applications = await req.app.locals.db.getSponsorApplications(SponsorName);
+        if (applications.length === 0) {
+            res.status(404).send('No applications found.');
+            return;
+        }
+
+        res.status(200).send({ applications });
+    } catch (err) {
+        console.log(err);
         res.status(500).send();
     }
 });
@@ -117,6 +138,32 @@ applications.delete('/users/:Username', async (req, res) => {
 
         else res.status(400).send();
 
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * POST to <baseurl>/api/applications/process
+ * Accepts or rejects the application with a specific AID
+ * Request body: {
+ *      AID: UniqueIdentifier
+ *      ApplicationStatus: String
+ * }
+ */
+applications.post('/process', async(req, res) => {
+    try {
+        const body = req.body
+
+        .then(() => {
+            // Update application with the given information
+            req.app.locals.db.processApplication(body.AID, body.ApplicationStatus)
+            // If successful, send success code
+            .then(() => {
+                res.status(201).send();
+            })
+        })
     } catch (err) {
         console.log(err);
         res.status(500).send();

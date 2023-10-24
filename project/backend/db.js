@@ -526,6 +526,47 @@ async function getUserApplications(Username) {
 }
 
 /**
+ * Returns an array of application objects belonging to the sponsor with
+ * the given Sponsor name
+ * Application Example: {
+ *  AID: String,
+ *  Username: String,
+ *  SponsorName: String,
+ *  ApplicationDate: String,
+ *  ApplicationStatus: String,
+ *  Reason: String
+ * }
+ * @param {String} SponsorName
+ * @returns Array
+ */
+async function getSponsorApplications(SponsorName){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('SponsorName', sql.VarChar(100), SponsorName)
+            .query(
+                "SELECT \
+                    Applications.AID,\
+                    Users.Username,\
+                    Sponsors.SponsorName,\
+                    Applications.ApplicationDate,\
+                    Applications.ApplicationStatus,\
+                    Applications.Reason \
+                FROM Applications \
+                JOIN Users ON Users.UID = Applications.UID \
+                JOIN Sponsors ON Sponsors.SID = Applications.SID \
+                WHERE Sponsors.SponsorName = @SponsorName"
+            );
+
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
  * Deletes the application with AID and Username from the database
  * and returns 1 if successful and 0 if no record was found.
  * @param {String} AID 
@@ -562,6 +603,30 @@ async function deleteUsersApplications(Username) {
         const result = await pool.request()
             .input('Username', sql.VarChar(50), Username)
             .query("DELETE Applications FROM Applications JOIN Users ON Users.UID = Applications.UID WHERE Username = @Username");
+
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Accepts or rejects the application with the given AID, returns the number of rows updated
+ * @param {UniqueIdentifier} AID
+ * @param {String} ApplicationStatus
+ * @returns Number
+ */
+async function processApplication(AID, ApplicationStatus){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('@AID', sql.UniqueIdentifier, AID)
+            .input('@ApplicationStatus'. sql.VarChar(100), ApplicationStatus)
+            .query("UPDATE Applications \
+                    SET ApplicationStatus = @ApplicationStatus \
+                    WHERE AID = @AID");
 
         return result.rowsAffected[0];
     } catch (err) {
@@ -783,5 +848,7 @@ module.exports = {
     updateSearchQuery,
     deleteCatalogSearchQuery,
     getUsersSponsors,
-    createTransaction
+    createTransaction,
+    processApplication,
+    getSponsorApplications
 }

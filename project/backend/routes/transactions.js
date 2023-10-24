@@ -2,7 +2,7 @@ const express = require('express');
 const transactions = express.Router();
 
 /**
- * POST to <baseurl>/api/transactions/createtransaction
+ * POST to <baseurl>/api/transactions
  * Request Body: {
  *  UID: Unique Identifier,
  *  SID: Unique Identifier,
@@ -12,7 +12,7 @@ const transactions = express.Router();
 * }
  * Create a transaction entry with the given details
  */
-users.post('/createtransaction', async (req, res) => {
+users.post('/', async (req, res) => {
     try {
         const body = req.body;
 
