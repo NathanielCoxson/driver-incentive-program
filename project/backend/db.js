@@ -438,7 +438,7 @@ async function createLogin(Login) {
         await pool.request()
             .input('LoginDate', sql.DateTime, Login.LoginDate)
             .input('Username', sql.VarChar(50), Login.Username)
-            .input('Success', sql.VarChar(50), Login.Password)
+            .input('Success', sql.VarChar(50), Login.Success)
             .query("\
                     INSERT INTO Logins(\
                         LID,\
