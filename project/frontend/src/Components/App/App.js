@@ -25,6 +25,7 @@ import AddUser from '../AddUser/AddUser';
 import RejectionReason from '../Dashboard/RejectionReason';
 import CatalogSettings from '../Catalog/CatalogSettings';
 import EditProfile from '../EditProfile/EditProfile'
+import SponsorDriverList from '../SponsorDriverList/SponsorDriverList'
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
                 <Route path="sponsor_add_user/add_sponsor" element={<Register role='sponsor' />} />
                 <Route path="create_sponsor_organization" element={<CreateSponsorOrganization />} />
                 <Route path="sponsor_points" element={<SponsorPoints />} />
+                <Route path="sponsor_driver_list" element={<SponsorDriverList />} />
                 <Route path="rejection_reason" element={<RejectionReason />} />
                 <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
               </Route>

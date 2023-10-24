@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import  axios from '../../api/axios';
 
-function AdminProfile() {
+function EditProfile() {
     const { auth } = useAuth();
     const [responseMessage, setResponseMessage] = useState('');
 
@@ -109,4 +109,4 @@ function AdminProfile() {
     );
 }
 
-export default AdminProfile;
+export default EditProfile;
