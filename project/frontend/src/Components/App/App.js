@@ -24,6 +24,7 @@ import Profile from '../Profile/Profile';
 import AddUser from '../AddUser/AddUser';
 import RejectionReason from '../Dashboard/RejectionReason';
 import CatalogSettings from '../Catalog/CatalogSettings';
+import EditProfile from '../EditProfile/EditProfile'
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
               <Route path="sponsor_organization" element={<SponsorOrganization />} /> {/* Could be hidden for admins or not */}
               <Route path="catalog" element={<Catalog />} /> {/* Sponsors can see their own catalog along with drivers */}
               <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
+              <Route path="edit_profile" element={<EditProfile />} />
 
               <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
 
