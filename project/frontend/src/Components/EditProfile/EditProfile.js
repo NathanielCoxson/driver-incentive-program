@@ -100,7 +100,7 @@ function EditProfile() {
                     <input type="password" id="retypePassword" name="retypePassword" required />
                     
                     <div className="password-validation" id="passwordValidation">{responseMessage}</div>
-                    <button type="submit" className="cta-button">Sign Up</button>
+                    <button type="submit" className="cta-button">Submit Update</button>
 
                 </form>
             </div>

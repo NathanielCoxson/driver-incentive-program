@@ -20,7 +20,7 @@ function SponsorDriverList(){
         const fetchSponsorDrivers = async () => {
             // Make the request
             try {
-                const response = await axios.post("/users/sponsor_drivers",
+                const response = await axios.post("/drivers/",
                     { Username },
                     {
                         headers: { 'Content-Type': 'application/json' },
