@@ -16,9 +16,6 @@ function Purchase() {
         <main>
             <section className="hero">
                 <h3>Shopping Cart</h3>
-            </section>
-
-            <section className="hero">
                 <ul>
                     {shoppingCart.map((item) => (
                         <ul key={item.id} className="cart-item">
@@ -28,10 +25,7 @@ function Purchase() {
                         </ul>
                     ))}
                 </ul>
-
-                <div className="hero">
                     <h4>Total Cost: ${totalCost}</h4>
-                </div>
 
                 <button className="cta-button">Checkout</button>
             </section>
