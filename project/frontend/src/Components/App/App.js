@@ -24,6 +24,7 @@ import Profile from '../Profile/Profile';
 import AddUser from '../AddUser/AddUser';
 import RejectionReason from '../Dashboard/RejectionReason';
 import CatalogSettings from '../Catalog/CatalogSettings';
+import Purchase from '../Purchase/Purchase';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
               <Route element={<RequireAuth allowedRoles={['driver', 'admin']} />}>
                 <Route path="driver_points" element={<DriverPoints />} />
                 <Route path="view_sponsor_organization" element={<ViewSponsorOrganization />} />
+                <Route path="purchase" element={<Purchase />} />
               </Route>
 
               {/* sponsor */}
