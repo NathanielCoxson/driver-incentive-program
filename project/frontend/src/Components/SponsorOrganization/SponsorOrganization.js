@@ -52,6 +52,7 @@ function SponsorOrganization() {
                         <p>{organizationProfile}</p>
                     </div>
                 )}
+               
 
                 <p>Looking for a Sponsor?</p>
                 <Link to="../join_sponsor_organization" className="cta-button">
