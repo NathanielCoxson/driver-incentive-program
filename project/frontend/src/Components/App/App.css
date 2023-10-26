@@ -266,9 +266,6 @@ footer {
   background-color: #f5f5f5; /* Background color */
 }
 
-.cart-item span {
-  display: block; /* Make each line of item details appear on a new line */
-}
 
 /* Styles for the total cost section */
 .total-cost {
