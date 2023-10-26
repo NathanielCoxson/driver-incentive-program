@@ -1,5 +1,6 @@
 const express = require('express');
 const sponsors = express.Router();
+const validation = require('../middlewares/validation');
 
 // Sponsor routes
 /**
@@ -39,6 +40,16 @@ sponsors.get('/:SponsorName', async (req, res) => {
 
         // Not found
         else res.status(404).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+sponsors.post('/', async (req, res) => {
+    try {
+        await req.app.locals.db.createSponsor(req.body.SponsorName);
+        res.status(201).send();
     } catch (err) {
         console.log(err);
         res.status(500).send();

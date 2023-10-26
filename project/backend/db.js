@@ -869,6 +869,25 @@ async function updateProfile(UID, Vehicle, PhoneNumber){
     }
 }
 
+/**
+ * Adds a new sponsor to the database with the given name.
+ * @param {String} SponsorName 
+ */
+async function createSponsor(SponsorName) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('SponsorName', sql.VarChar(50), SponsorName)
+            .query("INSERT INTO Sponsors (SID, SponsorName) VALUES(NEWID(), @SponsorName)");
+
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -900,5 +919,6 @@ module.exports = {
     processApplication,
     getSponsorApplications,
     updateProfile,
-    getSponsorsDrivers
+    getSponsorsDrivers,
+    createSponsor
 }
