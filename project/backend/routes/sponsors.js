@@ -48,12 +48,42 @@ sponsors.get('/:SponsorName', async (req, res) => {
 
 sponsors.post('/', async (req, res) => {
     try {
-        await req.app.locals.db.createSponsor(req.body.SponsorName);
+        if (!req.body.SponsorName) {
+            res.status(400).send();
+            return;
+        }
+        const sponsors = await req.app.locals.db.getSponsorByName(req.body.SponsorName);
+        console.log(sponsors);
+        if (sponsors) {
+            res.status(409).send();
+            return;
+        }
+        const result = await req.app.locals.db.createSponsor(req.body.SponsorName);
+        if (result === 0) {
+            res.status(500).send();
+            return;
+        }
         res.status(201).send();
     } catch (err) {
         console.log(err);
         res.status(500).send();
     }
 });
+
+sponsors.delete('/:SponsorName', async (req, res) => {
+    try {
+        const result = await req.app.locals.db.deleteSponsor(req.params.SponsorName);
+        console.log(result);
+        if (result === 0) {
+            res.status(500).send();
+            return;
+        }
+        res.status(200).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 
 module.exports = sponsors;
