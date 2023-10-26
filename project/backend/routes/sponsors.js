@@ -91,5 +91,27 @@ sponsors.delete('/:SponsorName', async (req, res) => {
     }
 });
 
+/**
+ * PUT <baseurl>/api/sponsors/:SponsorName
+ * Updates the sponsor with the given name with the provided new data.
+ */
+sponsors.put('/:SponsorName', async (req, res) => {
+    try {
+        if (!req.body.SponsorName) {
+            res.status(400).send();
+            return;
+        }
+        const result = await req.app.locals.db.updateSponsor(req.params.SponsorName, { SponsorName: req.body.SponsorName });
+        if (!result) {
+            res.status(404).send();
+            return;
+        }
+        res.status(204).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+}); 
+
 
 module.exports = sponsors;

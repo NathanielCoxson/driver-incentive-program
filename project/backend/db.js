@@ -918,6 +918,20 @@ async function deleteSponsor(SponsorName) {
     }
 }
 
+async function updateSponsor(SponsorName, Update) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('SponsorName', sql.VarChar(50), SponsorName)
+            .input('NewName', sql.VarChar(50), Update.SponsorName)
+            .query("UPDATE Sponsors SET SponsorName = @NewName OUTPUT inserted.* WHERE SponsorName = @SponsorName");
+        return result.recordset[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -951,5 +965,6 @@ module.exports = {
     updateProfile,
     getSponsorsDrivers,
     createSponsor,
-    deleteSponsor
+    deleteSponsor,
+    updateSponsor
 }
