@@ -1,0 +1,28 @@
+/* Styles for individual shopping cart items */
+.cart-item {
+    margin-bottom: 10px; /* Add space between each cart item */
+    padding: 10px; /* Add padding to separate item details */
+    border: 1px solid #ccc; /* Add a border around each item */
+    border-radius: 5px; /* Round the corners */
+    background-color: #f5f5f5; /* Background color */
+}
+
+.cart-item span {
+    display: block; /* Make each line of item details appear on a new line */
+}
+
+/* Styles for the total cost section */
+.total-cost {
+    margin-top: 20px; /* Add space above the total cost */
+    padding: 10px; /* Add padding for separation */
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 5px; /* Round the corners */
+    background-color: #f5f5f5; /* Background color */
+    text-align: right; /* Right-align the total cost */
+}
+
+
+
+
+
+

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './Purchase.css'; // Import your CSS file
 
 function Purchase() {
     // Sample shopping cart data (replace with your data)
@@ -14,14 +15,13 @@ function Purchase() {
     return (
         <main>
             <section className="hero">
-                <h2>Purchase</h2>
+                <h3>Shopping Cart</h3>
             </section>
 
             <section className="shopping-cart">
-                <h3>Shopping Cart</h3>
                 <ul>
                     {shoppingCart.map((item) => (
-                        <li key={item.id}>
+                        <li key={item.id} className="cart-item">
                             <span>{item.name} - Quantity: {item.quantity}</span>
                             <span>Cost Per Item: ${item.costPerItem}</span>
                             <span>Subtotal: ${item.quantity * item.costPerItem}</span>
