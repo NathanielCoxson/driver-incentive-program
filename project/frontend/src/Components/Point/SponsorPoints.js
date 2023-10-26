@@ -10,7 +10,6 @@ function SponsorPoints() {
     const [selectedDriver, setSelectedDriver] = useState('');
     const [pointsChange, setPointsChange] = useState('');
     const [reason, setReason] = useState('');
-    const [showReasonInput, setShowReasonInput] = useState(false);
 
     const handlePointsChange = (action) => {
         const updatedDrivers = [...drivers];
@@ -71,17 +70,14 @@ function SponsorPoints() {
                     }}
                     placeholder="Enter points change (numbers only)"
                 />
+                <input
+                    type="text"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    placeholder="Enter reason"
+                />
                 <button onClick={() => handlePointsChange('add')} className="cta-button">Add</button>
                 <button onClick={() => handlePointsChange('reduce')} className="cta-button">Reduce</button>
-                <div>
-                    <input
-                        type="text"
-                        value={reason}
-                        onChange={(e) => setReason(e.target.value)}
-                        placeholder="Enter reason"
-                    />
-                </div>
-                
             </div>
         </section>
     );
