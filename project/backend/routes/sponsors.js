@@ -46,6 +46,10 @@ sponsors.get('/:SponsorName', async (req, res) => {
     }
 });
 
+/**
+ * POST <baseurl>/api/sponsors
+ * Creates a new sponsor organization
+ */
 sponsors.post('/', async (req, res) => {
     try {
         if (!req.body.SponsorName) {
@@ -53,13 +57,12 @@ sponsors.post('/', async (req, res) => {
             return;
         }
         const sponsors = await req.app.locals.db.getSponsorByName(req.body.SponsorName);
-        console.log(sponsors);
         if (sponsors) {
             res.status(409).send();
             return;
         }
         const result = await req.app.locals.db.createSponsor(req.body.SponsorName);
-        if (result === 0) {
+        if (!result) {
             res.status(500).send();
             return;
         }
@@ -70,12 +73,15 @@ sponsors.post('/', async (req, res) => {
     }
 });
 
+/**
+ * DELETE <baseurl>/api/sponsors/:SponsorName
+ * Deletes the given sponsor from the database.
+ */
 sponsors.delete('/:SponsorName', async (req, res) => {
     try {
         const result = await req.app.locals.db.deleteSponsor(req.params.SponsorName);
-        console.log(result);
-        if (result === 0) {
-            res.status(500).send();
+        if (result < 1) {
+            res.status(404).send();
             return;
         }
         res.status(200).send();

@@ -61,14 +61,12 @@ async function getSponsorByName(SponsorName) {
         // Connect
         const pool = await poolPromise;
         // Make request
-        console.log(`looking for: ${SponsorName}`)
         const result = await pool.request()
             .input('SponsorName', sql.VarChar(100), SponsorName)
             .query("SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
                     FROM Sponsors \
                     JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
-                    WHERE SponsorName");
-        console.log(result);
+                    WHERE SponsorName = @SponsorName");
         return result.recordset[0];
     } catch (err) {
         console.log(err);
@@ -541,7 +539,7 @@ async function getUserApplications(Username) {
  * @param {String} SponsorName
  * @returns Array
  */
-async function getSponsorApplications(SponsorName){
+async function getSponsorApplications(SponsorName) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -618,14 +616,14 @@ async function deleteUsersApplications(Username) {
  * @param {String} ApplicationStatus
  * @returns Number
  */
-async function processApplication(AID, ApplicationStatus){
+async function processApplication(AID, ApplicationStatus) {
     try {
         // Connect to pool
         const pool = await poolPromise;
 
         const result = await pool.request()
             .input('@AID', sql.UniqueIdentifier, AID)
-            .input('@ApplicationStatus'. sql.VarChar(100), ApplicationStatus)
+            .input('@ApplicationStatus'.sql.VarChar(100), ApplicationStatus)
             .query("UPDATE Applications \
                     SET ApplicationStatus = @ApplicationStatus \
                     WHERE AID = @AID");
@@ -813,7 +811,7 @@ async function getSponsorsDrivers(SID) {
  *  Reason: String
  * }
  */
-async function createTransaction(Transaction){
+async function createTransaction(Transaction) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -852,15 +850,15 @@ async function createTransaction(Transaction){
  * @param {String} PhoneNumber
  * @returns Number
  */
-async function updateProfile(UID, Vehicle, PhoneNumber){
+async function updateProfile(UID, Vehicle, PhoneNumber) {
     try {
         // Connect to pool
         const pool = await poolPromise;
 
         const result = await pool.request()
             .input('@UID', sql.UniqueIdentifier, UID)
-            .input('@Vehicle'. sql.VarChar(50), Vehicle)
-            .input('@PhoneNumber'. sql.VarChar(50), PhoneNumber)
+            .input('@Vehicle'.sql.VarChar(50), Vehicle)
+            .input('@PhoneNumber'.sql.VarChar(50), PhoneNumber)
             .query("UPDATE Profiles \
                     SET Vehicle = @Vehicle, PhoneNumber = @PhoneNumber \
                     WHERE UID = @UID");
@@ -871,72 +869,37 @@ async function updateProfile(UID, Vehicle, PhoneNumber){
     }
 }
 
-
 /**
  * Adds a new sponsor to the database with the given name.
  * @param {String} SponsorName 
  */
 async function createSponsor(SponsorName) {
-    // let transaction;
-    // try {
-    //     transaction = pool.transaction();
-    //     await transaction.begin();
-    //     const datetime = new Date();
-    //     // Insert new token and timeout
-    //     const insert = await new sql.Request(transaction)
-    //         .input('Email', sql.VarChar(300), Email)
-    //         .input('year', sql.Int, datetime.getUTCFullYear())
-    //         .input('month', sql.Int, datetime.getUTCMonth() + 1)
-    //         .input('day', sql.Int, datetime.getUTCDate())
-    //         .input('hour', sql.Int, datetime.getUTCHours())
-    //         .input('minute', sql.Int, datetime.getUTCMinutes())
-    //         .input('seconds', sql.Int, datetime.getUTCSeconds())
-    //         .input('milliseconds', sql.Int, datetime.getUTCMilliseconds())
-    //         .query("UPDATE Users \
-    //                 SET \
-    //                     PasswordResetToken = NEWID(), \
-    //                     PasswordResetExpiration = DATEADD(hour, 1, DATETIMEFROMPARTS(@year, @month, @day, @hour, @minute, @seconds, @milliseconds)) \
-    //                 WHERE Email = @Email");
-    //     if (!insert) return {};
-
-    //     // Get newly generated token
-    //     const result = await new sql.Request(transaction)
-    //         .input('Email', sql.VarChar(300), Email)
-    //         .query("SELECT PasswordResetToken FROM Users WHERE Email = @Email");
-
-    //     if (!result || result.recordset.length === 0) throw new Error("Failed to insert password reset token into database.");
-
-    //     // Commit and return new token
-    //     await transaction.commit();
-    //     return result.recordset[0].PasswordResetToken;
-    // } catch (err) {
-    //     await transaction.rollback();
-    //     console.log(err);
-    //     throw err;
-    // }
     try {
         // Connect to pool
         const pool = await poolPromise;
 
-        // MAKE THIS A TRANSACTION WHERE A NEW CATALOG IS ALSO
-        let transaction;
-        try {
-            transaction = pool.transaction();
-            await transaction.begin();
-            const sponsor = await new sql.Request(transaction)
-                .input("SponsorName", sql.VarChar(50), SponsorName)
-                .query("INSERT INTO Sponsors (SID, SponsorName) VALUES(NEWID(), @SponsorName)")
-        } catch (err) {
-            await transaction.rollback();
-            console.log(err);
-            throw err;
-        }
-        const result = await pool.request()
-            .input('SponsorName', sql.VarChar(50), SponsorName)
-            .query("INSERT INTO Sponsors (SID, SponsorName) VALUES(NEWID(), @SponsorName)");
-        return result.rowsAffected[0];
+        // Transaction
+        let transaction = pool.transaction();
+        await transaction.begin();
+
+        // Insert new sponsor
+        const sponsor = await new sql.Request(transaction)
+            .input("SponsorName", sql.VarChar(50), SponsorName)
+            .query("INSERT INTO Sponsors (SID, SponsorName) OUTPUT Inserted.* VALUES(NEWID(), @SponsorName)");
+        if (!sponsor.recordset[0]) throw new Error('Failed to insert sponsor.');
+
+        // Insert catalog for new sponsor
+        const catalog = await new sql.Request(transaction)
+            .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
+            .query("INSERT INTO Catalogs (CID, SID, ConversionRate) OUTPUT Inserted.* VALUES(NEWID(), @SID, 0.01)");
+        if (!catalog.recordset[0]) throw new Error('Failed to create catalog.');
+
+        await transaction.commit();
+        return true;
     } catch (err) {
         console.log(err);
+        await transaction.rollback();
+        return false;
     }
 }
 
