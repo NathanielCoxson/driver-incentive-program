@@ -793,7 +793,7 @@ async function getSponsorsDrivers(SID) {
             .input('SID', sql.UniqueIdentifier, SID)
             .query("SELECT Users.UID, Users.Name, Users.Role, Users.Username, Email\
                     FROM Users \
-                    INNER JOIN Users ON Users.UID = SponsorsUsers.UID \
+                    INNER JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID \
                     WHERE SponsorsUsers.SID = @SID AND Users.Role = 'driver'");
         return result.recordset;
     } catch (err) {

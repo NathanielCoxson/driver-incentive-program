@@ -1,11 +1,11 @@
 import React from 'react';
 import  axios from '../../api/axios';
 import useAuth from '../../hooks/useAuth';
-import { useState, useEffect, useNavigate, useLocation} from 'react';
+import { useState, useEffect} from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function SponsorDriverList(){
-    const auth = useAuth();
-    const Username = auth.Username;
+    const {auth} = useAuth();
 
     const [drivers, setDrivers] = useState({});
     const navigate = useNavigate();
@@ -16,21 +16,16 @@ function SponsorDriverList(){
     useEffect(() => {
         let isMounted = true;
 
-
         const fetchSponsorDrivers = async () => {
+            console.log(auth?.sponsors[0]?.SponsorName);
             // Make the request
             try {
-                const response = await axios.post("/drivers/",
-                    { Username },
-                    {
-                        headers: { 'Content-Type': 'application/json' },
-                        withCredentials: true
-                    }
-                );
+                const response = await axios.get("applications/drivers/" + auth?.sponsors[0]?.SponsorName);
                 isMounted && setDrivers(response.data);
+                console.log(drivers)
             } catch (err) {
                 console.error("Error fetching data:", err);
-                navigate('/login', { state: { from: location }, replace: true });
+                navigate('/dashboard', { state: { from: location }, replace: true });
             }
         }
         fetchSponsorDrivers();
@@ -43,12 +38,12 @@ function SponsorDriverList(){
         <section className="hero">
             <h2>Drivers in your Organization</h2>
             <ol className="driver-list">
-                {drivers.map((driver) => (
+                {/* {drivers.map((driver) => (
                     <li>
                         <h3>{driver.Name}</h3>
                         <h3>{driver.Username}</h3>
                     </li>
-                ))}
+                ))} */}
             </ol>
         </section>
     );
