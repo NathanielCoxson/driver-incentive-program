@@ -22,7 +22,6 @@ function SponsorPoints() {
                 updatedDrivers[driverIndex].points += parseInt(pointsValue, 10);
             } else if (action === 'reduce') {
                 updatedDrivers[driverIndex].points -= parseInt(pointsValue, 10);
-                setShowReasonInput(true); // Show the reason input when reducing points
             }
 
             updatedDrivers[driverIndex].reason = reason; // Store the reason
@@ -74,16 +73,15 @@ function SponsorPoints() {
                 />
                 <button onClick={() => handlePointsChange('add')} className="cta-button">Add</button>
                 <button onClick={() => handlePointsChange('reduce')} className="cta-button">Reduce</button>
-                {showReasonInput && (
-                    <div>
-                        <input
-                            type="text"
-                            value={reason}
-                            onChange={(e) => setReason(e.target.value)}
-                            placeholder="Enter reason"
-                        />
-                    </div>
-                )}
+                <div>
+                    <input
+                        type="text"
+                        value={reason}
+                        onChange={(e) => setReason(e.target.value)}
+                        placeholder="Enter reason"
+                    />
+                </div>
+                
             </div>
         </section>
     );
