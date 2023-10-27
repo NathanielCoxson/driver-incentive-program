@@ -873,7 +873,7 @@ async function updateProfile(UID, Vehicle, PhoneNumber) {
  * Adds a new sponsor to the database with the given name.
  * @param {String} SponsorName 
  */
-async function createSponsor(SponsorName) {
+async function createSponsor(SponsorName, UID) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -885,14 +885,21 @@ async function createSponsor(SponsorName) {
         // Insert new sponsor
         const sponsor = await new sql.Request(transaction)
             .input("SponsorName", sql.VarChar(50), SponsorName)
-            .query("INSERT INTO Sponsors (SID, SponsorName) OUTPUT Inserted.* VALUES(NEWID(), @SponsorName)");
+            .query("INSERT INTO Sponsors (SID, SponsorName) OUTPUT INSERTED.* VALUES(NEWID(), @SponsorName)");
         if (!sponsor.recordset[0]) throw new Error('Failed to insert sponsor.');
 
         // Insert catalog for new sponsor
         const catalog = await new sql.Request(transaction)
             .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
-            .query("INSERT INTO Catalogs (CID, SID, ConversionRate) OUTPUT Inserted.* VALUES(NEWID(), @SID, 0.01)");
+            .query("INSERT INTO Catalogs (CID, SID, ConversionRate) OUTPUT INSERTED.* VALUES(NEWID(), @SID, 0.01)");
         if (!catalog.recordset[0]) throw new Error('Failed to create catalog.');
+
+        // Add the user who created the sponsor organization to the new organization
+        const user = await new sql.Request(transaction)
+            .input("UID", sql.UniqueIdentifier, UID)
+            .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
+            .query("INSERT INTO SponsorsUsers (SID, UID) OUTPUT INSERTED.* VALUES(@SID, @UID)");
+        if (!user.recordset[0]) throw new Error('Failed to add user to new organization.');
 
         await transaction.commit();
         return true;

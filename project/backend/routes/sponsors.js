@@ -50,9 +50,13 @@ sponsors.get('/:SponsorName', async (req, res) => {
  * POST <baseurl>/api/sponsors
  * Creates a new sponsor organization
  */
-sponsors.post('/', async (req, res) => {
+sponsors.post('/', validation.validateToken, async (req, res) => {
     try {
-        if (!req.body.SponsorName) {
+        if (req.User?.Role !== 'sponsor') {
+            res.status(401).send();
+            return;
+        }
+        if (!req.User?.UID || !req.body.SponsorName) {
             res.status(400).send();
             return;
         }
@@ -61,7 +65,7 @@ sponsors.post('/', async (req, res) => {
             res.status(409).send();
             return;
         }
-        const result = await req.app.locals.db.createSponsor(req.body.SponsorName);
+        const result = await req.app.locals.db.createSponsor(req.body.SponsorName, req.User.UID);
         if (!result) {
             res.status(500).send();
             return;
