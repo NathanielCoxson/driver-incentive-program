@@ -25,7 +25,7 @@ function Home() {
                 if (accessToken) setLoggedIn(true);
             }
         } catch (err) {
-            console.log(err);
+            if (process.env.NODE_ENV === 'production') console.log(err);
         }
     }, [persist, refresh]);
 

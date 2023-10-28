@@ -3,12 +3,13 @@ import './SponsorPoints.css';
 
 function SponsorPoints() {
     const [drivers, setDrivers] = useState([
-        { name: 'Driver 1', points: 100 },
-        { name: 'Driver 2', points: 75 },
-        { name: 'Driver 3', points: 120 },
+        { name: 'Driver 1', points: 100, reason: '' },
+        { name: 'Driver 2', points: 75, reason: '' },
+        { name: 'Driver 3', points: 120, reason: '' },
     ]);
     const [selectedDriver, setSelectedDriver] = useState('');
     const [pointsChange, setPointsChange] = useState('');
+    const [reason, setReason] = useState('');
 
     const handlePointsChange = (action) => {
         const updatedDrivers = [...drivers];
@@ -22,7 +23,10 @@ function SponsorPoints() {
                 updatedDrivers[driverIndex].points -= parseInt(pointsValue, 10);
             }
 
+            updatedDrivers[driverIndex].reason = reason; // Store the reason
+
             setPointsChange('');
+            setReason('');
             setDrivers(updatedDrivers);
         }
     };
@@ -41,6 +45,7 @@ function SponsorPoints() {
                                 <h3>{driver.name}</h3>
                             </div>
                             <p>Points: {driver.points}</p>
+                            {driver.reason && <p>Reason: {driver.reason}</p>}
                         </div>
                     ))}
                 </div>
@@ -64,6 +69,12 @@ function SponsorPoints() {
                         }
                     }}
                     placeholder="Enter points change (numbers only)"
+                />
+                <input
+                    type="text"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    placeholder="Enter reason"
                 />
                 <button onClick={() => handlePointsChange('add')} className="cta-button">Add</button>
                 <button onClick={() => handlePointsChange('reduce')} className="cta-button">Reduce</button>

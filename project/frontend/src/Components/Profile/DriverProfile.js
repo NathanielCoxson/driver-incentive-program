@@ -11,8 +11,8 @@ function DriverProfile() {
             <h1>My Profile</h1>
             <div className="profile-info">
                 <p><strong>Username:</strong> {auth?.Username}</p>
-                <p><strong>Vehicle:</strong> Toyota Camry</p>
-                <p><strong>Sponsor Company:</strong> ABC</p>
+                <p><strong>Vehicle:</strong> {auth?.vehicleInfo}</p>
+                <p><strong>Sponsor Company:</strong> {auth?.SponsorOrganization}</p>
                 <p><strong>Email:</strong> {auth?.Email}</p>
             
             </div>

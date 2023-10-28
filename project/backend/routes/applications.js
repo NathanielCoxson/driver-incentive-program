@@ -78,7 +78,28 @@ applications.get('/users/:Username', async (req, res) => {
 
         res.status(200).send({ applications });
     } catch (err) {
-        console.log(error);
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * GET to <baseurl>/api/applications/users/:Username
+ * Retrieves the applications to the Sponsor with the provided SponsorName.
+ */
+applications.get('/sponsors/:SponsorName', async (req, res) => {
+    const SponsorName = req.params.SponsorName;
+
+    try {
+        const applications = await req.app.locals.db.getSponsorApplications(SponsorName);
+        if (applications.length === 0) {
+            res.status(404).send('No applications found.');
+            return;
+        }
+
+        res.status(200).send({ applications });
+    } catch (err) {
+        console.log(err);
         res.status(500).send();
     }
 });
@@ -117,6 +138,61 @@ applications.delete('/users/:Username', async (req, res) => {
 
         else res.status(400).send();
 
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * POST to <baseurl>/api/applications/process
+ * Accepts or rejects the application with a specific AID
+ * Request body: {
+ *      AID: UniqueIdentifier
+ *      ApplicationStatus: String
+ * }
+ */
+applications.post('/process', async(req, res) => {
+    try {
+        const body = req.body
+
+        .then(() => {
+            // Update application with the given information
+            req.app.locals.db.processApplication(body.AID, body.ApplicationStatus)
+            // If successful, send success code
+            .then(() => {
+                res.status(201).send();
+            })
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * GET <baseurl>/api/sponsors/drivers/:SponsorName
+ * Returns the list of drivers in the given sponsor organization
+ */
+applications.get('/drivers/:SponsorName', async (req, res) => {
+    try {
+        // Bad request
+        if (!req.params.SponsorName) res.status(400).send();
+
+        // Query for sponsor
+        const sponsor = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
+
+        if(sponsor){
+            // Query for drivers
+            const result = await req.app.locals.db.getSponsorsDrivers(sponsor.SID);
+
+            if (result.length === 0) {
+                res.status(404).send();
+                return;
+            }
+            res.status(200).send({ result });
+        }
+        else res.status(404).send();
     } catch (err) {
         console.log(err);
         res.status(500).send();

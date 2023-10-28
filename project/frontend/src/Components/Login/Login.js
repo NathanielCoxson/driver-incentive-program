@@ -16,10 +16,12 @@ function Login() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-    
+
+
+
         try {
-            const response = await axios.post(LOGIN_URL,
-                JSON.stringify({Username, Password}),
+            let response = await axios.post(LOGIN_URL,
+                { Username, Password },
                 {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
@@ -30,6 +32,15 @@ function Login() {
             setPassword('');
             if (from === '/') navigate('/dashboard', { replace: true });
             else navigate(from, { replace: true });
+
+            // Send successful login attempt
+            let loginDate = new Date();
+            let LoginAttempt = {
+                LoginDate: loginDate.toISOString().slice(0, 19).replace('T', ' '),
+                Username: Username,
+                Success: 'true'
+            }
+            await axios.post('/users/loginattempt', LoginAttempt);
         } catch (err) {
             if (!err?.response) {
                 setResponseMessage('No Server Response');
@@ -46,6 +57,19 @@ function Login() {
             else {
                 setResponseMessage('Login Failed');
             }
+            
+            // Send unsuccessful login attempt
+            try {
+                let loginDate = new Date();
+                let LoginAttempt = {
+                    LoginDate: (loginDate).toISOString().slice(0, 19).replace('T', ' '),
+                    Username: Username,
+                    Success: 'false'
+                }
+                await axios.post('/users/loginattempt', LoginAttempt);
+            } catch (err) {
+                console.log(err);
+            }
         }
     };
 
@@ -58,54 +82,54 @@ function Login() {
     }, [persist]);
 
     return (
-    <main>
-        <section className="login-section">
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit} className='login-form'>
-                <label htmlFor="username">Username:</label>
-                <input 
-                    type="text" 
-                    id="username" 
-                    name="username" 
-                    required 
-                    onChange={event => setUsername(event.target.value)}
-                    value={Username}
-                />
-                <br />
-                <label htmlFor="password">Password:</label>
-                <input 
-                    type="password" 
-                    id="password" 
-                    name="password" 
-                    required 
-                    onChange={event => setPassword(event.target.value)}
-                    value={Password}
-                />
-                <br />
-                <button type="submit" className="cta-button">Submit</button>
-
-                <div className="response" id="response">{responseMessage}</div>
-                <div className="persistCheck">
-                    <label htmlFor='persist'>Trust This Device?</label>
-                    <input 
-                        type="checkbox"
-                        id="persist"
-                        onChange={togglePersist}
-                        checked={persist}
+        <main>
+            <section className="login-section">
+                <h2>Login</h2>
+                <form onSubmit={handleSubmit} className='login-form'>
+                    <label htmlFor="username">Username:</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        required
+                        onChange={event => setUsername(event.target.value)}
+                        value={Username}
                     />
-                </div>
-                
-            </form>
-           
-            <div>
+                    <br />
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        onChange={event => setPassword(event.target.value)}
+                        value={Password}
+                    />
+                    <br />
+                    <button type="submit" className="cta-button">Submit</button>
+
+                    <div className="response" id="response">{responseMessage}</div>
+                    <div className="persistCheck">
+                        <label htmlFor='persist'>Trust This Device?</label>
+                        <input
+                            type="checkbox"
+                            id="persist"
+                            onChange={togglePersist}
+                            checked={persist}
+                        />
+                    </div>
+
+                </form>
+
                 <div>
-                    <span>Need an account? </span>
-                    <Link to='/register'>Signup</Link>
+                    <div>
+                        <span>Need an account? </span>
+                        <Link to='/register'>Signup</Link>
+                    </div>
+                    <Link to='/password-reset'>Forgot Password?</Link>
                 </div>
-                <Link to='/password-reset'>Forgot Password?</Link> 
-            </div>   
-        </section>
-    </main>)
+            </section>
+        </main>)
 }
 
 export default Login;

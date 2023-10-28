@@ -63,7 +63,10 @@ async function getSponsorByName(SponsorName) {
         // Make request
         const result = await pool.request()
             .input('name', sql.VarChar(100), SponsorName)
-            .query('SELECT * FROM Sponsors WHERE SponsorName = @name');
+            .query('SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
+                    FROM Sponsors \
+                    JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
+                    WHERE SponsorName = @name');
         return result.recordset[0];
     } catch (err) {
         console.log(err);
@@ -111,7 +114,7 @@ async function getUserByUsername(Username) {
  * }
  * @param {String} Username 
  */
-async function getUserByEmail (Email) {
+async function getUserByEmail(Email) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -225,7 +228,7 @@ async function createUser(User) {
     }
 
 }
-    
+
 /**
  * Retrieves the user from the database with the specified username.
  * Response: {
@@ -253,8 +256,8 @@ async function getUserPasswordResetToken(Email) {
         console.log(err);
     }
 }
-    
-    
+
+
 /**
  * Sets a password reset token and timeout value for the user with the specific email 
  * in the database, as well as returns the token to be used by the caller.
@@ -376,7 +379,7 @@ async function getUserByRefreshToken(RefreshToken) {
         console.log(err);
     }
 }
-    
+
 /**
  * Updates the password of the user with the given email.
  * @param {String} Email 
@@ -397,7 +400,7 @@ async function resetUserPassword(Email, Password) {
         console.log(err);
     }
 }
-    
+
 /**
  * Sets PasswordResetToken and PasswordResetExpiration to NULL for the user with the given email.
  * @param {String} Email 
@@ -417,7 +420,7 @@ async function clearPasswordReset(Email) {
         console.log(err);
     }
 }
-        
+
 /**
  * Create a log entry into Logins with the given details
  * Request Body: {
@@ -435,7 +438,7 @@ async function createLogin(Login) {
         await pool.request()
             .input('LoginDate', sql.DateTime, Login.LoginDate)
             .input('Username', sql.VarChar(50), Login.Username)
-            .input('Success', sql.VarChar(50), Login.Password)
+            .input('Success', sql.VarChar(50), Login.Success)
             .query("\
                     INSERT INTO Logins(\
                         LID,\
@@ -452,7 +455,7 @@ async function createLogin(Login) {
         console.log(err);
     }
 }
-    
+
 /**
  * Insert's a new driver application in the Applications table
  * Application example: {
@@ -515,7 +518,48 @@ async function getUserApplications(Username) {
                 JOIN Sponsors ON Sponsors.SID = Applications.SID \
                 WHERE Users.Username = @Username"
             );
-        
+
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Returns an array of application objects belonging to the sponsor with
+ * the given Sponsor name
+ * Application Example: {
+ *  AID: String,
+ *  Username: String,
+ *  SponsorName: String,
+ *  ApplicationDate: String,
+ *  ApplicationStatus: String,
+ *  Reason: String
+ * }
+ * @param {String} SponsorName
+ * @returns Array
+ */
+async function getSponsorApplications(SponsorName){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('SponsorName', sql.VarChar(100), SponsorName)
+            .query(
+                "SELECT \
+                    Applications.AID,\
+                    Users.Username,\
+                    Sponsors.SponsorName,\
+                    Applications.ApplicationDate,\
+                    Applications.ApplicationStatus,\
+                    Applications.Reason \
+                FROM Applications \
+                JOIN Users ON Users.UID = Applications.UID \
+                JOIN Sponsors ON Sponsors.SID = Applications.SID \
+                WHERE Sponsors.SponsorName = @SponsorName"
+            );
+
         return result.recordset;
     } catch (err) {
         console.log(err);
@@ -567,14 +611,38 @@ async function deleteUsersApplications(Username) {
 }
 
 /**
-     * Create a password change log entry into PWChanges with the given details
-     * Request Body: {
-     *  UID: Unique Identifier,
-     *  PWCDate: Date/Time,
-     *  ChangeType: String
-     * }
-     */
-async function createPWC(PWC){
+ * Accepts or rejects the application with the given AID, returns the number of rows updated
+ * @param {UniqueIdentifier} AID
+ * @param {String} ApplicationStatus
+ * @returns Number
+ */
+async function processApplication(AID, ApplicationStatus){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('@AID', sql.UniqueIdentifier, AID)
+            .input('@ApplicationStatus'. sql.VarChar(100), ApplicationStatus)
+            .query("UPDATE Applications \
+                    SET ApplicationStatus = @ApplicationStatus \
+                    WHERE AID = @AID");
+
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Create a password change log entry into PWChanges with the given details
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  PWCDate: Date/Time,
+ *  ChangeType: String
+ * }
+ */
+async function createPWC(PWC) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -595,6 +663,207 @@ async function createPWC(PWC){
                     @PWCDate,\
                     @ChangeType)");
         return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getSponsorCatalog(CID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('CID', sql.UniqueIdentifier, CID)
+            .query("\
+                SELECT CSID, term, media, entity, limit \
+                FROM CatalogSearches \
+                JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
+                WHERE Catalogs.CID = @CID");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function addCatalogSearchQuery(CID, Search) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('CID', sql.UniqueIdentifier, CID)
+            .input('term', sql.VarChar(50), Search.term)
+            .input('media', sql.VarChar(50), Search.media)
+            .input('entity', sql.VarChar(50), Search.entity)
+            .input('limit', sql.Int, Search.limit)
+            .query("\
+                INSERT INTO CatalogSearches (CID, term, media, entity, limit, CSID) \
+                VALUES(@CID, @term, @media, @entity, @limit, NEWID())");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function updateSearchQuery(SID, CID, Searches) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        let transaction;
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
+            await new sql.Request(transaction)
+                .input("SID", sql.UniqueIdentifier, SID)
+                .query("DELETE CatalogSearches \
+                        FROM CatalogSearches \
+                        JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
+                        JOIN Sponsors ON Sponsors.SID = Catalogs.SID \
+                        WHERE Sponsors.SID = @SID");
+            for (const search of Searches) {
+                await pool.request()
+                    .input('CID', sql.UniqueIdentifier, CID)
+                    .input('term', sql.VarChar(50), search.term)
+                    .input('media', sql.VarChar(50), search.media)
+                    .input('entity', sql.VarChar(50), search.entity)
+                    .input('limit', sql.Int, search.limit)
+                    .query("\
+                        INSERT INTO CatalogSearches (CID, CSID, term, media, entity, limit) \
+                        VALUES(@CID, NEWID(), @term, @media, @entity, @limit)");
+            }
+            await transaction.commit();
+            return true;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function deleteCatalogSearchQuery(CID, CSID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('CID', sql.UniqueIdentifier, CID)
+            .input('CSID', sql.UniqueIdentifier, CSID)
+            .query("\
+                DELETE CatalogSearches \
+                FROM CatalogSearches \
+                JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
+                WHERE Catalogs.CID = @CID AND CSID = @CSID");
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function getUsersSponsors(UID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .query("SELECT Sponsors.SponsorName \
+                    FROM SponsorsUsers \
+                    JOIN Sponsors ON Sponsors.SID = SponsorsUsers.SID \
+                    WHERE UID = @UID");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Get the list of drivers for a given SID
+ * @param {UniqueIdentifier} SID
+ * @Return Array
+ */
+async function getSponsorsDrivers(SID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("SELECT Users.UID, Users.Name, Users.Role, Users.Username, Email\
+                    FROM Users \
+                    INNER JOIN Users ON Users.UID = SponsorsUsers.UID \
+                    WHERE SponsorsUsers.SID = @SID AND Users.Role = 'driver'");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Create a transcation for the given user, sponsor, quantity, and reason
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  SID: Unique Identifier,
+ *  TransactionDate: Date/Time,
+ *  TransactionAmount: Int,
+ *  Reason: String
+ * }
+ */
+async function createTransaction(Transaction){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, Transaction.UID)
+            .input('SID', sql.UniqueIdentifier, Transaction.SID)
+            .input('TransactionDate', sql.DateTime, PWC.TransactionDate)
+            .input('TransactionAmount', sql.Int, Transaction.TransactionAmount)
+            .input('Reason', sql.VarChar(100), PWC.ChangeType)
+            .query("\
+                INSERT INTO Transactions(\
+                    TID,\
+                    UID,\
+                    SID,\
+                    TransactionDate,\
+                    TransactionAmount,\
+                    Reason) \
+                VALUES(\
+                    NEWID(),\
+                    @UID,\
+                    @SID,\
+                    @TransactionDate,\
+                    @TransactionAmount,\
+                    @Reason)");
+        return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Edit the Profile information for the user with the given UID, returns the number of rows affected
+ * @param {UniqueIdentifier} UID
+ * @param {String} Vehicle
+ * @param {String} PhoneNumber
+ * @returns Number
+ */
+async function updateProfile(UID, Vehicle, PhoneNumber){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('@UID', sql.UniqueIdentifier, UID)
+            .input('@Vehicle'. sql.VarChar(50), Vehicle)
+            .input('@PhoneNumber'. sql.VarChar(50), PhoneNumber)
+            .query("UPDATE Profiles \
+                    SET Vehicle = @Vehicle, PhoneNumber = @PhoneNumber \
+                    WHERE UID = @UID");
+
+        return result.rowsAffected[0];
     } catch (err) {
         console.log(err);
     }
@@ -621,5 +890,15 @@ module.exports = {
     getUserApplications,
     deleteApplication,
     deleteUsersApplications,
-    createPWC
+    createPWC,
+    getSponsorCatalog,
+    addCatalogSearchQuery,
+    updateSearchQuery,
+    deleteCatalogSearchQuery,
+    getUsersSponsors,
+    createTransaction,
+    processApplication,
+    getSponsorApplications,
+    updateProfile,
+    getSponsorsDrivers
 }

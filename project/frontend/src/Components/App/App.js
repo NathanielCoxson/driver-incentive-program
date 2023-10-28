@@ -23,6 +23,8 @@ import DashboardLayout from '../Dashboard/DashboardLayout';
 import Profile from '../Profile/Profile';
 import AddUser from '../AddUser/AddUser';
 import RejectionReason from '../Dashboard/RejectionReason';
+import CatalogSettings from '../Catalog/CatalogSettings';
+import Purchase from '../Purchase/Purchase';
 
 function App() {
   return (
@@ -47,10 +49,13 @@ function App() {
               <Route path="catalog" element={<Catalog />} /> {/* Sponsors can see their own catalog along with drivers */}
               <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
 
+              <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
+
               {/* driver */}
               <Route element={<RequireAuth allowedRoles={['driver', 'admin']} />}>
                 <Route path="driver_points" element={<DriverPoints />} />
                 <Route path="view_sponsor_organization" element={<ViewSponsorOrganization />} />
+                <Route path="purchase" element={<Purchase />} />
               </Route>
 
               {/* sponsor */}
@@ -61,6 +66,7 @@ function App() {
                 <Route path="create_sponsor_organization" element={<CreateSponsorOrganization />} />
                 <Route path="sponsor_points" element={<SponsorPoints />} />
                 <Route path="rejection_reason" element={<RejectionReason />} />
+                <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
               </Route>
 
               {/* admin */}

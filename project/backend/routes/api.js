@@ -7,10 +7,12 @@ const users = require('./users');
 const sponsors = require('./sponsors');
 const applications = require('./applications');
 const about = require('./about');
+const catalogs = require('./catalogs');
 
 api.use('/users', users);
 api.use('/sponsors', sponsors);
 api.use('/applications', applications);
 api.use('/about', about);
+api.use('/catalogs', catalogs);
 
 module.exports = api;
