@@ -1,11 +1,13 @@
 import './CreateSponsorOrganization.css';
 import { useState } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
+import { useNavigate } from 'react-router-dom';
 
 function CreateSponsorOrganization() {
     const [organizationName, setOrganizationName] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
     const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate();
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -21,6 +23,7 @@ function CreateSponsorOrganization() {
         try {
             await axiosPrivate.post('/sponsors', organizationData);
             setResponseMessage('Success!');
+            setOrganizationName('');
         } catch (err) {
             if(process.env.NODE_ENV === 'development') console.log(err);
             if (!err?.response) {
@@ -28,6 +31,9 @@ function CreateSponsorOrganization() {
             }
             else if (err.response?.status === 409) {
                 setResponseMessage('Sponsor name already taken.')
+            }
+            else if (err?.response?.status === 401) {
+                return navigate('/login');
             }
         }
     }
