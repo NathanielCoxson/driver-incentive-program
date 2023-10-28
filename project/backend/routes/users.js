@@ -240,6 +240,7 @@ users.get("/refresh", async (req, res) => {
             if (newToken.error) {
                 console.log('Error creating jwt on refresh.');
                 res.status(500).send();
+                return;
             }
             // Token created
             else {
@@ -249,6 +250,7 @@ users.get("/refresh", async (req, res) => {
                 delete user.Password;
                 delete user.RefreshTokenExpiration;
                 res.status(200).send({ ...user, accessToken: newToken.accessToken, sponsors });
+                return;
             }
         }
         // Invalid expiration date

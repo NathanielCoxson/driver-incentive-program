@@ -1,43 +1,41 @@
 import './CreateSponsorOrganization.css';
 import { useState } from 'react';
+import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
 function CreateSponsorOrganization() {
     const [organizationName, setOrganizationName] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
+    const axiosPrivate = useAxiosPrivate();
 
-    const baseURL = process.env.NODE_ENV === 'production'
-        ? 'http://your-production-api-url'
-        : 'http://localhost:3001/api/create-org';
-
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        setResponseMessage('');
+        setResponseMessage(''); 
 
         // Validate the form data if needed
 
         const organizationData = {
-            OrganizationName: organizationName,
+            SponsorName: organizationName,
             // Add other fields as needed
         };
 
-        fetch(baseURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(organizationData),
-        })
-            .then((res) => {
-                if (res.status === 400) setResponseMessage('Invalid Input');
-                if (res.status === 201) setResponseMessage('Success!');
-            })
-            .catch((err) => console.log(err));
+        try {
+            await axiosPrivate.post('/sponsors', organizationData);
+            setResponseMessage('Success!');
+        } catch (err) {
+            if(process.env.NODE_ENV === 'development') console.log(err);
+            if (!err?.response) {
+                setResponseMessage('No Server Response');
+            }
+            else if (err.response?.status === 409) {
+                setResponseMessage('Sponsor name already taken.')
+            }
+        }
     }
 
     return (
         <section className="hero">
             <h2>Create Sponsor Organization</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className='create-sponsor-form'>
                 <div>
                     <label htmlFor="organizationName">Organization Name:</label>
                     <input
