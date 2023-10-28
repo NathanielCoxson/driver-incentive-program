@@ -62,11 +62,11 @@ async function getSponsorByName(SponsorName) {
         const pool = await poolPromise;
         // Make request
         const result = await pool.request()
-            .input('name', sql.VarChar(100), SponsorName)
-            .query('SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
+            .input('SponsorName', sql.VarChar(100), SponsorName)
+            .query("SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
                     FROM Sponsors \
                     JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
-                    WHERE SponsorName = @name');
+                    WHERE SponsorName = @SponsorName");
         return result.recordset[0];
     } catch (err) {
         console.log(err);
@@ -539,7 +539,7 @@ async function getUserApplications(Username) {
  * @param {String} SponsorName
  * @returns Array
  */
-async function getSponsorApplications(SponsorName){
+async function getSponsorApplications(SponsorName) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -616,14 +616,14 @@ async function deleteUsersApplications(Username) {
  * @param {String} ApplicationStatus
  * @returns Number
  */
-async function processApplication(AID, ApplicationStatus){
+async function processApplication(AID, ApplicationStatus) {
     try {
         // Connect to pool
         const pool = await poolPromise;
 
         const result = await pool.request()
             .input('@AID', sql.UniqueIdentifier, AID)
-            .input('@ApplicationStatus'. sql.VarChar(100), ApplicationStatus)
+            .input('@ApplicationStatus'.sql.VarChar(100), ApplicationStatus)
             .query("UPDATE Applications \
                     SET ApplicationStatus = @ApplicationStatus \
                     WHERE AID = @AID");
@@ -811,7 +811,7 @@ async function getSponsorsDrivers(SID) {
  *  Reason: String
  * }
  */
-async function createTransaction(Transaction){
+async function createTransaction(Transaction) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -850,20 +850,90 @@ async function createTransaction(Transaction){
  * @param {String} PhoneNumber
  * @returns Number
  */
-async function updateProfile(UID, Vehicle, PhoneNumber){
+async function updateProfile(UID, Vehicle, PhoneNumber) {
     try {
         // Connect to pool
         const pool = await poolPromise;
 
         const result = await pool.request()
             .input('@UID', sql.UniqueIdentifier, UID)
-            .input('@Vehicle'. sql.VarChar(50), Vehicle)
-            .input('@PhoneNumber'. sql.VarChar(50), PhoneNumber)
+            .input('@Vehicle'.sql.VarChar(50), Vehicle)
+            .input('@PhoneNumber'.sql.VarChar(50), PhoneNumber)
             .query("UPDATE Profiles \
                     SET Vehicle = @Vehicle, PhoneNumber = @PhoneNumber \
                     WHERE UID = @UID");
 
         return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Adds a new sponsor to the database with the given name.
+ * @param {String} SponsorName 
+ */
+async function createSponsor(SponsorName, UID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        // Transaction
+        let transaction = pool.transaction();
+        await transaction.begin();
+
+        // Insert new sponsor
+        const sponsor = await new sql.Request(transaction)
+            .input("SponsorName", sql.VarChar(50), SponsorName)
+            .query("INSERT INTO Sponsors (SID, SponsorName) OUTPUT INSERTED.* VALUES(NEWID(), @SponsorName)");
+        if (!sponsor.recordset[0]) throw new Error('Failed to insert sponsor.');
+
+        // Insert catalog for new sponsor
+        const catalog = await new sql.Request(transaction)
+            .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
+            .query("INSERT INTO Catalogs (CID, SID, ConversionRate) OUTPUT INSERTED.* VALUES(NEWID(), @SID, 0.01)");
+        if (!catalog.recordset[0]) throw new Error('Failed to create catalog.');
+
+        // Add the user who created the sponsor organization to the new organization
+        const user = await new sql.Request(transaction)
+            .input("UID", sql.UniqueIdentifier, UID)
+            .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
+            .query("INSERT INTO SponsorsUsers (SID, UID) OUTPUT INSERTED.* VALUES(@SID, @UID)");
+        if (!user.recordset[0]) throw new Error('Failed to add user to new organization.');
+
+        await transaction.commit();
+        return true;
+    } catch (err) {
+        console.log(err);
+        await transaction.rollback();
+        return false;
+    }
+}
+
+async function deleteSponsor(SponsorName) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('SponsorName', sql.VarChar(50), SponsorName)
+            .query("DELETE FROM Sponsors WHERE SponsorName = @SponsorName");
+
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function updateSponsor(SponsorName, Update) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('SponsorName', sql.VarChar(50), SponsorName)
+            .input('NewName', sql.VarChar(50), Update.SponsorName)
+            .query("UPDATE Sponsors SET SponsorName = @NewName OUTPUT inserted.* WHERE SponsorName = @SponsorName");
+        return result.recordset[0];
     } catch (err) {
         console.log(err);
     }
@@ -900,5 +970,8 @@ module.exports = {
     processApplication,
     getSponsorApplications,
     updateProfile,
-    getSponsorsDrivers
+    getSponsorsDrivers,
+    createSponsor,
+    deleteSponsor,
+    updateSponsor
 }
