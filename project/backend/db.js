@@ -93,7 +93,18 @@ async function getUserByUsername(Username) {
         // Make request
         const result = await pool.request()
             .input('username', Username)
-            .query("SELECT Users.UID, Sponsors.SponsorName, Users.Name, Users.Role, Users.Username, Users.Password, Users.Email FROM (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID WHERE Users.Username = @Username");
+            .query("SELECT\
+                        Users.UID,\
+                        Sponsors.SponsorName,\
+                        Users.Name,\
+                        Users.Role,\
+                        Users.Username,\
+                        Users.Password,\
+                        Users.Email\
+                    FROM\
+                        (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID\
+                    WHERE\
+                        Users.Username = @Username");
         // Return user object
         return result.recordset[0];
     } catch (err) {
@@ -121,7 +132,18 @@ async function getUserByEmail(Email) {
         // Make request
         const result = await pool.request()
             .input('Email', sql.VarChar(300), Email)
-            .query("SELECT Users.UID, Sponsors.SponsorName, Users.Name, Users.Role, Users.Username, Users.Password, Users.Email FROM (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID WHERE Users.Email = @Email");
+            .query("SELECT\
+                        Users.UID,\
+                        Sponsors.SponsorName,\
+                        Users.Name,\
+                        Users.Role,\
+                        Users.Username,\
+                        Users.Password,\
+                        Users.Email\
+                    FROM\
+                        (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID\
+                    WHERE\
+                        Users.Email = @Email");
         // Return user object
         return result.recordset[0];
     } catch (err) {
@@ -162,7 +184,9 @@ async function getLatestRelease() {
 *  Password: String,
 *  SID: String,
 *  Name: String,
-*  Role: String
+*  Role: String,
+*  Vehicle: String,
+*  PhoneNumber: String
 * }
 */
 async function createUser(User) {
@@ -178,32 +202,8 @@ async function createUser(User) {
                 .input('Username', sql.VarChar(50), User.Username)
                 .input('Password', sql.VarChar(100), User.Password)
                 .input('Email', sql.VarChar(300), User.Email)
-                .query("DECLARE @usid uniqueidentifier;\
-                        SET @usid = NEWID();\
-                        INSERT INTO Users(\
-                                        UID,\
-                                        Name,\
-                                        Role,\
-                                        Username,\
-                                        Password,\
-                                        Email)\
-                                    VALUES(\
-                                        @usid,\
-                                        @Name,\
-                                        @Role,\
-                                        @Username,\
-                                        @Password,\
-                                        @Email);");
-                        
-        }
-        else {
-            result = await pool.request()
-                .input('SID', User.SID)
-                .input('Name', sql.VarChar(100), User.Name)
-                .input('Role', User.Role)
-                .input('Username', sql.VarChar(50), User.Username)
-                .input('Password', sql.VarChar(100), User.Password)
-                .input('Email', sql.VarChar(300), User.Email)
+                .input('VehicleInfo', sql.VarChar(50), User.VehicleInfo)
+                .input('PhoneNumber', sql.VarChar(50), User.PhoneNumber)
                 .query("DECLARE @usid uniqueidentifier;\
                         SET @usid = NEWID();\
                         INSERT INTO Users(\
@@ -220,7 +220,45 @@ async function createUser(User) {
                                         @Username,\
                                         @Password,\
                                         @Email);\
-                        INSERT INTO SponsorsUsers VALUES (CAST(@SID AS uniqueidentifier), @usid);");
+                        INSERT INTO Profiles VALUES(\
+                                        NEWID(),\
+                                        @usid,\
+                                        @VehicleInfo,\
+                                        @PhoneNumber);");
+                        
+        }
+        else {
+            result = await pool.request()
+                .input('SID', User.SID)
+                .input('Name', sql.VarChar(100), User.Name)
+                .input('Role', User.Role)
+                .input('Username', sql.VarChar(50), User.Username)
+                .input('Password', sql.VarChar(100), User.Password)
+                .input('Email', sql.VarChar(300), User.Email)
+                .input('VehicleInfo', sql.VarChar(50), User.VehicleInfo)
+                .input('PhoneNumber', sql.VarChar(50), User.PhoneNumber)
+                .query("DECLARE @usid uniqueidentifier;\
+                        SET @usid = NEWID();\
+                        INSERT INTO Users(\
+                                        UID,\
+                                        Name,\
+                                        Role,\
+                                        Username,\
+                                        Password,\
+                                        Email)\
+                                    VALUES(\
+                                        @usid,\
+                                        @Name,\
+                                        @Role,\
+                                        @Username,\
+                                        @Password,\
+                                        @Email);\
+                        INSERT INTO SponsorsUsers VALUES (CAST(@SID AS uniqueidentifier), @usid);\
+                        INSERT INTO Profiles VALUES(\
+                                        NEWID(),\
+                                        @usid,\
+                                        @VehicleInfo,\
+                                        @PhoneNumber);");
         }
         return result.rowsAffected[0];
     } catch (err) {

@@ -8,11 +8,13 @@ const sponsors = require('./sponsors');
 const applications = require('./applications');
 const about = require('./about');
 const catalogs = require('./catalogs');
+const transactions = require('./transactions');
 
 api.use('/users', users);
 api.use('/sponsors', sponsors);
 api.use('/applications', applications);
 api.use('/about', about);
 api.use('/catalogs', catalogs);
+api.use('/transactions', transactions);
 
 module.exports = api;
