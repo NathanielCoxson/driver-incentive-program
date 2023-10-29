@@ -8,6 +8,7 @@
     border: 1px solid #ccc; /* Add a border around each item */
     border-radius: 5px; /* Round the corners */
     background-color:   #0077b6; /* Background color */
+    color: white
 }
 
 .cart-item span {
