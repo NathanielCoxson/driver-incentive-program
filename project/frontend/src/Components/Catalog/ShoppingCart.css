@@ -1,4 +1,29 @@
 
+/* ShoppingCart.css */
+
+/* Styles for individual purchase items */
+.cart-item {
+    margin-bottom: 20px; /* Add space between each purchase item */
+    padding: 15px; /* Add padding to separate item details */
+    border: 1px solid #ccc; /* Add a border around each item */
+    border-radius: 5px; /* Round the corners */
+    background-color:   #0077b6; /* Background color */
+}
+
+.cart-item span {
+    color:#0077b6;
+    display: block; /* Make each line of item details appear on a new line */
+}
+
+/* Styles for the purchase list */
+.cart-list {
+    list-style: none; /* Remove list bullets */
+    padding: 0; /* Remove list padding */
+}
+
+.button-spacing {
+    margin: 10px;
+}
 
 
 

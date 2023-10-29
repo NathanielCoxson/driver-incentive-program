@@ -15,6 +15,7 @@
 }
 
 .purchase-item span {
+    color:#0077b6;
     display: block; /* Make each line of item details appear on a new line */
 }
 
