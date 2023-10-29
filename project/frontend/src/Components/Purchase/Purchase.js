@@ -1,33 +1,42 @@
-import React, { useState } from 'react';
-import './Purchase.css'; // Import your CSS file
+import React from 'react';
+import './Purchase.css';
 
 function Purchase() {
-    // Sample shopping cart data (replace with your data)
-    const shoppingCart = [
-        { id: 1, name: 'Product A', quantity: 2, costPerItem: 10 },
-        { id: 2, name: 'Product B', quantity: 3, costPerItem: 15 },
-        { id: 3, name: 'Product C', quantity: 1, costPerItem: 20 },
+    // Sample purchase history (replace with your data)
+    const purchaseHistory = [
+        { id: 1, date: '2023-03-15', pointsSpent: 50, items: ['Product A', 'Product B'], status: 'Delivered' },
+        { id: 2, date: '2023-03-10', pointsSpent: 30, items: ['Product C'], status: 'Processing' },
+        { id: 3, date: '2023-03-05', pointsSpent: 70, items: ['Product A', 'Product B', 'Product C'], status: 'Processing' },
     ];
 
-    // Calculate the total cost
-    const totalCost = shoppingCart.reduce((total, item) => total + item.quantity * item.costPerItem, 0);
+    const handleCancel = (id) => {
+        // Handle cancel logic here (you can remove the purchase with the given ID from your data)
+        console.log(`Cancelled purchase with ID: ${id}`);
+    };
 
     return (
         <main>
             <section className="hero">
-                <h3>Shopping Cart</h3>
-                <ul>
-                    {shoppingCart.map((item) => (
-                        <ul key={item.id} className="cart-item">
-                            <span>{item.name} - Quantity: {item.quantity}</span>
-                            <span>Cost Per Item: ${item.costPerItem}</span>
-                            <span>Subtotal: ${item.quantity * item.costPerItem}</span>
-                        </ul>
+                <h3>Purchase History</h3>
+                <ul className="purchase-list">
+                    {purchaseHistory.map((purchase) => (
+                        <li key={purchase.id} className="purchase-item">
+                            <div className="purchase-details">
+                                <span>Date: {purchase.date}</span>
+                                <span>Points Spent: {purchase.pointsSpent} points</span>
+                                <span>Items: {purchase.items.join(', ')}</span>
+                                <span>Status: {purchase.status}</span> {/* Display the status */}
+
+
+                                {purchase.status === 'Processing' && ( // Conditionally render the cancel button
+                                    <button onClick={() => handleCancel(purchase.id)} className="cancel-button">
+                                        Cancel
+                                    </button>
+                                )}
+                            </div>
+                        </li>
                     ))}
                 </ul>
-                    <h4>Total Cost: ${totalCost}</h4>
-
-                <button className="cta-button">Checkout</button>
             </section>
         </main>
     );
