@@ -28,6 +28,7 @@ function ShoppingCart() {
                     <h4>Total Cost: ${totalCost}</h4>
 
                 <button className="cta-button">Checkout</button>
+                <button className="cta-button">Cancel</button>
             </section>
         </main>
     );
