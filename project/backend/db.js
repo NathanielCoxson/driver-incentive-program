@@ -65,7 +65,7 @@ async function getSponsorByName(SponsorName) {
             .input('name', sql.VarChar(100), SponsorName)
             .query('SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
                     FROM Sponsors \
-                    JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
+                    LEFT JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
                     WHERE SponsorName = @name');
         return result.recordset[0];
     } catch (err) {
@@ -104,7 +104,7 @@ async function getUserByUsername(Username) {
                     FROM\
                         (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID\
                     WHERE\
-                        Users.Username = @Username");
+                        Users.Username = @username");
         // Return user object
         return result.recordset[0];
     } catch (err) {
@@ -857,9 +857,9 @@ async function createTransaction(Transaction){
         const result = await pool.request()
             .input('UID', sql.UniqueIdentifier, Transaction.UID)
             .input('SID', sql.UniqueIdentifier, Transaction.SID)
-            .input('TransactionDate', sql.DateTime, PWC.TransactionDate)
+            .input('TransactionDate', sql.DateTime, Transaction.TransactionDate)
             .input('TransactionAmount', sql.Int, Transaction.TransactionAmount)
-            .input('Reason', sql.VarChar(100), PWC.ChangeType)
+            .input('Reason', sql.VarChar(100), Transaction.Reason)
             .query("\
                 INSERT INTO Transactions(\
                     TID,\
@@ -880,6 +880,75 @@ async function createTransaction(Transaction){
         console.log(err);
     }
 }
+
+/**
+ * Return all transactions associated with a given user and sponsor
+ * Results are sorted by descending date
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  SID: Unique Identifier
+ * }
+ * @param {UniqueIdentifier} UID
+ * @param {UniqueIdentifier} SID
+ */
+async function getTransactions(UID, SID){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("\
+                SELECT\
+                    TID,\
+                    TransactionDate,\
+                    TransactionAmount,\
+                    Reason\
+                FROM\
+                    Transactions\
+                WHERE\
+                    UID = @UID AND SID = @SID\
+                ORDER BY\
+                    TransactionDate DESC");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Return the total points for a given user and sponsor
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  SID: Unique Identifier
+ * }
+ * @param {UniqueIdentifier} UID
+ * @param {UniqueIdentifier} SID
+ */
+async function getPoints(UID, SID){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("\
+                SELECT\
+                    SUM(TransactionAmount) AS Points\
+                FROM\
+                    Transactions\
+                WHERE\
+                    UID = @UID AND SID = @SID\
+                GROUP BY\
+                    UID");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 /**
  * Edit the Profile information for the user with the given UID, returns the number of rows affected
@@ -938,5 +1007,7 @@ module.exports = {
     processApplication,
     getSponsorApplications,
     updateProfile,
-    getSponsorsDrivers
+    getSponsorsDrivers,
+    getTransactions,
+    getPoints
 }
