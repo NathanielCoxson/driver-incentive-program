@@ -26,9 +26,11 @@ function ShoppingCart() {
                     ))}
                 </ul>
                     <h4>Total Cost: ${totalCost}</h4>
+                <div className="check-out-buttons">
+                    <button className="cta-button">Checkout</button>
+                    <button className="cta-button">Cancel</button>
+                </div>
 
-                <button className="cta-button">Checkout</button>
-                <button className="cta-button">Cancel</button>
             </section>
         </main>
     );

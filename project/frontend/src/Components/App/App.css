@@ -268,7 +268,7 @@ footer {
 .purchase-item {
   margin-bottom: 20px; /* Add space between each purchase item */
   padding: 15px; /* Add padding to separate item details */
-  border: 2px solid #ccc; /* Add a border around each item */
+  border: 2px solid #0077b6; /* Add a border around each item */
   border-radius: 5px; /* Round the corners */
   background-color: #0077b6; /* Background color */
 }
