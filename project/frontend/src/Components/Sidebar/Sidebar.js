@@ -13,7 +13,7 @@ function Sidebar() {
                         <li><Link to="profile">Driver Profile</Link></li>
                         <li><Link to="driver_points">Driver Point</Link></li>
                         <li><Link to="sponsor_organization">Driver's Sponsor Organization</Link></li>
-                        <li><Link to="catalog">Driver Catalog</Link></li>
+                        <li><Link to={`sponsors/${auth?.sponsors[0]?.SponsorName}/catalog`}>Driver Catalog</Link></li>
                         <li><Link to="driver_messagebox">Message Box</Link></li>
                     </>
                 }

@@ -9,6 +9,7 @@ function Catalog() {
     const [items, setItems] = useState([]);
     const { auth } = useAuth();
     const { SponsorName } = useParams();
+    const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
 
     useEffect(() => {
         const getItems = async () => {
@@ -27,30 +28,66 @@ function Catalog() {
             }
         }
         getItems();
-    }, [SponsorName]);
+    }, [SponsorName, cart]);
+
+    const handleAddToCart = (item) => {
+        if (cart.filter(i => i.trackName === item.trackName).length === 0) {
+            setCart(prev => [...prev, item]);
+            localStorage.setItem('cart', JSON.stringify([...cart, item]));
+        }
+    };
+
+    const handleRemoveItem = (trackName) => {
+        const newCart = cart.filter(item => item.trackName !== trackName);
+        setCart(newCart);
+        localStorage.setItem('cart', JSON.stringify(newCart));
+    };
 
     return (
-        <section className="hero catalog-section">
-            <h1>{SponsorName}</h1>
-            {auth?.Role === 'sponsor' || auth?.Role === 'admin'
-                ? <h2>Welcome to Your Sponsor's Catalog Preview</h2>
-                : <h2>Welcome to Your Driver's Catalog</h2>
-            }
-            <div className="sponsor-info">
-                <p> Here is a list of catalog item you chould choose from.</p>
-                <p> ... </p>
-                <div className='products-container'>
-                    {items.map((item, i) => {
-                        return (
-                            <Product details={item} key={item.wrapperType + i}/>
-                        )
-                    })}
+        <>
+            <section className="hero catalog-section">
+                <h1>{SponsorName}</h1>
+                {auth?.Role === 'sponsor' || auth?.Role === 'admin'
+                    ? <h2>Welcome to Your Sponsor's Catalog Preview</h2>
+                    : <h2>Welcome to Your Driver's Catalog</h2>
+                }
+                <div className="sponsor-info">
+                    <p> Here is a list of catalog item you chould choose from:</p>
+                    <div className='products-container'>
+                        {items.map((item, i) => {
+                            return (
+                                <Product
+                                    details={item}
+                                    key={item.wrapperType + i}
+                                    handleAddToCart={handleAddToCart}
+                                    handleRemoveItem={handleRemoveItem}
+                                />
+                            )
+                        })}
+                    </div>
                 </div>
-            </div>
-            {(auth?.Role === 'sponsor' || auth?.Role === 'admin') 
-                && <Link to='./settings' className='cta-button'>Settings</Link>
-            }
-        </section>
+                {(auth?.Role === 'sponsor' || auth?.Role === 'admin')
+                    && <Link to='./settings' className='cta-button'>Settings</Link>
+                }
+
+            </section>
+            <section className='cart-section'>
+                <ul className='cart'>
+                    {cart.map(item => {
+                        return (
+                            <li key={item.trackName} onClick={(e) => handleRemoveItem(item.trackName)}>
+                                <div className='cart-item-text'>
+                                    <span>{item.trackName}</span>
+                                    <span>{item.trackPrice}</span>
+                                </div>
+                            </li>
+                        );
+                    })}
+                    <li>Total: {cart.reduce((accumulator, currentValue) => accumulator + currentValue.trackPrice, 1)}</li>
+                </ul>
+                
+            </section>
+        </>
     )
 }
 
