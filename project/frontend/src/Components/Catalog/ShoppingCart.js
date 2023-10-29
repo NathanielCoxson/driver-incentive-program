@@ -28,8 +28,8 @@ function ShoppingCart() {
                     <h4>Total Cost: ${totalCost}</h4>
                 <div className="check-out-buttons">
                     <>
-                        <button className="cta-button">Checkout</button>
-                        <button className="cta-button">Cancel</button>
+                        <button className="check-out-buttons">Checkout</button>
+                        <button className="check-out-buttons">Cancel</button>
                     </>
 
                 </div>
