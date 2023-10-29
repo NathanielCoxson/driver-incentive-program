@@ -21,6 +21,13 @@ function Purchase() {
                                 <span>Points Spent: {purchase.pointsSpent} points</span>
                                 <span>Items: {purchase.items.join(', ')}</span>
                                 <span>Status: {purchase.status}</span> {/* Display the status */}
+
+
+                                {purchase.status === 'Processing' && ( // Conditionally render the cancel button
+                                    <button onClick={() => handleCancel(purchase.id)} className="cancel-button">
+                                        Cancel
+                                    </button>
+                                )}
                             </div>
                         </li>
                     ))}
