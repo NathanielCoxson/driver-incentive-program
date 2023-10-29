@@ -10,18 +10,21 @@ function Catalog() {
     const { auth } = useAuth();
     const { SponsorName } = useParams();
     const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
-
+    // dollars/point * dollars
     useEffect(() => {
         const getItems = async () => {
             try {
                 let results = [];
                 let response = await axios.get(`/catalogs/${SponsorName}`);
                 let searches = response.data.searches;
+                const ConversionRate = response.data.ConversionRate;
                 for (let i = 0; i < searches.length; i++) {
                     let search = searches[i];
                     response = await axios.get(`https://itunes.apple.com/search?term=${search.term}&media=${search.media}&entity=${search.entity}&limit=${search.limit}`);
                     results = [...results, ...response.data.results];
                 }
+                // Convert each dollar price to points
+                results.forEach(result => result.trackPrice = Math.ceil(result.trackPrice * (1 / ConversionRate)))
                 setItems(results);
             } catch (err) {
                 if (process.env.NODE_ENV === 'development') console.log(err);
@@ -69,24 +72,26 @@ function Catalog() {
                 {(auth?.Role === 'sponsor' || auth?.Role === 'admin')
                     && <Link to='./settings' className='cta-button'>Settings</Link>
                 }
+            </section>
+            {
+                cart.length > 0 &&
+                <section className='cart-section'>
+                    <ul className='cart'>
+                        {cart.map(item => {
+                            return (
+                                <li key={item.trackName} onClick={(e) => handleRemoveItem(item.trackName)}>
+                                    <div className='cart-item-text'>
+                                        <span>{item.trackName}</span>
+                                        <span>{item.trackPrice}P</span>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                        <li>Total: {cart.reduce((accumulator, currentValue) => accumulator + currentValue.trackPrice, 0)}P</li>
+                    </ul>
+                </section>
+            }
 
-            </section>
-            <section className='cart-section'>
-                <ul className='cart'>
-                    {cart.map(item => {
-                        return (
-                            <li key={item.trackName} onClick={(e) => handleRemoveItem(item.trackName)}>
-                                <div className='cart-item-text'>
-                                    <span>{item.trackName}</span>
-                                    <span>{item.trackPrice}</span>
-                                </div>
-                            </li>
-                        );
-                    })}
-                    <li>Total: {cart.reduce((accumulator, currentValue) => accumulator + currentValue.trackPrice, 1)}</li>
-                </ul>
-                
-            </section>
         </>
     )
 }

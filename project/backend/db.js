@@ -676,7 +676,7 @@ async function getSponsorCatalog(CID) {
         const result = await pool.request()
             .input('CID', sql.UniqueIdentifier, CID)
             .query("\
-                SELECT CSID, term, media, entity, limit \
+                SELECT CSID, term, media, entity, limit, Catalogs.ConversionRate \
                 FROM CatalogSearches \
                 JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
                 WHERE Catalogs.CID = @CID");

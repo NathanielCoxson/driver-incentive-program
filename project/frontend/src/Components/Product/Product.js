@@ -8,7 +8,7 @@ function Product(props) {
             <div className='product-text-wrapper'>
                 <h3>{details.trackName}</h3>
                 <h4>{details.artistName}</h4>
-                <p>${details.trackPrice}</p>
+                <p>{details.trackPrice}P</p>
                 <button className='cta-button' onClick={(e) => handleAddToCart(details)}>Add to Cart</button>
             </div>
         </div>
