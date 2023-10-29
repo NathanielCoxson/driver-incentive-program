@@ -35,6 +35,10 @@
     {
       "name": "catalogs",
       "description": "Operations about catalogs"
+    },
+    {
+      "name": "orders",
+      "description": "Operations about orders"
     }
   ],
   "paths": {
@@ -960,6 +964,62 @@
           },
           "404": {
             "description": "Sponsor not found"
+          }
+        }
+      }
+    },
+    "/orders/users/:Username": {
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Create a new order for the user.",
+        "description": "Adds a user's order to the database.",
+        "operationId": "createOrder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the user."
+          }
+        ],
+        "requestBody": {
+          "description": "The list of order items.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "itemName": "Toy Story 4",
+                        "itemPrice": 99,
+                        "itemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found"
           }
         }
       }
