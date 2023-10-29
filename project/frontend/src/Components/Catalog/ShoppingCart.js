@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import './Purchase.css'; // Import your CSS file
+import './ShoppingCart.css'; // Import your CSS file
 
-function Purchase() {
+function ShoppingCart() {
     // Sample shopping cart data (replace with your data)
     const shoppingCart = [
         { id: 1, name: 'Product A', quantity: 2, costPerItem: 10 },
@@ -33,4 +33,4 @@ function Purchase() {
     );
 }
 
-export default Purchase;
+export default ShoppingCart;
