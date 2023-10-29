@@ -79,11 +79,12 @@ function Catalog() {
                     <ul className='cart'>
                         {cart.map(item => {
                             return (
-                                <li key={item.trackName} onClick={(e) => handleRemoveItem(item.trackName)}>
+                                <li key={item.trackName}>
                                     <div className='cart-item-text'>
                                         <span>{item.trackName}</span>
                                         <span>{item.trackPrice}P</span>
                                     </div>
+                                    <button onClick={(e) => handleRemoveItem(item.trackName)}>Remove</button>
                                 </li>
                             );
                         })}

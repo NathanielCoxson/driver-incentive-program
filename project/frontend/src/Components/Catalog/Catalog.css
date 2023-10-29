@@ -24,6 +24,15 @@ section.cart-section {
     margin: 0.5em 0;
 }
 
+.cart-section button {
+    all: unset;
+    font-size: 0.7em;
+}
+
+.cart-section button:hover {
+    cursor: pointer;
+}
+
 div.cart-item-text {
     width: 100%;
     display: inline-flex;
