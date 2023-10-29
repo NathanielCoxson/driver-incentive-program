@@ -11,7 +11,7 @@ function Purchase() {
 
     return (
         <main>
-            <section className="purchase-history">
+            <section className="hero">
                 <h3>Purchase History</h3>
                 <ul className="purchase-list">
                     {purchaseHistory.map((purchase) => (
