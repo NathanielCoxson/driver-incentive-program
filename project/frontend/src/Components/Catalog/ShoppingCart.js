@@ -19,9 +19,9 @@ function ShoppingCart() {
                 <ul>
                     {shoppingCart.map((item) => (
                         <ul key={item.id} className="cart-item">
-                            <span>{item.name} - Quantity: {item.quantity}</span>
-                            <span>Cost Per Item: ${item.costPerItem}</span>
-                            <span>Subtotal: ${item.quantity * item.costPerItem}</span>
+                            <span>{item.name} - Quantity: {item.quantity} </span>
+                            <span>Cost Per Item: ${item.costPerItem} </span>
+                            <span>Subtotal: ${item.quantity * item.costPerItem} </span>
                         </ul>
                     ))}
                 </ul>
