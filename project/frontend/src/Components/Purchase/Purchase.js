@@ -9,6 +9,11 @@ function Purchase() {
         { id: 3, date: '2023-03-05', pointsSpent: 70, items: ['Product A', 'Product B', 'Product C'], status: 'Processing' },
     ];
 
+    const handleCancel = (id) => {
+        // Handle cancel logic here (you can remove the purchase with the given ID from your data)
+        console.log(`Cancelled purchase with ID: ${id}`);
+    };
+
     return (
         <main>
             <section className="hero">
