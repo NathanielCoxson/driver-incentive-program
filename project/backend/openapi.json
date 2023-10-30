@@ -1002,6 +1002,10 @@
                         "itemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
                       }
                     ]
+                  },
+                  "SponsorName": {
+                    "type": "string",
+                    "example": "Sponsor Org."
                   }
                 }
               }
@@ -1019,7 +1023,10 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "User not found"
+            "description": "User or sponsor not found"
+          },
+          "409": {
+            "description": "Not enough points"
           }
         }
       }

@@ -8,13 +8,37 @@ const orders = express.Router();
  */
 orders.post('/users/:Username', async (req, res) => {
     try {
-        // Make db request
-        const info = await req.app.locals.db.getLatestRelease();
-        res.status(200).json(info);
+        if (!req.body.SponsorName || !req.body.items) {
+            res.status(400).send();
+            return;
+        }
+
+        const user = await req.app.locals.db.getUserByUsername(req.params.Username);
+        if (!user) {
+            res.status(404).send();
+            return;
+        }
+        
+        const sponsors = await req.app.locals.db.getUsersSponsors(user.UID);
+        const sponsor = sponsors.find(s => s.SponsorName === req.body.SponsorName);
+        if (!sponsor) {
+            res.status(404).send();
+            return;
+        }
+
+        const points = (await req.app.locals.db.getDriverPoints(user.UID, sponsor.SID)) || 0;
+        const cost = req.body.items.reduce((acc, curr) => acc += curr.itemPrice, 0);
+        if (points < cost) {
+            res.status(409).send();
+            return;
+        }
+        
+        await req.app.locals.db.createOrder(req.body.items, user.UID, sponsor.SID);
+        res.status(201).send();
     } catch (err) {
         console.log(err);
         res.status(500).send();
     }
 });
 
-module.exports = about;
+module.exports = orders;
