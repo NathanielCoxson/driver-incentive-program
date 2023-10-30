@@ -459,4 +459,40 @@ users.post('/profiles/:Username', async (req, res) => {
     }
 })
 
+/**
+ * POST to <baseurl>/api/users/profiles/:Username
+ * Updates the profile with the given details
+ * Request Body {
+ * Username: string
+ * }
+ */
+users.post('/edit-profile', async (req, res) => {
+    try {
+        // Bad request
+        if (!req.body.Username) res.status(400).send();
+
+        // Query
+        const user = await req.app.locals.db.getUserByUsername(req.body.Username);
+
+        // Success
+        if (user) {
+            bcrypt.hash(req.body.Password, 12)
+            .then(hash => {
+                // Update user with the given information
+                req.app.locals.db.updateUser(user.UID, hash, req.body.Name, req.body.Email, req.body.PhoneNumber)
+                // If successful, send success code
+                .then(() => {
+                    res.status(201).send();
+                })
+            })
+        }
+
+        // Not found
+        else res.status(404).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+})
+
 module.exports = users;
