@@ -16,7 +16,6 @@ function Catalog() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    // dollars/point * dollars
     useEffect(() => {
         const getItems = async () => {
             try {

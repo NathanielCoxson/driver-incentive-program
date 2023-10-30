@@ -1067,7 +1067,7 @@ async function getUsersOrders(UID) {
                 let items = await new sql.Request(transaction)
                     .input("OID", sql.UniqueIdentifier, order.OID)
                     .query("SELECT * FROM OrderLines WHERE OID = @OID");
-                result.push({ ...order, items: items.recordset });
+                result.push({ ...order, items: items.recordset, total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) });
             }
             await transaction.commit();
             return result;
