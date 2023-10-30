@@ -1,13 +1,18 @@
 const express = require('express');
 const orders = express.Router();
+const validation = require('../middlewares/validation');
 
 // About routes
 /**
  * POST to <baseurl>/api/orders/users/:Username
  * Adds a user's order to the database.
  */
-orders.post('/users/:Username', async (req, res) => {
+orders.post('/users/:Username', validation.validateToken, async (req, res) => {
     try {
+        if (req.User.Username !== req.params.Username) {
+            res.status(403).send();
+            return;
+        }
         if (!req.body.SponsorName || !req.body.items) {
             res.status(400).send();
             return;

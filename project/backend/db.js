@@ -994,9 +994,12 @@ async function createOrder(items, UID, SID) {
 
             let count = 0;
             for(let i of items) {
+                let description = i.itemDescription;
+                if (i.itemDescription === '') description = 'NULL';
+                
                 const item = await new sql.Request(transaction)
                     .input("itemPrice", sql.Float, i.itemPrice)
-                    .input("itemDescription", sql.Text, i.itemDescription)
+                    .input("itemDescription", sql.Text, description)
                     .input("itemName", sql.VarChar(100), i.itemName)
                     .input("OID", sql.UniqueIdentifier, order.recordset[0].OID)
                     .input("number", sql.Int, count)

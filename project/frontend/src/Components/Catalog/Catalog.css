@@ -24,7 +24,7 @@ section.cart-section {
     margin: 0.5em 0;
 }
 
-.cart-section button {
+.cart button {
     all: unset;
     font-size: 0.7em;
 }
