@@ -66,7 +66,6 @@ function Catalog() {
             await axiosPrivate.post(`/orders/users/${auth?.Username}`, { items, SponsorName });
             setCart([]);
             localStorage.setItem('cart', JSON.stringify([]));
-            setResponseMessage('Success!');
         } catch (err) {
             if (process.env.NODE_ENV === 'development') console.log(err);
             if (!err?.response) {

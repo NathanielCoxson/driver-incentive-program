@@ -2,7 +2,6 @@ const express = require('express');
 const orders = express.Router();
 const validation = require('../middlewares/validation');
 
-// About routes
 /**
  * POST to <baseurl>/api/orders/users/:Username
  * Adds a user's order to the database.
@@ -44,6 +43,14 @@ orders.post('/users/:Username', validation.validateToken, async (req, res) => {
         console.log(err);
         res.status(500).send();
     }
+});
+
+/**
+ * GET to <baseurl>/api/orders/users/:Username
+ * Retrieves a list of a user's orders.
+ */
+orders.get('/users/:Username', async (req, res) => {
+
 });
 
 module.exports = orders;

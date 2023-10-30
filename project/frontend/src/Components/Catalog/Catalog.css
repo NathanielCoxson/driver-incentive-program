@@ -38,3 +38,7 @@ div.cart-item-text {
     display: inline-flex;
     justify-content: space-between;
 }
+
+.cart-section .response-message {
+    color: white;
+}

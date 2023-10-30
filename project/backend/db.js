@@ -979,8 +979,9 @@ async function createOrder(items, UID, SID) {
             const order = await new sql.Request(transaction)
                 .input("UID", sql.UniqueIdentifier, UID)
                 .input("datetime", sql.DateTime, datetime)
-                .query("INSERT INTO Orders (OID, UID, OrderDate) OUTPUT INSERTED.* \
-                        VALUES(NEWID(), @UID, @datetime)");
+                .input("SID", sql.UniqueIdentifier, SID)
+                .query("INSERT INTO Orders (OID, UID, OrderDate, SID) OUTPUT INSERTED.* \
+                        VALUES(NEWID(), @UID, @datetime, @SID)");
             if (!order.recordset[0]) throw new Error("Failed to create new order.");
 
             const pointTransaction = await new sql.Request(transaction)
@@ -996,7 +997,7 @@ async function createOrder(items, UID, SID) {
             for(let i of items) {
                 let description = i.itemDescription;
                 if (i.itemDescription === '') description = 'NULL';
-                
+
                 const item = await new sql.Request(transaction)
                     .input("itemPrice", sql.Float, i.itemPrice)
                     .input("itemDescription", sql.Text, description)
@@ -1036,6 +1037,14 @@ async function getDriverPoints(UID, SID) {
     } catch (err) {
         console.log(err);
     }
+}
+
+/**
+ * Returns a list of order objects for the given user.
+ * @param {String} UID 
+ */
+async function getUsersOrders(UID) {
+
 }
 
 // Write query functions here so that they are 
