@@ -1029,6 +1029,49 @@
             "description": "Not enough points"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Retrieve the orders of a user.",
+        "description": "Returns a list of a user's orders.",
+        "operationId": "getUsersOrders",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the user."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "orders": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "OID": "544F44D9-8D86-4EB8-A2C6-687519C2FD86",
+                          "items": [
+                            
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
