@@ -1060,6 +1060,12 @@
                       "example": [
                         {
                           "OID": "544F44D9-8D86-4EB8-A2C6-687519C2FD86",
+                          "SID": "8EE59120-A598-4E99-BBA8-AF5C19F3EE29",
+                          "SponsorName": "Test Sponsor",
+                          "ShippingAddress": "100 Example Rd.",
+                          "BillingAddress": "100 Example Rd.",
+                          "OrderDate": "2023-10-31T00:17:08.000Z",
+                          "ArrivalDate": null,
                           "items": [
                             {
                               "itemName": "Toy Story 4",
@@ -1075,6 +1081,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Orders not found"
           }
         }
       }

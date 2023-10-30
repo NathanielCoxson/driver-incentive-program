@@ -1044,7 +1044,41 @@ async function getDriverPoints(UID, SID) {
  * @param {String} UID 
  */
 async function getUsersOrders(UID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        
+        let transaction;
+        let result = [];
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
 
+            let orders = await new sql.Request(transaction)
+                .input("UID", sql.UniqueIdentifier, UID)
+                .query("SELECT OID, UID, Sponsors.SID, Sponsors.SponsorName, ShippingAddress, BillingAddress, OrderDate, ArrivalDate \
+                        FROM Orders \
+                        JOIN Sponsors ON Orders.SID = Sponsors.SID \
+                        WHERE UID = @UID");
+            if (!orders) throw new Error("Error retrieving orders.");
+            orders = orders.recordset;
+
+            for (let order of orders) {
+                let items = await new sql.Request(transaction)
+                    .input("OID", sql.UniqueIdentifier, order.OID)
+                    .query("SELECT * FROM OrderLines WHERE OID = @OID");
+                result.push({ ...order, items: items.recordset });
+            }
+            await transaction.commit();
+            return result;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
 // Write query functions here so that they are 
@@ -1083,5 +1117,6 @@ module.exports = {
     deleteSponsor,
     updateSponsor,
     createOrder,
-    getDriverPoints
+    getDriverPoints,
+    getUsersOrders
 }

@@ -50,7 +50,17 @@ orders.post('/users/:Username', validation.validateToken, async (req, res) => {
  * Retrieves a list of a user's orders.
  */
 orders.get('/users/:Username', async (req, res) => {
-
+    try {
+        const user = await req.app.locals.db.getUserByUsername(req.params.Username);
+        if (!user) {
+            res.status(404).send();
+        }
+        const orders = await req.app.locals.db.getUsersOrders(user.UID);
+        res.status(200).send({ orders });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 module.exports = orders;
