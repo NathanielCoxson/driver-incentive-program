@@ -65,7 +65,7 @@ async function getSponsorByName(SponsorName) {
             .input('SponsorName', sql.VarChar(100), SponsorName)
             .query("SELECT Sponsors.SID, Sponsors.SponsorName, Catalogs.CID, Catalogs.ConversionRate \
                     FROM Sponsors \
-                    JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
+                    LEFT JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
                     WHERE SponsorName = @SponsorName");
         return result.recordset[0];
     } catch (err) {
@@ -93,7 +93,18 @@ async function getUserByUsername(Username) {
         // Make request
         const result = await pool.request()
             .input('username', Username)
-            .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Username = @username");
+            .query("SELECT\
+                        Users.UID,\
+                        Sponsors.SponsorName,\
+                        Users.Name,\
+                        Users.Role,\
+                        Users.Username,\
+                        Users.Password,\
+                        Users.Email\
+                    FROM\
+                        (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID\
+                    WHERE\
+                        Users.Username = @username");
         // Return user object
         return result.recordset[0];
     } catch (err) {
@@ -121,7 +132,18 @@ async function getUserByEmail(Email) {
         // Make request
         const result = await pool.request()
             .input('Email', sql.VarChar(300), Email)
-            .query("SELECT UID, SID, Name, Role, Username, Password, Email FROM Users WHERE Email = @Email");
+            .query("SELECT\
+                        Users.UID,\
+                        Sponsors.SponsorName,\
+                        Users.Name,\
+                        Users.Role,\
+                        Users.Username,\
+                        Users.Password,\
+                        Users.Email\
+                    FROM\
+                        (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID\
+                    WHERE\
+                        Users.Email = @Email");
         // Return user object
         return result.recordset[0];
     } catch (err) {
@@ -162,7 +184,9 @@ async function getLatestRelease() {
 *  Password: String,
 *  SID: String,
 *  Name: String,
-*  Role: String
+*  Role: String,
+*  Vehicle: String,
+*  PhoneNumber: String
 * }
 */
 async function createUser(User) {
@@ -178,23 +202,30 @@ async function createUser(User) {
                 .input('Username', sql.VarChar(50), User.Username)
                 .input('Password', sql.VarChar(100), User.Password)
                 .input('Email', sql.VarChar(300), User.Email)
-                .query("\
-                    INSERT INTO Users(\
-                        UID,\
-                        SID,\
-                        Name,\
-                        Role,\
-                        Username,\
-                        Password,\
-                        Email) \
-                    VALUES(\
-                        NEWID(),\
-                        NULL,\
-                        @Name,\
-                        @Role,\
-                        @Username,\
-                        @Password,\
-                        @Email)");
+                .input('VehicleInfo', sql.VarChar(50), User.VehicleInfo)
+                .input('PhoneNumber', sql.VarChar(50), User.PhoneNumber)
+                .query("DECLARE @usid uniqueidentifier;\
+                        SET @usid = NEWID();\
+                        INSERT INTO Users(\
+                                        UID,\
+                                        Name,\
+                                        Role,\
+                                        Username,\
+                                        Password,\
+                                        Email)\
+                                    VALUES(\
+                                        @usid,\
+                                        @Name,\
+                                        @Role,\
+                                        @Username,\
+                                        @Password,\
+                                        @Email);\
+                        INSERT INTO Profiles VALUES(\
+                                        NEWID(),\
+                                        @usid,\
+                                        @VehicleInfo,\
+                                        @PhoneNumber);");
+                        
         }
         else {
             result = await pool.request()
@@ -204,23 +235,30 @@ async function createUser(User) {
                 .input('Username', sql.VarChar(50), User.Username)
                 .input('Password', sql.VarChar(100), User.Password)
                 .input('Email', sql.VarChar(300), User.Email)
-                .query("\
-                    INSERT INTO Users(\
-                        UID,\
-                        SID,\
-                        Name,\
-                        Role,\
-                        Username,\
-                        Password,\
-                        Email) \
-                    VALUES(\
-                        NEWID(),\
-                        @SID,\
-                        @Name,\
-                        @Role,\
-                        @Username,\
-                        @Password,\
-                        @Email)");
+                .input('VehicleInfo', sql.VarChar(50), User.VehicleInfo)
+                .input('PhoneNumber', sql.VarChar(50), User.PhoneNumber)
+                .query("DECLARE @usid uniqueidentifier;\
+                        SET @usid = NEWID();\
+                        INSERT INTO Users(\
+                                        UID,\
+                                        Name,\
+                                        Role,\
+                                        Username,\
+                                        Password,\
+                                        Email)\
+                                    VALUES(\
+                                        @usid,\
+                                        @Name,\
+                                        @Role,\
+                                        @Username,\
+                                        @Password,\
+                                        @Email);\
+                        INSERT INTO SponsorsUsers VALUES (CAST(@SID AS uniqueidentifier), @usid);\
+                        INSERT INTO Profiles VALUES(\
+                                        NEWID(),\
+                                        @usid,\
+                                        @VehicleInfo,\
+                                        @PhoneNumber);");
         }
         return result.rowsAffected[0];
     } catch (err) {
@@ -373,7 +411,7 @@ async function getUserByRefreshToken(RefreshToken) {
         const result = await pool.request()
             .input('RefreshToken', sql.UniqueIdentifier, RefreshToken)
             // Update password and wipe the reset token to prevent further changes.
-            .query('SELECT UID, SID, Name, Role, Username, Password, Email, RefreshTokenExpiration FROM Users WHERE RefreshToken = @RefreshToken');
+            .query('SELECT Users.UID, Sponsors.SID, Users.Name, Users.Role, Users.Username, Users.Password, Users.Email, Users.RefreshTokenExpiration FROM (Users LEFT JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID) LEFT JOIN Sponsors ON SponsorsUsers.SID = Sponsors.SID WHERE RefreshToken = @RefreshToken');
         return result.recordset[0];
     } catch (err) {
         console.log(err);
@@ -479,6 +517,38 @@ async function createApplication(Application) {
                     INSERT INTO Applications(AID, UID, SID, ApplicationDate, ApplicationStatus, Reason) \
                     VALUES(NEWID(), @UID, @SID, SYSDATETIME(), 'Pending', @Reason)");
         return;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Returns the application with the given AID
+ * @param {UniqueIdentifier} AID 
+ * @returns Array
+ */
+async function getApplication(AID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('AID', sql.UniqueIdentifier, AID)
+            .query(
+                "SELECT \
+                    Applications.AID,\
+                    Users.Username,\
+                    Sponsors.SponsorName,\
+                    Applications.ApplicationDate,\
+                    Applications.ApplicationStatus,\
+                    Applications.Reason \
+                FROM Applications \
+                JOIN Users ON Users.UID = Applications.UID \
+                JOIN Sponsors ON Sponsors.SID = Applications.SID \
+                WHERE Applications.AID = @AID"
+            );
+
+        return result.recordset[0];
     } catch (err) {
         console.log(err);
     }
@@ -622,12 +692,39 @@ async function processApplication(AID, ApplicationStatus) {
         const pool = await poolPromise;
 
         const result = await pool.request()
-            .input('@AID', sql.UniqueIdentifier, AID)
-            .input('@ApplicationStatus'.sql.VarChar(100), ApplicationStatus)
+            .input('AID', sql.UniqueIdentifier, AID)
+            .input('ApplicationStatus', sql.VarChar(100), ApplicationStatus)
             .query("UPDATE Applications \
                     SET ApplicationStatus = @ApplicationStatus \
                     WHERE AID = @AID");
 
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Adds an entry to SponsorsUsers, returns rows updated
+ * @param {UniqueIdentifier} UID 
+ * @param {UniqueIdentifier} SID 
+ * @returns Number
+ */
+async function addSponsorsUsers(UID, SID){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("\
+                INSERT INTO SponsorsUsers(\
+                    UID,\
+                    SID) \
+                VALUES(\
+                    @UID,\
+                    @SID)");
         return result.rowsAffected[0];
     } catch (err) {
         console.log(err);
@@ -819,9 +916,9 @@ async function createTransaction(Transaction) {
         const result = await pool.request()
             .input('UID', sql.UniqueIdentifier, Transaction.UID)
             .input('SID', sql.UniqueIdentifier, Transaction.SID)
-            .input('TransactionDate', sql.DateTime, PWC.TransactionDate)
+            .input('TransactionDate', sql.DateTime, Transaction.TransactionDate)
             .input('TransactionAmount', sql.Int, Transaction.TransactionAmount)
-            .input('Reason', sql.VarChar(100), PWC.ChangeType)
+            .input('Reason', sql.VarChar(100), Transaction.Reason)
             .query("\
                 INSERT INTO Transactions(\
                     TID,\
@@ -842,6 +939,75 @@ async function createTransaction(Transaction) {
         console.log(err);
     }
 }
+
+/**
+ * Return all transactions associated with a given user and sponsor
+ * Results are sorted by descending date
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  SID: Unique Identifier
+ * }
+ * @param {UniqueIdentifier} UID
+ * @param {UniqueIdentifier} SID
+ */
+async function getTransactions(UID, SID){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("\
+                SELECT\
+                    TID,\
+                    TransactionDate,\
+                    TransactionAmount,\
+                    Reason\
+                FROM\
+                    Transactions\
+                WHERE\
+                    UID = @UID AND SID = @SID\
+                ORDER BY\
+                    TransactionDate DESC");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Return the total points for a given user and sponsor
+ * Request Body: {
+ *  UID: Unique Identifier,
+ *  SID: Unique Identifier
+ * }
+ * @param {UniqueIdentifier} UID
+ * @param {UniqueIdentifier} SID
+ */
+async function getPoints(UID, SID){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("\
+                SELECT\
+                    SUM(TransactionAmount) AS Points\
+                FROM\
+                    Transactions\
+                WHERE\
+                    UID = @UID AND SID = @SID\
+                GROUP BY\
+                    UID");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 
 /**
  * Edit the Profile information for the user with the given UID, returns the number of rows affected
@@ -1146,5 +1312,9 @@ module.exports = {
     updateSponsor,
     createOrder,
     getDriverPoints,
-    getUsersOrders
+    getUsersOrders,
+    getTransactions,
+    getPoints,
+    addSponsorsUsers,
+    getApplication
 }
