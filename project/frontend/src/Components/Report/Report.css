@@ -12,4 +12,9 @@ h1 {
     font-size: 36px;
 }
 
+.radio-inline input[type="radio"] {
+    display: inline-block;
+    margin-right: 10px;
+}
+
 /* Additional CSS styles can be added here to customize the report appearance */
