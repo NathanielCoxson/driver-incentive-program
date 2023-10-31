@@ -1,9 +1,11 @@
 import React from 'react';
 import  axios from '../../api/axios';
+import useAuth from '../../hooks/useAuth';
 import { useState, useEffect} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function ViewAdminList(){
+    const auth = useAuth();
     const [adminList, setAdminList] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();

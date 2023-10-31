@@ -461,6 +461,18 @@ users.post('/profiles/:Username', async (req, res) => {
     }
 })
 
+/*
+*/
+users.get('/admin', async (req, res) => {
+    try {
+        const admin = await req.app.locals.db.getAllAdmin();
+        return res.status(200).send(admin);
+    } catch (err){
+        console.log(err);
+        res.status(500).send();
+    }
+})
+
 /**
  * POST to <baseurl>/api/users/profiles/:Username
  * Updates the profile with the given details
@@ -494,16 +506,6 @@ users.post('/edit-profile', async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send();
-    }
-})
-
-users.get('/admin', async (req, res) => {
-    try {
-        const admin = await req.app.locals.db.getAllAdmin();
-        return admin;
-    } catch (err){
-        console.log(err);
-        res.status()
     }
 })
 
