@@ -27,8 +27,9 @@ import CatalogSettings from '../Catalog/CatalogSettings';
 import ShoppingCart from '../Catalog/ShoppingCart';
 import Purchase from '../Purchase/Purchase';
 import Orders from '../Orders/Orders';
-import EditProfile from '../EditProfile/EditProfile'
-import SponsorDriverList from '../SponsorDriverList/SponsorDriverList'
+import EditProfile from '../EditProfile/EditProfile';
+import SponsorDriverList from '../SponsorDriverList/SponsorDriverList';
+import ViewAdminList from '../Profile/ViewAdminList';
 
 function App() {
   return (
@@ -83,6 +84,7 @@ function App() {
                 <Route path="admin_add_user/add_driver" element={<Register role='driver' />} />
                 <Route path="admin_add_user/add_sponsor" element={<Register role='sponsor' />} />
                 <Route path="admin_add_user/add_admin" element={<Register role='admin' />} />
+                <Route path="admin_list" element={<ViewAdminList />} />
               </Route>
 
               {/* catch all */}

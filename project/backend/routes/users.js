@@ -497,4 +497,14 @@ users.post('/edit-profile', async (req, res) => {
     }
 })
 
+users.get('/admin', async (req, res) => {
+    try {
+        const admin = await req.app.locals.db.getAllAdmin();
+        return admin;
+    } catch (err){
+        console.log(err);
+        res.status()
+    }
+})
+
 module.exports = users;
