@@ -27,6 +27,8 @@ import CatalogSettings from '../Catalog/CatalogSettings';
 import ShoppingCart from '../Catalog/ShoppingCart';
 import Purchase from '../Purchase/Purchase';
 import Orders from '../Orders/Orders';
+import EditProfile from '../EditProfile/EditProfile'
+import SponsorDriverList from '../SponsorDriverList/SponsorDriverList'
 
 function App() {
   return (
@@ -50,6 +52,7 @@ function App() {
               <Route path="sponsor_organization" element={<SponsorOrganization />} /> {/* Could be hidden for admins or not */}
               <Route path="catalog" element={<Catalog />} /> {/* Sponsors can see their own catalog along with drivers */}
               <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
+              <Route path="edit_profile" element={<EditProfile />} />
 
               <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
 
@@ -69,6 +72,7 @@ function App() {
                 <Route path="sponsor_add_user/add_sponsor" element={<Register role='sponsor' />} />
                 <Route path="create_sponsor_organization" element={<CreateSponsorOrganization />} />
                 <Route path="sponsor_points" element={<SponsorPoints />} />
+                <Route path="sponsor_driver_list" element={<SponsorDriverList />} />
                 <Route path="rejection_reason" element={<RejectionReason />} />
                 <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
               </Route>

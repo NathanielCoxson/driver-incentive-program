@@ -210,7 +210,7 @@ applications.get('/drivers/:SponsorName', async (req, res) => {
     try {
         // Bad request
         if (!req.params.SponsorName) res.status(400).send();
-
+        
         // Query for sponsor
         const sponsor = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
 

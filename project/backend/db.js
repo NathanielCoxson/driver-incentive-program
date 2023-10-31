@@ -890,7 +890,7 @@ async function getSponsorsDrivers(SID) {
             .input('SID', sql.UniqueIdentifier, SID)
             .query("SELECT Users.UID, Users.Name, Users.Role, Users.Username, Email\
                     FROM Users \
-                    INNER JOIN Users ON Users.UID = SponsorsUsers.UID \
+                    INNER JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID \
                     WHERE SponsorsUsers.SID = @SID AND Users.Role = 'driver'");
         return result.recordset;
     } catch (err) {
@@ -1247,6 +1247,33 @@ async function getUsersOrders(UID) {
     }
 }
 
+/**
+ * Edit the Profile information for the user with the given UID, returns the number of rows affected
+ * @param {UniqueIdentifier} UID
+ * @param {String} Vehicle
+ * @param {String} PhoneNumber
+ * @returns Number
+ */
+async function updateUser(UID, Password, Name, Email, PhoneNumber){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('Name', sql.VarChar(100), Name)
+            .input('Password', sql.VarChar(100), Password)
+            .input('Email', sql.VarChar(300), Email)
+            .query("UPDATE Users \
+                    SET Name = @Name, Password = @Password, Email = @Email \
+                    WHERE UID = @UID");
+
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -1279,6 +1306,7 @@ module.exports = {
     getSponsorApplications,
     updateProfile,
     getSponsorsDrivers,
+    updateUser,
     createSponsor,
     deleteSponsor,
     updateSponsor,

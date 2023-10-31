@@ -25,6 +25,7 @@ function Sidebar() {
                         <li><Link to="profile">Sponsor Profile</Link></li>
                         <li><Link to="sponsor_organization">Sponsor Organization</Link></li>
                         <li><Link to="sponsor_points">Sponsor Point</Link></li>
+                        <li><Link to="sponsor_driver_list">List of Drivers</Link></li>
                         <li><Link to="sponsor_add_user">Add User</Link></li>
                         <li><Link to={`sponsors/${auth?.sponsors[0]?.SponsorName}/catalog`}>Sponsor Catalog</Link></li>
                         <li><Link to="sponsor_messagebox">Message Box</Link></li>
