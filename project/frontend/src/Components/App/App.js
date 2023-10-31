@@ -30,6 +30,7 @@ import Orders from '../Orders/Orders';
 import EditProfile from '../EditProfile/EditProfile';
 import SponsorDriverList from '../SponsorDriverList/SponsorDriverList';
 import ViewAdminList from '../Profile/ViewAdminList';
+import SponsorReport from '../Report/SponsorReport';
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function App() {
                 <Route path="sponsor_driver_list" element={<SponsorDriverList />} />
                 <Route path="rejection_reason" element={<RejectionReason />} />
                 <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
+                <Route path="sponsor_report" element={<SponsorReport />} />
               </Route>
 
               {/* admin */}
