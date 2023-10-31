@@ -15,7 +15,6 @@ function Purchase() {
     };
 
     return (
-        <main>
             <section className="hero">
                 <h3>Purchase History</h3>
                 <ul className="purchase-list">
@@ -38,7 +37,6 @@ function Purchase() {
                     ))}
                 </ul>
             </section>
-        </main>
     );
 }
 
