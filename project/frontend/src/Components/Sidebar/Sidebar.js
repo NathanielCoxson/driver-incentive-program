@@ -38,6 +38,7 @@ function Sidebar() {
                         <li><Link to=".">Admin Home</Link></li>
                         <li><Link to="profile">Admin Profile</Link></li>
                         <li><Link to="admin_add_user">Add User</Link></li>
+                        <li><Link to="admin_report"> Admin Report</Link></li>
                         <li><Link to="admin_messagebox">Message Box</Link></li>
                         <li><Link to="admin_list">View All Admin</Link></li>
                     </>

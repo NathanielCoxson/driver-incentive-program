@@ -31,6 +31,7 @@ import EditProfile from '../EditProfile/EditProfile';
 import SponsorDriverList from '../SponsorDriverList/SponsorDriverList';
 import ViewAdminList from '../Profile/ViewAdminList';
 import SponsorReport from '../Report/SponsorReport';
+import AdminReport from '../Report/AdminReport';
 
 function App() {
   return (
@@ -86,6 +87,7 @@ function App() {
                 <Route path="admin_add_user/add_driver" element={<Register role='driver' />} />
                 <Route path="admin_add_user/add_sponsor" element={<Register role='sponsor' />} />
                 <Route path="admin_add_user/add_admin" element={<Register role='admin' />} />
+                <Route path="admin_report" element={<AdminReport />} />
                 <Route path="admin_list" element={<ViewAdminList />} />
               </Route>
 
