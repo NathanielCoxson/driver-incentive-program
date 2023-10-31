@@ -154,10 +154,46 @@ applications.delete('/users/:Username', async (req, res) => {
  */
 applications.post('/process', async(req, res) => {
     try {
-        const body = req.body
+        const body = req.body;
+
+        //Make sure ApplicationStatus conforms to status types
+        if(body.ApplicationStatus != 'Accept' && body.ApplicationStatus != 'Reject'){
+            res.status(403).send(body);
+        }
+
+        //Make sure that the application exists
+        const app = await req.app.locals.db.getApplication(body.AID);
+
+        if(!app){
+            res.status(404).send('Application was not found');
+            return;
+        }
+
+        //Get user for UID
+        const user = await req.app.locals.db.getUserByUsername(app.Username);
+        if(!user){
+            res.status(404).send('User was not found');
+            return;
+        }
+
+        //Get sponsor for SID
+        const sponsor = await req.app.locals.db.getSponsorByName(app.SponsorName);
+        if(!sponsor){
+            res.status(404).send('Sponsor was not found');
+            return;
+        }
 
         // Update application with the given information
         await req.app.locals.db.processApplication(body.AID, body.ApplicationStatus);
+
+        //If process is accepted, create an entry in SponsorsUsers
+        if(body.ApplicationStatus === 'Accept'){
+            await req.app.locals.db.addSponsorsUsers(user.UID, sponsor.SID);
+        }
+
+        //Remove application after processing
+        await req.app.locals.db.deleteApplication(body.AID, app.Username);
+
         // If successful, send success code
         res.status(201).send();
     } catch (err) {

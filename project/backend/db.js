@@ -523,6 +523,38 @@ async function createApplication(Application) {
 }
 
 /**
+ * Returns the application with the given AID
+ * @param {UniqueIdentifier} AID 
+ * @returns Array
+ */
+async function getApplication(AID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .input('AID', sql.UniqueIdentifier, AID)
+            .query(
+                "SELECT \
+                    Applications.AID,\
+                    Users.Username,\
+                    Sponsors.SponsorName,\
+                    Applications.ApplicationDate,\
+                    Applications.ApplicationStatus,\
+                    Applications.Reason \
+                FROM Applications \
+                JOIN Users ON Users.UID = Applications.UID \
+                JOIN Sponsors ON Sponsors.SID = Applications.SID \
+                WHERE Applications.AID = @AID"
+            );
+
+        return result.recordset[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
  * Returns an array of application objects belonging to the user with
  * Username from the database.
  * Application Example: {
@@ -660,12 +692,39 @@ async function processApplication(AID, ApplicationStatus) {
         const pool = await poolPromise;
 
         const result = await pool.request()
-            .input('@AID', sql.UniqueIdentifier, AID)
-            .input('@ApplicationStatus'.sql.VarChar(100), ApplicationStatus)
+            .input('AID', sql.UniqueIdentifier, AID)
+            .input('ApplicationStatus', sql.VarChar(100), ApplicationStatus)
             .query("UPDATE Applications \
                     SET ApplicationStatus = @ApplicationStatus \
                     WHERE AID = @AID");
 
+        return result.rowsAffected[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Adds an entry to SponsorsUsers, returns rows updated
+ * @param {UniqueIdentifier} UID 
+ * @param {UniqueIdentifier} SID 
+ * @returns Number
+ */
+async function addSponsorsUsers(UID, SID){
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("\
+                INSERT INTO SponsorsUsers(\
+                    UID,\
+                    SID) \
+                VALUES(\
+                    @UID,\
+                    @SID)");
         return result.rowsAffected[0];
     } catch (err) {
         console.log(err);
@@ -1227,5 +1286,7 @@ module.exports = {
     getDriverPoints,
     getUsersOrders,
     getTransactions,
-    getPoints
+    getPoints,
+    addSponsorsUsers,
+    getApplication
 }
