@@ -1274,6 +1274,18 @@ async function updateUser(UID, Password, Name, Email, PhoneNumber){
     }
 }
 
+async function getAllAdmin(){
+    try {
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .query("SELECT * FROM USERS WHERE Role='admin'");
+        return result;
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -1316,5 +1328,6 @@ module.exports = {
     getTransactions,
     getPoints,
     addSponsorsUsers,
-    getApplication
+    getApplication,
+    getAllAdmin
 }
