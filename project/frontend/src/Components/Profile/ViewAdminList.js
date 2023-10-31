@@ -1,11 +1,9 @@
 import React from 'react';
 import  axios from '../../api/axios';
-import useAuth from '../../hooks/useAuth';
 import { useState, useEffect} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function ViewAdminList(){
-    const auth = useAuth();
     const [adminList, setAdminList] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
@@ -32,7 +30,7 @@ function ViewAdminList(){
 
     return (
         <section className="hero">
-            <h2>Drivers in your Organization</h2>
+            <h2>All Admin Users</h2>
             <ol className="admin-list" style={{textAlign:'left'}}>
                 {adminList.map((admin) => (
                     <li>

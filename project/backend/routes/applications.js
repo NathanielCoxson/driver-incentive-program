@@ -213,16 +213,18 @@ applications.get('/drivers/:SponsorName', async (req, res) => {
         
         // Query for sponsor
         const sponsor = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
+        console.log("Sponsor: ", sponsor);
 
         if(sponsor){
             // Query for drivers
             const result = await req.app.locals.db.getSponsorsDrivers(sponsor.SID);
+            console.log(result);
 
             if (result.length === 0) {
                 res.status(404).send();
                 return;
             }
-            res.status(200).send({ result });
+            res.status(200).send(result);
         }
         else res.status(404).send();
     } catch (err) {
