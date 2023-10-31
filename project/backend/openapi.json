@@ -35,6 +35,10 @@
     {
       "name": "catalogs",
       "description": "Operations about catalogs"
+    },
+    {
+      "name": "orders",
+      "description": "Operations about orders"
     }
   ],
   "paths": {
@@ -440,6 +444,38 @@
             "description": "Sponsors not found."
           }
         }
+      },
+      "post": {
+        "tags": [
+          "sponsors"
+        ],
+        "summary": "Create a new sponsor",
+        "description": "Creates a new sponsor with the name provided.",
+        "operationId": "createSponsor",
+        "requestBody": {
+          "description": "The name of the sponsor organization.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "SponsorName": {
+                    "type": "string",
+                    "example": "Sponsor Org."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "409": {
+            "description": "Name unavailable"
+          }
+        }
       }
     },
     "/sponsors/{SponsorName}": {
@@ -487,6 +523,66 @@
           },
           "400": {
             "description": "Missing sponsor name."
+          },
+          "404": {
+            "description": "Sponsor not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "sponsors"
+        ],
+        "summary": "Remove a sponsor",
+        "description": "Removes a sponsor organization from the database.",
+        "operationId": "deleteSponsor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the sponsor to retrieve",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Sponsor not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "sponsors"
+        ],
+        "summary": "Update a sponsor",
+        "description": "Update a sponsor organization's information.",
+        "operationId": "updateSponsor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the sponsor to retrieve",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "401": {
+            "description": "Unauthorized"
           },
           "404": {
             "description": "Sponsor not found"
@@ -868,6 +964,129 @@
           },
           "404": {
             "description": "Sponsor not found"
+          }
+        }
+      }
+    },
+    "/orders/users/:Username": {
+      "post": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Create a new order for the user.",
+        "description": "Adds a user's order to the database.",
+        "operationId": "createOrder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the user."
+          }
+        ],
+        "requestBody": {
+          "description": "The list of order items.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "itemName": "Toy Story 4",
+                        "itemPrice": 99,
+                        "itemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
+                      }
+                    ]
+                  },
+                  "SponsorName": {
+                    "type": "string",
+                    "example": "Sponsor Org."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User or sponsor not found"
+          },
+          "409": {
+            "description": "Not enough points"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "orders"
+        ],
+        "summary": "Retrieve the orders of a user.",
+        "description": "Returns a list of a user's orders.",
+        "operationId": "getUsersOrders",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the user."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "orders": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "OID": "544F44D9-8D86-4EB8-A2C6-687519C2FD86",
+                          "SID": "8EE59120-A598-4E99-BBA8-AF5C19F3EE29",
+                          "SponsorName": "Test Sponsor",
+                          "ShippingAddress": "100 Example Rd.",
+                          "BillingAddress": "100 Example Rd.",
+                          "OrderDate": "2023-10-31T00:17:08.000Z",
+                          "ArrivalDate": null,
+                          "items": [
+                            {
+                              "itemName": "Toy Story 4",
+                              "itemPrice": 99,
+                              "itemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
+                            }
+                          ],
+                          "total": 99
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Orders not found"
           }
         }
       }

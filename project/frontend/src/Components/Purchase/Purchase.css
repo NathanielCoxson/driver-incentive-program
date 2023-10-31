@@ -1,0 +1,26 @@
+/* Purchase.css */
+
+/* Styles for the purchase history section */
+.purchase-history {
+    margin: 20px; /* Add space around the section */
+}
+
+/* Styles for individual purchase items */
+.purchase-item {
+    margin-bottom: 20px; /* Add space between each purchase item */
+    padding: 15px; /* Add padding to separate item details */
+    border: 1px solid #ccc; /* Add a border around each item */
+    border-radius: 5px; /* Round the corners */
+    background-color:   #0077b6; /* Background color */
+}
+
+.purchase-item span {
+    color:white;
+    display: block; /* Make each line of item details appear on a new line */
+}
+
+/* Styles for the purchase list */
+.purchase-list {
+    list-style: none; /* Remove list bullets */
+    padding: 0; /* Remove list padding */
+}

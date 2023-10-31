@@ -1,5 +1,5 @@
 div.product-card {
-    background-color: hsl(201, 100%, 28%);
+    background-color: hsl(201, 100%, 30%);
     display: inline-flex;
     justify-content: left;
     align-items: center;
@@ -8,15 +8,38 @@ div.product-card {
     padding: 1em;
 }
 
+/* div.product-card:hover, .product-card *:hover {
+    background-color: hsl(201, 100%, 10%);
+    cursor: pointer;
+} */
+
+.product-card h3:hover {
+    color: #f77f00;
+    cursor: pointer;
+    user-select: none;
+}
+
 .product-card * {
     margin: 0;
+    cursor: default;
 }
 
 div.product-text-wrapper {
     display: flex;
     flex-direction: column;
+    gap: 0.5em;
 }
 
 .product-text-wrapper {
     text-align: left;
+}
+
+.product-card button.cta-button {
+    padding: 0.5em;
+    width: fit-content;
+}
+
+.product-card .cta-button {
+    font-size: 0.9em;
+    text-wrap: nowrap;
 }

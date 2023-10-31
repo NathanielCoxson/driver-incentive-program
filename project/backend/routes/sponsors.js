@@ -1,5 +1,6 @@
 const express = require('express');
 const sponsors = express.Router();
+const validation = require('../middlewares/validation');
 
 // Sponsor routes
 /**
@@ -44,5 +45,77 @@ sponsors.get('/:SponsorName', async (req, res) => {
         res.status(500).send();
     }
 });
+
+/**
+ * POST <baseurl>/api/sponsors
+ * Creates a new sponsor organization
+ */
+sponsors.post('/', validation.validateToken, async (req, res) => {
+    try {
+        if (req.User?.Role !== 'sponsor') {
+            res.status(401).send();
+            return;
+        }
+        if (!req.User?.UID || !req.body.SponsorName) {
+            res.status(400).send();
+            return;
+        }
+        const sponsors = await req.app.locals.db.getSponsorByName(req.body.SponsorName);
+        if (sponsors) {
+            res.status(409).send();
+            return;
+        }
+        const result = await req.app.locals.db.createSponsor(req.body.SponsorName, req.User.UID);
+        if (!result) {
+            res.status(500).send();
+            return;
+        }
+        res.status(201).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * DELETE <baseurl>/api/sponsors/:SponsorName
+ * Deletes the given sponsor from the database.
+ */
+sponsors.delete('/:SponsorName', async (req, res) => {
+    try {
+        const result = await req.app.locals.db.deleteSponsor(req.params.SponsorName);
+        if (result < 1) {
+            res.status(404).send();
+            return;
+        }
+        res.status(200).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * PUT <baseurl>/api/sponsors/:SponsorName
+ * Updates the sponsor with the given name with the provided new data.
+ */
+sponsors.put('/:SponsorName', async (req, res) => {
+    try {
+        if (!req.body.SponsorName) {
+            res.status(400).send();
+            return;
+        }
+        const result = await req.app.locals.db.updateSponsor(req.params.SponsorName, { SponsorName: req.body.SponsorName });
+        if (!result) {
+            res.status(404).send();
+            return;
+        }
+        res.status(204).send();
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+}); 
+
 
 module.exports = sponsors;
