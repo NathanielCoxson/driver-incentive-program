@@ -676,7 +676,7 @@ async function getSponsorCatalog(CID) {
         const result = await pool.request()
             .input('CID', sql.UniqueIdentifier, CID)
             .query("\
-                SELECT CSID, term, media, entity, limit \
+                SELECT CSID, term, media, entity, limit, Catalogs.ConversionRate \
                 FROM CatalogSearches \
                 JOIN Catalogs ON Catalogs.CID = CatalogSearches.CID \
                 WHERE Catalogs.CID = @CID");
@@ -769,7 +769,7 @@ async function getUsersSponsors(UID) {
         // Make request
         const result = await pool.request()
             .input('UID', sql.UniqueIdentifier, UID)
-            .query("SELECT Sponsors.SponsorName \
+            .query("SELECT Sponsors.SponsorName, Sponsors.SID \
                     FROM SponsorsUsers \
                     JOIN Sponsors ON Sponsors.SID = SponsorsUsers.SID \
                     WHERE UID = @UID");
@@ -879,37 +879,47 @@ async function createSponsor(SponsorName, UID) {
         const pool = await poolPromise;
 
         // Transaction
-        let transaction = pool.transaction();
-        await transaction.begin();
+        let transaction;
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
 
-        // Insert new sponsor
-        const sponsor = await new sql.Request(transaction)
-            .input("SponsorName", sql.VarChar(50), SponsorName)
-            .query("INSERT INTO Sponsors (SID, SponsorName) OUTPUT INSERTED.* VALUES(NEWID(), @SponsorName)");
-        if (!sponsor.recordset[0]) throw new Error('Failed to insert sponsor.');
+            // Insert new sponsor
+            const sponsor = await new sql.Request(transaction)
+                .input("SponsorName", sql.VarChar(50), SponsorName)
+                .query("INSERT INTO Sponsors (SID, SponsorName) OUTPUT INSERTED.* VALUES(NEWID(), @SponsorName)");
+            if (!sponsor.recordset[0]) throw new Error('Failed to insert sponsor.');
 
-        // Insert catalog for new sponsor
-        const catalog = await new sql.Request(transaction)
-            .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
-            .query("INSERT INTO Catalogs (CID, SID, ConversionRate) OUTPUT INSERTED.* VALUES(NEWID(), @SID, 0.01)");
-        if (!catalog.recordset[0]) throw new Error('Failed to create catalog.');
+            // Insert catalog for new sponsor
+            const catalog = await new sql.Request(transaction)
+                .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
+                .query("INSERT INTO Catalogs (CID, SID, ConversionRate) OUTPUT INSERTED.* VALUES(NEWID(), @SID, 0.01)");
+            if (!catalog.recordset[0]) throw new Error('Failed to create catalog.');
 
-        // Add the user who created the sponsor organization to the new organization
-        const user = await new sql.Request(transaction)
-            .input("UID", sql.UniqueIdentifier, UID)
-            .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
-            .query("INSERT INTO SponsorsUsers (SID, UID) OUTPUT INSERTED.* VALUES(@SID, @UID)");
-        if (!user.recordset[0]) throw new Error('Failed to add user to new organization.');
+            // Add the user who created the sponsor organization to the new organization
+            const user = await new sql.Request(transaction)
+                .input("UID", sql.UniqueIdentifier, UID)
+                .input("SID", sql.UniqueIdentifier, sponsor?.recordset[0]?.SID)
+                .query("INSERT INTO SponsorsUsers (SID, UID) OUTPUT INSERTED.* VALUES(@SID, @UID)");
+            if (!user.recordset[0]) throw new Error('Failed to add user to new organization.');
 
-        await transaction.commit();
-        return true;
+            await transaction.commit();
+            return true;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
     } catch (err) {
         console.log(err);
-        await transaction.rollback();
         return false;
     }
 }
 
+/**
+ * Deletes the given sponsor from the database.
+ * @param {String} SponsorName 
+ * @returns Number
+ */
 async function deleteSponsor(SponsorName) {
     try {
         // Connect to pool
@@ -925,6 +935,12 @@ async function deleteSponsor(SponsorName) {
     }
 }
 
+/**
+ * Updates the existing information for the given sponsor.
+ * @param {String} SponsorName 
+ * @param {Object} Update 
+ * @returns 
+ */
 async function updateSponsor(SponsorName, Update) {
     try {
         // Connect to pool
@@ -936,6 +952,132 @@ async function updateSponsor(SponsorName, Update) {
         return result.recordset[0];
     } catch (err) {
         console.log(err);
+    }
+}
+
+/**
+ * Creates a new order for the given user with the provided list of items and sponsor id.
+ * This includes inserting an order into the orders table, a new transaction to reflect the point deduction
+ * into the transactions table, and individual rows in the OrderLines table for each order item.
+ * @param {Array} items 
+ * @param {String} UID 
+ * @param {String} SID 
+ */
+async function createOrder(items, UID, SID) {
+    try {
+        
+        // Connect to pool
+        const pool = await poolPromise;
+        let transaction;
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
+            const datetime = (new Date()).toISOString().slice(0, 19).replace('T', ' ');
+            const amount = items.reduce((acc, curr) => acc += curr.itemPrice, 0);
+
+            // Insert new order
+            const order = await new sql.Request(transaction)
+                .input("UID", sql.UniqueIdentifier, UID)
+                .input("datetime", sql.DateTime, datetime)
+                .input("SID", sql.UniqueIdentifier, SID)
+                .query("INSERT INTO Orders (OID, UID, OrderDate, SID) OUTPUT INSERTED.* \
+                        VALUES(NEWID(), @UID, @datetime, @SID)");
+            if (!order.recordset[0]) throw new Error("Failed to create new order.");
+
+            const pointTransaction = await new sql.Request(transaction)
+                .input('SID', sql.UniqueIdentifier, SID)
+                .input('UID', sql.UniqueIdentifier, UID)
+                .input('datetime', sql.DateTime, datetime)
+                .input('amount', sql.Float, amount * -1)
+                .query("INSERT INTO Transactions(TID, UID, SID, TransactionDate, TransactionAmount, Reason) OUTPUT INSERTED.*\
+                        VALUES(NEWID(), @UID, @SID, @datetime, @amount, 'Order')");
+            if (!pointTransaction.recordset[0]) throw new Error("Failed in insert order transaction.");
+
+            let count = 0;
+            for(let i of items) {
+                let description = i.itemDescription;
+                if (i.itemDescription === '') description = 'NULL';
+
+                const item = await new sql.Request(transaction)
+                    .input("itemPrice", sql.Float, i.itemPrice)
+                    .input("itemDescription", sql.Text, description)
+                    .input("itemName", sql.VarChar(100), i.itemName)
+                    .input("OID", sql.UniqueIdentifier, order.recordset[0].OID)
+                    .input("number", sql.Int, count)
+                    .query("INSERT INTO OrderLines (OLID, OID, OrderLineNumber, ItemCost, ItemName, ItemDescription) OUTPUT INSERTED.* \
+                            VALUES(NEWID(), @OID, @number, @itemPrice, @itemName, @itemDescription)")
+                if (!item.recordset[0]) throw new Error("Failed to insert new item.");
+                count++;
+            }
+
+            await transaction.commit();
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Returns the total points of a driver for the provided sponsor.
+ * @param {String} UID 
+ * @param {String} SID 
+ */
+async function getDriverPoints(UID, SID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        const result = await pool.request()
+            .input('UID', sql.UniqueIdentifier, UID)
+            .input('SID', sql.UniqueIdentifier, SID)
+            .query("SELECT SUM(TransactionAmount) AS Points FROM Transactions WHERE UID = @UID AND SID = @SID");
+        return result.recordset[0].Points;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Returns a list of order objects for the given user.
+ * @param {String} UID 
+ */
+async function getUsersOrders(UID) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        
+        let transaction;
+        let result = [];
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
+
+            let orders = await new sql.Request(transaction)
+                .input("UID", sql.UniqueIdentifier, UID)
+                .query("SELECT OID, UID, Sponsors.SID, Sponsors.SponsorName, ShippingAddress, BillingAddress, OrderDate, ArrivalDate \
+                        FROM Orders \
+                        JOIN Sponsors ON Orders.SID = Sponsors.SID \
+                        WHERE UID = @UID");
+            if (!orders) throw new Error("Error retrieving orders.");
+            orders = orders.recordset;
+
+            for (let order of orders) {
+                let items = await new sql.Request(transaction)
+                    .input("OID", sql.UniqueIdentifier, order.OID)
+                    .query("SELECT * FROM OrderLines WHERE OID = @OID");
+                result.push({ ...order, items: items.recordset, total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) });
+            }
+            await transaction.commit();
+            return result;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+    } catch (err) {
+        console.log(err);
+        return false;
     }
 }
 
@@ -973,5 +1115,8 @@ module.exports = {
     getSponsorsDrivers,
     createSponsor,
     deleteSponsor,
-    updateSponsor
+    updateSponsor,
+    createOrder,
+    getDriverPoints,
+    getUsersOrders
 }

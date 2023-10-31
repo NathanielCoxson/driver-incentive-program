@@ -14,7 +14,9 @@ catalogs.get('/:SponsorName', async (req, res) => {
             res.status(404).send();
             return;
         }
-        res.status(200).send({ searches: result });
+        const ConversionRate = result[0].ConversionRate;
+        result.forEach(search => delete search.ConversionRate);
+        res.status(200).send({ searches: result, ConversionRate });
     } catch (err) {
         console.log(err);
         res.status(500).send();

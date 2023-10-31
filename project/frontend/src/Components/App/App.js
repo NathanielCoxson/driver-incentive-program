@@ -26,6 +26,7 @@ import RejectionReason from '../Dashboard/RejectionReason';
 import CatalogSettings from '../Catalog/CatalogSettings';
 import ShoppingCart from '../Catalog/ShoppingCart';
 import Purchase from '../Purchase/Purchase';
+import Orders from '../Orders/Orders';
 
 function App() {
   return (
@@ -58,7 +59,7 @@ function App() {
                 <Route path="view_sponsor_organization" element={<ViewSponsorOrganization />} />
                 <Route path="shoppingcart" element={<ShoppingCart />} />
                 <Route path="purchase" element={<Purchase />} />
-                
+                <Route path="orders" element={<Orders />} />
               </Route>
 
               {/* sponsor */}

@@ -1,0 +1,32 @@
+.order-section .order-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+}
+
+ul.order-items {
+    list-style: none;
+}
+
+.orders-section * {
+    text-align: left;
+}
+
+section.orders-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    text-align: left;
+    gap: 1em;
+}
+
+.orders-section .item {
+    display: flex;
+    width: 100%;
+    gap: 1em;
+    justify-content: space-between;
+}
+
+div.order {
+    width: fit-content;
+}
