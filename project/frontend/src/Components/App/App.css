@@ -257,4 +257,14 @@ footer {
   }
 }
 
+/* Use in Report.css*/
+.radio-inline input[type="radio"] {
+  display: inline-block;
+  vertical-align: middle; /* Add this line to vertically align the radio buttons */
+  margin-right: 10px;
+}
 
+.radio-inline label {
+  display: inline-block;
+  vertical-align: middle; /* Add this line to vertically align the labels */
+}
