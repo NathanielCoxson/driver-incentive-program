@@ -14,13 +14,14 @@ h1 {
 
 .radio-inline input[type="radio"] {
     display: inline-block;
-    vertical-align: middle; /* Add this line to vertically align the radio buttons */
+    width:20px;
+    vertical-align: middle; 
     margin-right: 10px;
 }
 
 .radio-inline label {
     display: inline-block;
-    vertical-align: middle; /* Add this line to vertically align the labels */
+    vertical-align: middle; 
 }
 
 /* Additional CSS styles can be added here to customize the report appearance */
