@@ -156,14 +156,10 @@ applications.post('/process', async(req, res) => {
     try {
         const body = req.body
 
-        .then(() => {
-            // Update application with the given information
-            req.app.locals.db.processApplication(body.AID, body.ApplicationStatus)
-            // If successful, send success code
-            .then(() => {
-                res.status(201).send();
-            })
-        })
+        // Update application with the given information
+        await req.app.locals.db.processApplication(body.AID, body.ApplicationStatus);
+        // If successful, send success code
+        res.status(201).send();
     } catch (err) {
         console.log(err);
         res.status(500).send();
