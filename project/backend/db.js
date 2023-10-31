@@ -1280,7 +1280,7 @@ async function getAllAdmin(){
 
         const result = await pool.request()
             .query("SELECT * FROM USERS WHERE Role='admin'");
-        return result;
+        return result.recordset;
     } catch (err) {
         console.log(err)
     }

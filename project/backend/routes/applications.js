@@ -231,4 +231,16 @@ applications.get('/drivers/:SponsorName', async (req, res) => {
     }
 });
 
+/*
+*/
+applications.get('/admin', async (req, res) => {
+    try {
+        const admin = await req.app.locals.db.getAllAdmin();
+        return res.status(200).send(admin);
+    } catch (err){
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 module.exports = applications;

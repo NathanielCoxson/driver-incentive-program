@@ -16,7 +16,7 @@ function ViewAdminList(){
 
         const fetchAdminList = async () => {
             try {
-                const response = await axios.get("users/admin");
+                const response = await axios.get("applications/admin");
                 isMounted && setAdminList(response.data);
                 console.log(adminList)
             } catch (err) {
@@ -33,11 +33,11 @@ function ViewAdminList(){
     return (
         <section className="hero">
             <h2>Drivers in your Organization</h2>
-            <ol className="admin-list">
+            <ol className="admin-list" style={{textAlign:'left'}}>
                 {adminList.map((admin) => (
                     <li>
-                        <h3>{admin.Name}</h3>
-                        <h3>{admin.Username}</h3>
+                        <h3>Name: <em>{admin.Name}</em></h3>
+                        <h3>Username: <em>{admin.Username}</em></h3>
                     </li>
                 ))}
             </ol>
