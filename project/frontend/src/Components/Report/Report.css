@@ -1,0 +1,15 @@
+/* Report.css */
+
+/* Styles for the report hero section */
+.hero {
+    background-color: #0077b6;
+    color: #fff;
+    padding: 60px;
+    border-radius: 10px;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+/* Additional CSS styles can be added here to customize the report appearance */
