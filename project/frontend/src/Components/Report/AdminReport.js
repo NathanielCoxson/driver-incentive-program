@@ -21,15 +21,16 @@ function AdminReport() {
                     <br />
 
                     <p>Generate the report for all sponsors or a specific sponsor?</p>
-                    <input type="radio" name="set1" id="allSponBox" value="option1-1" />
-                    <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
+                    <div className="radio-inline">
+                        <input type="radio" name="set1" id="allSponBox" value="option1-1" />
+                        <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
 
-                    <input type="radio" name="set1" id="individualSponBox" value="option1-2" />
-                    <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
+                        <input type="radio" name="set1" id="individualSponBox" value="option1-2" />
+                        <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
 
-                    <label htmlFor="indSponText">Sponsor Username:</label>
-                    <input type="text" id="indSponText" name="indSponsorUser" />
-
+                        <label htmlFor="indSponText">Sponsor Username:</label>
+                        <input type="text" id="indSponText" name="indSponsorUser" />
+                    </div>
                     <br />
                     <br />
 
@@ -75,15 +76,16 @@ function AdminReport() {
                     <br />
 
                     <p>Generate the report for all sponsors or a specific sponsor?</p>
-                    <input type="radio" name="set3" id="allSponBox" value="option3-1" />
-                    <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
+                    <div className="radio-inline">
+                        <input type="radio" name="set3" id="allSponBox" value="option3-1" />
+                        <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
 
-                    <input type="radio" name="set3" id="individualSponBox" value="option3-2" />
-                    <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
+                        <input type="radio" name="set3" id="individualSponBox" value="option3-2" />
+                        <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
 
-                    <label htmlFor="indSponText">Sponsor Username:</label>
-                    <input type="text" id="indSponText" name="indSponsorUser" />
-
+                        <label htmlFor="indSponText">Sponsor Username:</label>
+                        <input type="text" id="indSponText" name="indSponsorUser" />
+                        </div>
                     <br />
 
                     <div className="row">
@@ -109,37 +111,42 @@ function AdminReport() {
                     <br />
 
                     <p>Generate the report for all sponsors or a specific sponsor?</p>
-                    <input type="radio" name="set4" id="allSponBox" value="option4-1" />
-                    <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
+                    <div className="radio-inline">
+                        <input type="radio" name="set4" id="allSponBox" value="option4-1" />
+                        <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
 
-                    <input type="radio" name="set4" id="individualSponBox" value="option4-2" />
-                    <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
+                        <input type="radio" name="set4" id="individualSponBox" value="option4-2" />
+                        <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
 
-                    <label htmlFor="indSponText">Sponsor Username:</label>
-                    <input type="text" id="indSponText" name="indSponsorUser" />
+                        <label htmlFor="indSponText">Sponsor Username:</label>
+                        <input type="text" id="indSponText" name="indSponsorUser" />
+                    </div>
 
                     <br />
                     <br />
 
                     <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
-                    <input type="radio" name="set5" id="allDriverBox" value="option5-1" />
-                    <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
+                    <div className="radio-inline">
+                        <input type="radio" name="set5" id="allDriverBox" value="option5-1" />
+                        <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
 
-                    <input type="radio" name="set5" id="individualDriverBox" value="option5-2" />
-                    <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
+                        <input type="radio" name="set5" id="individualDriverBox" value="option5-2" />
+                        <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
 
-                    <label htmlFor="indDriverText">Driver Username:</label>
-                    <input type="text" id="indDriverText" name="indDriverUser" />
-
+                        <label htmlFor="indDriverText">Driver Username:</label>
+                        <input type="text" id="indDriverText" name="indDriverUser" />
+                    </div>
                     <br />
                     <br />
 
                     <p>Select View Type</p>
-                    <input type="radio" name="set6" id="detView" value="option6-1" />
-                    <label htmlFor="detView" className="styled-radio">Detailed View</label>
+                    <div className="radio-inline">
+                        <input type="radio" name="set6" id="detView" value="option6-1" />
+                        <label htmlFor="detView" className="styled-radio">Detailed View</label>
 
-                    <input type="radio" name="set6" id="sumView" value="option6-2" />
-                    <label htmlFor="sumView" className="styled-radio">Summary View</label>
+                        <input type="radio" name="set6" id="sumView" value="option6-2" />
+                        <label htmlFor="sumView" className="styled-radio">Summary View</label>
+                    </div>
 
                     <div className="row">
                         <div className="column-right">
@@ -164,24 +171,28 @@ function AdminReport() {
                         <br />
 
                         <p>Generate the report for all sponsors or a specific sponsor?</p>
-                        <input type="radio" name="set7" id="allSponBox" value="option7-1" />
-                        <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
+                        <div className="radio-inline">
+                            <input type="radio" name="set7" id="allSponBox" value="option7-1" />
+                            <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
 
-                        <input type="radio" name="set7" id="individualSponBox" value="option7-2" />
-                        <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
+                            <input type="radio" name="set7" id="individualSponBox" value="option7-2" />
+                            <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
 
-                        <label htmlFor="indSponText">Sponsor Username:</label>
-                        <input type="text" id="indSponText" name="indSponsorUser" />
+                            <label htmlFor="indSponText">Sponsor Username:</label>
+                            <input type="text" id="indSponText" name="indSponsorUser" />
+                        </div>
 
                         <br />
                         <br />
 
                         <p>Select View Type</p>
-                        <input type="radio" name="set8" id="detView" value="option8-1" />
-                        <label htmlFor="detView" className="styled-radio">Detailed View</label>
+                        <div className="radio-inline">
+                            <input type="radio" name="set8" id="detView" value="option8-1" />
+                            <label htmlFor="detView" className="styled-radio">Detailed View</label>
 
-                        <input type="radio" name="set8" id="sumView" value="option8-2" />
-                        <label htmlFor="sumView" className="styled-radio">Summary View</label>
+                            <input type="radio" name="set8" id="sumView" value="option8-2" />
+                            <label htmlFor="sumView" className="styled-radio">Summary View</label>
+                        </div>
 
                         <div className="row">
                             <div className="column-right">
