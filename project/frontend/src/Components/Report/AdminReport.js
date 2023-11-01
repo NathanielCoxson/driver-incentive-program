@@ -134,10 +134,10 @@ function AdminReport() {
 
                         <input type="radio" name="set5" id="individualDriverBox" value="option5-2" />
                         <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
-
-                        <label htmlFor="indDriverText">Driver Username:</label>
-                        <input type="text" id="indDriverText" name="indDriverUser" />
                     </div>
+                    <label htmlFor="indDriverText">Driver Username:</label>
+                    <input type="text" id="indDriverText" name="indDriverUser" />
+
                     <br />
                     <br />
 
