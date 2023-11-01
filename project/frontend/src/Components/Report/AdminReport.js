@@ -27,10 +27,11 @@ function AdminReport() {
 
                         <input type="radio" name="set1" id="individualSponBox" value="option1-2" />
                         <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
-
-                        <label htmlFor="indSponText">Sponsor Username:</label>
-                        <input type="text" id="indSponText" name="indSponsorUser" />
                     </div>
+
+                    <label htmlFor="indSponText">Sponsor Username:</label>
+                    <input type="text" id="indSponText" name="indSponsorUser" />
+
                     <br />
                     <br />
 
@@ -82,10 +83,11 @@ function AdminReport() {
 
                         <input type="radio" name="set3" id="individualSponBox" value="option3-2" />
                         <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
+                    </div>
 
-                        <label htmlFor="indSponText">Sponsor Username:</label>
-                        <input type="text" id="indSponText" name="indSponsorUser" />
-                        </div>
+                    <label htmlFor="indSponText">Sponsor Username:</label>
+                    <input type="text" id="indSponText" name="indSponsorUser" />
+
                     <br />
 
                     <div className="row">
@@ -117,10 +119,10 @@ function AdminReport() {
 
                         <input type="radio" name="set4" id="individualSponBox" value="option4-2" />
                         <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
-
-                        <label htmlFor="indSponText">Sponsor Username:</label>
-                        <input type="text" id="indSponText" name="indSponsorUser" />
                     </div>
+
+                    <label htmlFor="indSponText">Sponsor Username:</label>
+                    <input type="text" id="indSponText" name="indSponsorUser" />
 
                     <br />
                     <br />
@@ -177,10 +179,11 @@ function AdminReport() {
 
                             <input type="radio" name="set7" id="individualSponBox" value="option7-2" />
                             <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
-
-                            <label htmlFor="indSponText">Sponsor Username:</label>
-                            <input type="text" id="indSponText" name="indSponsorUser" />
                         </div>
+
+                        <label htmlFor="indSponText">Sponsor Username:</label>
+                        <input type="text" id="indSponText" name="indSponsorUser" />
+
 
                         <br />
                         <br />
