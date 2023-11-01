@@ -156,8 +156,7 @@ function AdminReport() {
 
                     <br />
                     <br />
-
-                    <p>Generate the report for all
+                    
                     <p>Generate the report for all sponsors or a specific sponsor?</p>
                     <input type="radio" name="set7" id="allSponBox" value="option7-1" />
                     <label htmlFor="allSponBox">All Sponsors</label>
