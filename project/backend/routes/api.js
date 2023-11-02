@@ -10,6 +10,7 @@ const about = require('./about');
 const catalogs = require('./catalogs');
 const orders = require('./orders');
 const transactions = require('./transactions');
+const reports = require('./reports');
 
 api.use('/users', users);
 api.use('/sponsors', sponsors);
@@ -18,5 +19,6 @@ api.use('/about', about);
 api.use('/catalogs', catalogs);
 api.use('/orders', orders);
 api.use('/transactions', transactions);
+api.use('/reports', reports);
 
 module.exports = api;

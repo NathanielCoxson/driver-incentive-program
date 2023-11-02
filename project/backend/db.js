@@ -1274,7 +1274,7 @@ async function updateUser(UID, Password, Name, Email, PhoneNumber){
     }
 }
 
-async function getAllAdmin(){
+async function getAllAdmin() {
     try {
         const pool = await poolPromise;
 
@@ -1283,6 +1283,65 @@ async function getAllAdmin(){
         return result.recordset;
     } catch (err) {
         console.log(err)
+    }
+}
+
+/**
+ * Returns a list of all sponsor objects including a list of each of their sales.
+ */
+async function getSponsorSales() {
+    try {
+        const pool = await poolPromise;
+
+        let transaction;
+        let result = [];
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
+
+            let sponsors = await new sql.Request(transaction)
+                .query("SELECT * FROM Sponsors");
+            if (!sponsors) throw new Error("Error retrieving sponsors.");
+
+            for (let sponsor of sponsors.recordset) {
+                let sales = [];
+                let orders = await new sql.Request(transaction)
+                    .input("SID", sql.UniqueIdentifier, sponsor.SID)
+                    .query("SELECT \
+                                OID, \
+                                Users.UID, \
+                                Sponsors.SID, \
+                                Sponsors.SponsorName, \
+                                ShippingAddress, \
+                                BillingAddress, \
+                                OrderDate, \
+                                ArrivalDate, \
+                                Users.Username \
+                            FROM Orders \
+                            JOIN Sponsors ON Orders.SID = Sponsors.SID \
+                            JOIN Users ON Users.UID = Orders.UID \
+                            WHERE Sponsors.SID = @SID");
+                if (!orders) throw new Error("Error retrieving orders.");
+                orders = orders.recordset;
+
+                for (let order of orders) {
+                    let items = await new sql.Request(transaction)
+                        .input("OID", sql.UniqueIdentifier, order.OID)
+                        .query("SELECT * FROM OrderLines WHERE OID = @OID");
+                    sales.push({ ...order, items: items.recordset, total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) });
+                }
+                result.push({ SponsorName: sponsor.SponsorName, sales });
+            }
+
+            await transaction.commit();
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+
+        return result;
+    } catch (err) {
+        console.log(err);
     }
 }
 
@@ -1329,5 +1388,6 @@ module.exports = {
     getPoints,
     addSponsorsUsers,
     getApplication,
-    getAllAdmin
+    getAllAdmin,
+    getSponsorSales
 }
