@@ -16,4 +16,18 @@ reports.get('/sponsors/sales', async (req, res) => {
     }
 });
 
+reports.get('/sponsors/:SponsorName/sales', async (req, res) => {
+    try {
+        const sales = await req.app.locals.db.getSponsorSalesByName(req.params.SponsorName);
+        if (!sales) {
+            res.status(404).send();
+            return;
+        }
+        res.status(200).send({ sales });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 module.exports = reports;

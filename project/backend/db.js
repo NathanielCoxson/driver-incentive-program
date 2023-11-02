@@ -1345,6 +1345,60 @@ async function getSponsorSales() {
     }
 }
 
+async function getSponsorSalesByName(SponsorName) {
+    try {
+        const pool = await poolPromise;
+
+        let transaction;
+        let result = [];
+        try {
+            transaction = pool.transaction();
+            await transaction.begin();
+
+            let sponsor = await new sql.Request(transaction)
+                .input("SponsorName", sql.VarChar(50), SponsorName)
+                .query("SELECT * FROM Sponsors WHERE SponsorName = @SponsorName");
+            sponsor = sponsor.recordset[0];
+            if (!sponsor) throw new Error("Error retrieving sponsor.");
+
+            let sales = [];
+            let orders = await new sql.Request(transaction)
+                .input("SID", sql.UniqueIdentifier, sponsor.SID)
+                .query("SELECT \
+                            OID, \
+                            Users.UID, \
+                            Sponsors.SID, \
+                            Sponsors.SponsorName, \
+                            ShippingAddress, \
+                            BillingAddress, \
+                            OrderDate, \
+                            ArrivalDate, \
+                            Users.Username \
+                        FROM Orders \
+                        JOIN Sponsors ON Orders.SID = Sponsors.SID \
+                        JOIN Users ON Users.UID = Orders.UID \
+                        WHERE Sponsors.SID = @SID");
+            if (!orders) throw new Error("Error retrieving orders.");
+            orders = orders.recordset;
+
+            for (let order of orders) {
+                let items = await new sql.Request(transaction)
+                    .input("OID", sql.UniqueIdentifier, order.OID)
+                    .query("SELECT * FROM OrderLines WHERE OID = @OID");
+                sales.push({ ...order, items: items.recordset, total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) });
+            }
+
+            await transaction.commit();
+            return sales;
+        } catch (err) {
+            await transaction.rollback();
+            throw err;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -1389,5 +1443,6 @@ module.exports = {
     addSponsorsUsers,
     getApplication,
     getAllAdmin,
-    getSponsorSales
+    getSponsorSales,
+    getSponsorSalesByName
 }
