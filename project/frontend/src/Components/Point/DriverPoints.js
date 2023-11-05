@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './DriverPoints.css';
+import  axios from '../../api/axios';
+import useAuth from '../../hooks/useAuth';
 
 function DriverPoints() {
-    // Simulated organization data, replace with actual data
-    const sponsorOrganizations = [
-        { id: 1, name: 'Organization 1', points: 100 },
-        { id: 2, name: 'Organization 2', points: 200 },
-        { id: 3, name: 'Organization 3', points: 150 },
-    ];
 
     const [selectedOrganization, setSelectedOrganization] = useState('');
     const [points, setPoints] = useState(0);
+    const { auth } = useAuth();
+    const Sponsors = auth?.sponsors;
+    const Username = auth?.Username;
+    const sponsorOrganizations = Sponsors.map((s) => {
+        let org = {
+            id: s.SID,
+            name: s.SponsorName,
+            points: 0
+        };
+        return org;
+    });
 
     // Handle organization selection
-    const handleOrganizationChange = (event) => {
+    const handleOrganizationChange = async (event) => {
         const selectedOrgName = event.target.value;
         setSelectedOrganization(selectedOrgName);
 
@@ -21,9 +28,19 @@ function DriverPoints() {
             // When "No Organization" is selected
             setPoints(0);
         } else {
-            // Find the points for the selected organization
-            const organization = sponsorOrganizations.find((org) => org.name === selectedOrgName);
-            setPoints(organization ? organization.points : 0);
+            try{
+                // Find the points for the selected organization
+                const request = {
+                    SponsorName: selectedOrgName,
+                    Username: Username,
+                };
+                const response = await axios.post('transactions/points', request);
+                setPoints(response ? response.data.points[0].Points : 0);
+            }
+            catch(err){
+                if (process.env.NODE_ENV === 'development');
+                    console.log("Error retrieving points: ",err);
+            }
         }
     };
 
