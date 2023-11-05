@@ -28,7 +28,7 @@ function ReportResults({ allSponsors, results }) {
                                         </tr>
                                     );
                                 })
-                            )
+                            );
                         })}
                     </tbody>
                 </table>
