@@ -26,7 +26,7 @@ function AdminReport() {
             } catch (err) {
                 if (process.env.NODE_ENV === 'development') console.log(err);
                 if (!err?.response) setResponseMessage('No Server Response');
-                if (err?.response === 404) setResponseMessage('No sales found.')
+                if (err?.response.status === 404) setResponseMessage('No sales found.')
             }
         }
         else {
@@ -36,7 +36,40 @@ function AdminReport() {
             } catch (err) {
                 if (process.env.NODE_ENV === 'development') console.log(err);
                 if (!err?.response) setResponseMessage('No Server Response');
-                if (err?.response === 404) setResponseMessage('No sales found.')
+                if (err?.response.status === 404) setResponseMessage('No sales found.');
+            }
+        }
+    };
+
+    const handleDownload = async () => {
+        if (!allSponsors) {
+            try {
+                const response = await axiosPrivate.get(`reports/sponsors/${sponsorName}/sales/download`, { responseType: 'blob' });
+                const blob = response.data;
+                const fileURL =
+                    window.URL.createObjectURL(blob);
+                let alink = document.createElement("a");
+                alink.href = fileURL;
+                alink.download = "report.csv";
+                alink.click();
+            } catch (err) {
+                if (process.env.NODE_ENV === 'development') console.log(err);
+                setResponseMessage("Error downloading report.");
+            }
+        }
+        else {
+            try {
+                const response = await axiosPrivate.get('reports/sponsors/sales/download', { responseType: 'blob' });
+                const blob = response.data;
+                const fileURL =
+                    window.URL.createObjectURL(blob);
+                let alink = document.createElement("a");
+                alink.href = fileURL;
+                alink.download = "report.csv";
+                alink.click();
+            } catch (err) {
+                if (process.env.NODE_ENV === 'development') console.log(err);
+                setResponseMessage("Error downloading report.");
             }
         }
     };
@@ -231,7 +264,10 @@ function AdminReport() {
                         id="allSponBox"
                         value="option7-1"
                         checked={allSponsors}
-                        onChange={e => setAllSponsors(prev => !prev)}
+                        onChange={e => {
+                            setAllSponsors(prev => !prev);
+                            setResults([]);
+                        }}
                     />
                     <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
 
@@ -241,7 +277,10 @@ function AdminReport() {
                         id="individualSponBox"
                         value="option7-2"
                         checked={!allSponsors}
-                        onChange={e => setAllSponsors(prev => !prev)}
+                        onChange={e => {
+                            setAllSponsors(prev => !prev);
+                            setResults([]);
+                        }}
                     />
                     <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
                 </div>
@@ -269,7 +308,10 @@ function AdminReport() {
                         id="detView"
                         value="option8-1"
                         checked={detailedView}
-                        onChange={e => setDetailedView(prev => !prev)}
+                        onChange={e => {
+                            setDetailedView(prev => !prev);
+                            setResults([]);
+                        }}
                     />
                     <label htmlFor="detView" className="styled-radio">Detailed View</label>
 
@@ -279,7 +321,10 @@ function AdminReport() {
                         id="sumView"
                         value="option8-2"
                         checked={!detailedView}
-                        onChange={e => setDetailedView(prev => !prev)}
+                        onChange={e => {
+                            setDetailedView(prev => !prev);
+                            setResults([]);
+                        }}
                     />
                     <label htmlFor="sumView" className="styled-radio">Summary View</label>
                 </div>
@@ -289,7 +334,7 @@ function AdminReport() {
                         <button className="cta-button" onClick={handleSponsorSales}>View Sponsor Sales Report</button>
                     </div>
                     <div className="column-left">
-                        <button className="cta-button" >Download CSV</button>
+                        <button className="cta-button" onClick={handleDownload}>Download CSV</button>
                     </div>
                     <div className='response-message'>{responseMessage}</div>
                 </div>
