@@ -1103,26 +1103,24 @@
         "summary": "Get all sponsor sales.",
         "description": "Returns an list of sponsor objects containing a list of that sponsor's sales.",
         "operationId": "getSponsorSales",
-        "requestBody": {
-          "description": "The start and end datetimes.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "StartDate": {
-                    "type": "string",
-                    "example": "2023-10-31T00:17:08.000Z"
-                  },
-                  "EndDate": {
-                    "type": "string",
-                    "example": "2023-10-31T00:17:08.000Z"
-                  }
-                }
-              }
-            }
+        "parameters": [
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from"
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to"
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -1184,28 +1182,24 @@
               "type": "string"
             },
             "description": "Name of the sponsor."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from"
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to"
           }
         ],
-        "requestBody": {
-          "description": "The start and end datetimes.",
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "StartDate": {
-                    "type": "string",
-                    "example": "2023-10-31T00:17:08.000Z"
-                  },
-                  "EndDate": {
-                    "type": "string",
-                    "example": "2023-10-31T00:17:08.000Z"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Success",

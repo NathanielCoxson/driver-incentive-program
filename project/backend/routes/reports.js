@@ -6,7 +6,11 @@ const path = require('path');
 
 reports.get('/sponsors/sales', async (req, res) => {
     try {
-        const sponsors = await req.app.locals.db.getSponsorSales();
+        if (!req.query.StartDate || !req.query.EndDate) {
+            res.status(400).send();
+            return;
+        }
+        const sponsors = await req.app.locals.db.getSponsorSales(req.query.StartDate, req.query.EndDate);
         if (!sponsors) {
             res.status(404).send();
             return;
@@ -20,7 +24,11 @@ reports.get('/sponsors/sales', async (req, res) => {
 
 reports.get('/sponsors/:SponsorName/sales', async (req, res) => {
     try {
-        const sales = await req.app.locals.db.getSponsorSalesByName(req.params.SponsorName);
+        if (!req.query.StartDate || !req.query.EndDate) {
+            res.status(400).send();
+            return;
+        }
+        const sales = await req.app.locals.db.getSponsorSalesByName(req.params.SponsorName, req.query.StartDate, req.query.EndDate);
         if (sales.length === 0) {
             res.status(404).send();
             return;
@@ -34,7 +42,11 @@ reports.get('/sponsors/:SponsorName/sales', async (req, res) => {
 
 reports.get('/sponsors/sales/download', async (req, res) => {
     try {
-        const sponsors = await req.app.locals.db.getSponsorSales();
+        if (!req.query.StartDate || !req.query.EndDate) {
+            res.status(400).send();
+            return;
+        }
+        const sponsors = await req.app.locals.db.getSponsorSales(req.query.StartDate, req.query.EndDate);
         if (!sponsors) {
             res.status(404).send();
             return;
@@ -68,7 +80,11 @@ reports.get('/sponsors/sales/download', async (req, res) => {
 
 reports.get('/sponsors/:SponsorName/sales/download', async (req, res) => {
     try {
-        const sales = await req.app.locals.db.getSponsorSalesByName(req.params.SponsorName);
+        if (!req.query.StartDate || !req.query.EndDate) {
+            res.status(400).send();
+            return;
+        }
+        const sales = await req.app.locals.db.getSponsorSalesByName(req.params.SponsorName, req.query.StartDate, req.query.EndDate);
         if (!sales) {
             res.status(404).send();
             return;

@@ -1289,7 +1289,7 @@ async function getAllAdmin() {
 /**
  * Returns a list of all sponsor objects including a list of each of their sales.
  */
-async function getSponsorSales() {
+async function getSponsorSales(StartDate, EndDate) {
     try {
         const pool = await poolPromise;
 
@@ -1307,6 +1307,8 @@ async function getSponsorSales() {
                 let sales = [];
                 let orders = await new sql.Request(transaction)
                     .input("SID", sql.UniqueIdentifier, sponsor.SID)
+                    .input("StartDate", sql.DateTime, StartDate)
+                    .input("EndDate", sql.DateTime, EndDate)
                     .query("SELECT \
                                 OID, \
                                 Users.UID, \
@@ -1320,7 +1322,7 @@ async function getSponsorSales() {
                             FROM Orders \
                             JOIN Sponsors ON Orders.SID = Sponsors.SID \
                             JOIN Users ON Users.UID = Orders.UID \
-                            WHERE Sponsors.SID = @SID");
+                            WHERE Sponsors.SID = @SID AND OrderDate >= @StartDate AND OrderDate <= @EndDate");
                 if (!orders) throw new Error("Error retrieving orders.");
                 orders = orders.recordset;
 
@@ -1345,7 +1347,7 @@ async function getSponsorSales() {
     }
 }
 
-async function getSponsorSalesByName(SponsorName) {
+async function getSponsorSalesByName(SponsorName, StartDate, EndDate) {
     try {
         const pool = await poolPromise;
 
@@ -1364,6 +1366,8 @@ async function getSponsorSalesByName(SponsorName) {
             let sales = [];
             let orders = await new sql.Request(transaction)
                 .input("SID", sql.UniqueIdentifier, sponsor.SID)
+                .input("StartDate", sql.DateTime, StartDate)
+                .input("EndDate", sql.DateTime, EndDate)
                 .query("SELECT \
                             OID, \
                             Users.UID, \
@@ -1377,7 +1381,7 @@ async function getSponsorSalesByName(SponsorName) {
                         FROM Orders \
                         JOIN Sponsors ON Orders.SID = Sponsors.SID \
                         JOIN Users ON Users.UID = Orders.UID \
-                        WHERE Sponsors.SID = @SID");
+                        WHERE Sponsors.SID = @SID AND OrderDate >= @StartDate AND OrderDate <= @EndDate");
             if (!orders) throw new Error("Error retrieving orders.");
             orders = orders.recordset;
 

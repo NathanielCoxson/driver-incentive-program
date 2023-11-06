@@ -15,26 +15,33 @@ function AdminSalesReport() {
 
     const handleSponsorSales = async () => {
         setResponseMessage('');
-        const StartDate = (new Date()).toISOString().slice(0, 19).replace('T', ' ');
-        const EndDate = new Date();
+        let StartDate = new Date();
+        let EndDate = new Date();
         const startDateParts = startDate.split('-');
         const endDateParts = endDate.split('-');
+        StartDate.setUTCFullYear(startDateParts[0]);
+        StartDate.setUTCMonth(startDateParts[1]-1);
+        StartDate.setUTCDate(Number(startDateParts[2]));
+        StartDate.setUTCHours(0);
+        StartDate.setUTCMinutes(0);
+        StartDate.setUTCSeconds(0);
+        StartDate = StartDate.toISOString().slice(0, 19).replace('T', ' ');
+        
         EndDate.setUTCFullYear(endDateParts[0]);
         EndDate.setUTCMonth(endDateParts[1]-1);
         EndDate.setUTCDate(Number(endDateParts[2]));
-        EndDate.setUTCHours(0);
-        EndDate.setUTCMinutes(0);
-        EndDate.setUTCSeconds(0);
-        console.log(endDate, '|', EndDate.toISOString().slice(0, 19).replace('T', ' '));
-        console.log(endDateParts);
-        
+        EndDate.setUTCHours(23);
+        EndDate.setUTCMinutes(59);
+        EndDate.setUTCSeconds(59);
+        EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
+
         if (!startDate || !endDate) {
             setResponseMessage('Missing date range.');
             return;
         }
         if (allSponsors) {
             try {
-                const response = await axiosPrivate.get('/reports/sponsors/sales');
+                const response = await axiosPrivate.get(`/reports/sponsors/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
                 setResults(response?.data?.sponsors);
             } catch (err) {
                 if (process.env.NODE_ENV === 'development') console.log(err);
@@ -44,7 +51,7 @@ function AdminSalesReport() {
         }
         else {
             try {
-                const response = await axiosPrivate.get(`/reports/sponsors/${sponsorName}/sales`);
+                const response = await axiosPrivate.get(`/reports/sponsors/${sponsorName}/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
                 setResults(response?.data?.sales);
             } catch (err) {
                 if (process.env.NODE_ENV === 'development') console.log(err);
@@ -55,9 +62,29 @@ function AdminSalesReport() {
     };
 
     const handleDownload = async () => {
+        let StartDate = new Date();
+        let EndDate = new Date();
+        const startDateParts = startDate.split('-');
+        const endDateParts = endDate.split('-');
+        StartDate.setUTCFullYear(startDateParts[0]);
+        StartDate.setUTCMonth(startDateParts[1]-1);
+        StartDate.setUTCDate(Number(startDateParts[2]));
+        StartDate.setUTCHours(0);
+        StartDate.setUTCMinutes(0);
+        StartDate.setUTCSeconds(0);
+        StartDate = StartDate.toISOString().slice(0, 19).replace('T', ' ');
+        
+        EndDate.setUTCFullYear(endDateParts[0]);
+        EndDate.setUTCMonth(endDateParts[1]-1);
+        EndDate.setUTCDate(Number(endDateParts[2]));
+        EndDate.setUTCHours(11);
+        EndDate.setUTCMinutes(59);
+        EndDate.setUTCSeconds(59);
+        EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
+
         if (!allSponsors) {
             try {
-                const response = await axiosPrivate.get(`reports/sponsors/${sponsorName}/sales/download`, { responseType: 'blob' });
+                const response = await axiosPrivate.get(`reports/sponsors/${sponsorName}/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
                 const blob = response.data;
                 const fileURL =
                     window.URL.createObjectURL(blob);
@@ -72,7 +99,7 @@ function AdminSalesReport() {
         }
         else {
             try {
-                const response = await axiosPrivate.get('reports/sponsors/sales/download', { responseType: 'blob' });
+                const response = await axiosPrivate.get(`reports/sponsors/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
                 const blob = response.data;
                 const fileURL =
                     window.URL.createObjectURL(blob);
