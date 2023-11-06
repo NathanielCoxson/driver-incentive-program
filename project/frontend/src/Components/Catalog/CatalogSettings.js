@@ -8,6 +8,7 @@ function CatalogSettings() {
     const [searches, setSearches] = useState([]);
     const [removing, setRemoving] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [conversionRate, setConversionRate] = useState(0.01);
     const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const { SponsorName } = useParams();
@@ -90,9 +91,20 @@ function CatalogSettings() {
         }
     };
 
+    const handleUpdateConversionRate = async () => {
+
+    };
+
+    useEffect(() => console.log(conversionRate), [conversionRate]);
+
     return (
         <section className="hero catalog-settings">
             <h2>Catalog Settings</h2>
+            <div>
+                <label htmlFor='conversion-rate'>Point Conversion Rate:</label>
+                <input type='number' name="conversion-rate" onChange={e => setConversionRate(e.target.value)}></input>
+                <button className='cta-button' onClick={handleUpdateConversionRate}>Update</button>
+            </div>
             <form onSubmit={handleSubmit}>
                 <div className='catalog-form'>
                     <table>
