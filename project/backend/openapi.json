@@ -1103,6 +1103,26 @@
         "summary": "Get all sponsor sales.",
         "description": "Returns an list of sponsor objects containing a list of that sponsor's sales.",
         "operationId": "getSponsorSales",
+        "requestBody": {
+          "description": "The start and end datetimes.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "StartDate": {
+                    "type": "string",
+                    "example": "2023-10-31T00:17:08.000Z"
+                  },
+                  "EndDate": {
+                    "type": "string",
+                    "example": "2023-10-31T00:17:08.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
@@ -1166,6 +1186,26 @@
             "description": "Name of the sponsor."
           }
         ],
+        "requestBody": {
+          "description": "The start and end datetimes.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "StartDate": {
+                    "type": "string",
+                    "example": "2023-10-31T00:17:08.000Z"
+                  },
+                  "EndDate": {
+                    "type": "string",
+                    "example": "2023-10-31T00:17:08.000Z"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",

@@ -15,6 +15,19 @@ function AdminReport() {
 
     const handleSponsorSales = async () => {
         setResponseMessage('');
+        const StartDate = (new Date()).toISOString().slice(0, 19).replace('T', ' ');
+        const EndDate = new Date();
+        const startDateParts = startDate.split('-');
+        const endDateParts = endDate.split('-');
+        EndDate.setUTCFullYear(endDateParts[0]);
+        EndDate.setUTCMonth(endDateParts[1]-1);
+        EndDate.setUTCDate(Number(endDateParts[2]));
+        EndDate.setUTCHours(0);
+        EndDate.setUTCMinutes(0);
+        EndDate.setUTCSeconds(0);
+        console.log(endDate, '|', EndDate.toISOString().slice(0, 19).replace('T', ' '));
+        console.log(endDateParts);
+        
         if (!startDate || !endDate) {
             setResponseMessage('Missing date range.');
             return;
@@ -73,8 +86,6 @@ function AdminReport() {
             }
         }
     };
-
-    useEffect(() => console.log(results), [results]);
 
     return (
         <section className="hero">
