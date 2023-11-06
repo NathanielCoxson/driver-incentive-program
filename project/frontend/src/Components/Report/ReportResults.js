@@ -7,11 +7,11 @@ function ReportResults({ allSponsors, results }) {
                 <table className="report-table">
                     <thead>
                         <tr>
-                            <td>Username</td>
-                            <td>Points</td>
-                            <td>Item Count</td>
-                            <td>Order Date</td>
-                            <td>Sponsor Name</td>
+                            <th>Username</th>
+                            <th>Points</th>
+                            <th>Item Count</th>
+                            <th>Order Date</th>
+                            <th>Sponsor Name</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,11 +37,11 @@ function ReportResults({ allSponsors, results }) {
                 <table className="report-table">
                     <thead>
                         <tr>
-                            <td>Username</td>
-                            <td>Points</td>
-                            <td>Item Count</td>
-                            <td>Order Date</td>
-                            <td>Sponsor Name</td>
+                            <th>Username</th>
+                            <th>Points</th>
+                            <th>Item Count</th>
+                            <th>Order Date</th>
+                            <th>Sponsor Name</th>
                         </tr>
                     </thead>
                     <tbody>
