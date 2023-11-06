@@ -1,13 +1,5 @@
 /* Report.css */
 
-/* Styles for the report hero section */
-.hero {
-    background-color: #0077b6;
-    color: #fff;
-    padding: 60px;
-    border-radius: 10px;
-}
-
 h1 {
     font-size: 36px;
 }
@@ -27,4 +19,89 @@ h1 {
 /* Additional CSS styles can be added here to customize the report appearance */
 .report-table td {
     padding: 0 1em;
+}
+
+.report-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.report-container * {
+    margin: 0;
+}
+
+.report-container .row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+}
+
+.reports-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1em;
+}
+
+.report-type-select {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+}
+
+.report-type-select select {
+    width: fit-content;
+}
+
+.report-container td {
+    padding: 0.5em 1em;
+    overflow: hidden;
+    vertical-align: center;
+    border-right: 1px solid black;
+}
+
+.report-container tr:last-child {
+    border-bottom: unset;
+}
+
+.report-container tr {
+    border-bottom: 1px solid black;
+}
+
+.report-container table {
+    background-color: hsl(201, 100%, 28%);
+    border-collapse: collapse;
+    width: 100%;
+    border-radius: 1em;
+}
+
+.report-container th {
+    background-color: #f77f00;
+    padding: 0.5em;
+}
+
+.report-container th:first-child {
+    border-radius: 1em 0 0 0;
+}
+
+.report-container th:last-child {
+    border-radius: 0 1em 0 0;
+}
+
+.report-container tr:last-child td:last-child {
+    border-radius: 0 0 1em 0;
+}
+
+.report-container tr:last-child td:first-child {
+    border-radius: 0 0 0 1em;
+}
+
+.report-container td:last-child {
+    border: unset;
 }

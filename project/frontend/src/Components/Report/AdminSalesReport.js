@@ -119,7 +119,7 @@ function AdminSalesReport() {
     };
 
     return (
-        <div className="sponsorSales">
+        <div className="sponsorSales report-container">
             <h2>Sales by Sponsor</h2>
 
             <p>Select Date Range</p>
@@ -138,9 +138,6 @@ function AdminSalesReport() {
                 onChange={(e) => setEndDate(e.target.value)}
                 min={startDate}
             />
-
-            <br />
-            <br />
 
             <p>Generate the report for all sponsors or a specific sponsor?</p>
             <div className="radio-inline">
@@ -183,9 +180,6 @@ function AdminSalesReport() {
                 </>
             }
 
-            <br />
-            <br />
-
             <p>Select View Type</p>
             <div className="radio-inline">
                 <input
@@ -222,8 +216,9 @@ function AdminSalesReport() {
                 <div className="column-left">
                     <button className="cta-button" onClick={handleDownload}>Download CSV</button>
                 </div>
-                <div className='response-message'>{responseMessage}</div>
+                {responseMessage.length > 0 && <div className='response-message'>{responseMessage}</div>}
             </div>
+
             {results.length > 0 &&
                 <ReportResults allSponsors={allSponsors} results={results} />
             }
