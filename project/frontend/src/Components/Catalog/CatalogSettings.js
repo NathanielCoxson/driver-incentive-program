@@ -92,12 +92,6 @@ function CatalogSettings() {
         }
     };
 
-    const handleUpdateConversionRate = async () => {
-        console.log(conversionRate);
-    };
-
-    useEffect(() => console.log(conversionRate), [conversionRate]);
-
     return (
         <section className="hero catalog-settings">
             <h2>Catalog Settings</h2>
