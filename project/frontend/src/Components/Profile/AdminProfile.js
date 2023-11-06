@@ -2,6 +2,7 @@ import React from 'react';
 import useAuth from '../../hooks/useAuth';
 
 function AdminProfile(props) {
+    console.log(props)
     return (
         <section className="hero">
             <h2>{props.admin?.Name}'s Profile</h2>

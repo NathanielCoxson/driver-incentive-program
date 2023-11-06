@@ -1,10 +1,12 @@
 import React from 'react';
 import  axios from '../../api/axios';
 import { useState, useEffect} from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import AdminProfile from './AdminProfile';
 
 function ViewAdminList(){
     const [adminList, setAdminList] = useState([]);
+    const [viewProfile, setViewProfile] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -28,13 +30,14 @@ function ViewAdminList(){
     }, []);
 
     return (
-        <section className="hero">
+        <section id="admin-list" className="hero">
             <h2>All Admin Users</h2>
-            <ol className="admin-list" style={{textAlign:'left'}}>
+            <ol className="list" style={{textAlign:'left'}}>
                 {adminList.map((admin) => (
                     <li key={admin.UID}>
                         <p><strong>Name: </strong><em>{admin.Name}</em></p>
                         <p><strong>Username: </strong><em>{admin.Username}</em></p>
+                        <Link to="/dashboard/profile" state={{ user: admin }}>View Profile</Link>
                     </li>
                 ))}
             </ol>

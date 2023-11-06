@@ -3,6 +3,7 @@ import  axios from '../../api/axios';
 import useAuth from '../../hooks/useAuth';
 import { useState, useEffect} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function SponsorDriverList(){
     const {auth} = useAuth();
@@ -38,6 +39,7 @@ function SponsorDriverList(){
                     <li key={driver.UID}>
                         <p><strong>Name: </strong><em>{driver.Name}</em></p>
                         <p><strong>Username: </strong><em>{driver.Username}</em></p>
+                        <Link to="/dashboard/profile" state={{ user: driver }}>View Profile</Link>
                     </li>
                 ))}
             </ol>

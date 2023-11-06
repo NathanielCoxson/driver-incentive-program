@@ -32,6 +32,9 @@ import SponsorDriverList from '../SponsorDriverList/SponsorDriverList';
 import ViewAdminList from '../Profile/ViewAdminList';
 import SponsorReport from '../Report/SponsorReport';
 import AdminReport from '../Report/AdminReport';
+import AdminProfile from '../Profile/AdminProfile';
+import DriverProfile from '../Profile/DriverProfile';
+import SponsorProfile from '../Profile/SponsorProfile';
 
 function App() {
   return (
@@ -56,6 +59,7 @@ function App() {
               <Route path="catalog" element={<Catalog />} /> {/* Sponsors can see their own catalog along with drivers */}
               <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
               <Route path="edit_profile" element={<EditProfile />} />
+              {/* <Route path="driver_profile" element={<DriverProfile />} /> */}
 
               <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
 
@@ -79,6 +83,7 @@ function App() {
                 <Route path="rejection_reason" element={<RejectionReason />} />
                 <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
                 <Route path="sponsor_report" element={<SponsorReport />} />
+                {/* <Route path="sponsor_profile" element={<SponsorProfile />} /> */}
               </Route>
 
               {/* admin */}
@@ -89,6 +94,7 @@ function App() {
                 <Route path="admin_add_user/add_admin" element={<Register role='admin' />} />
                 <Route path="admin_report" element={<AdminReport />} />
                 <Route path="admin_list" element={<ViewAdminList />} />
+                {/* <Route path="admin_profile" element={<AdminProfile />} /> */}
               </Route>
 
               {/* catch all */}
