@@ -35,9 +35,9 @@ function SponsorDriverList(){
             <h2>Drivers in your Organization</h2>
             <ol className="driver-list" style={{textAlign: 'left'}}>
                 {driverList.map((driver) => (
-                    <li>
-                        <h3>Name: <em>{driver.Name}</em></h3>
-                        <h3>Username: <em>{driver.Username}</em></h3>
+                    <li key={driver.UID}>
+                        <p><strong>Name: </strong><em>{driver.Name}</em></p>
+                        <p><strong>Username: </strong><em>{driver.Username}</em></p>
                     </li>
                 ))}
             </ol>

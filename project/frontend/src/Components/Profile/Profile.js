@@ -10,9 +10,9 @@ function Profile() {
 
     return (
         <>
-            {auth?.Role === 'driver' && <DriverProfile />}
-            {auth?.Role === 'sponsor' && <SponsorProfile />}
-            {auth?.Role === 'admin' && <AdminProfile />}
+            {auth?.Role === 'driver' && <DriverProfile driver={auth}/>}
+            {auth?.Role === 'sponsor' && <SponsorProfile sponsor={auth}/>}
+            {auth?.Role === 'admin' && <AdminProfile admin={auth}/>}
             <Link to='/dashboard/edit_profile'>Edit Profile</Link>
         </>
     );

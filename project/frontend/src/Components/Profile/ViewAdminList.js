@@ -8,7 +8,6 @@ function ViewAdminList(){
     const navigate = useNavigate();
     const location = useLocation();
 
-
     useEffect(() => {
         let isMounted = true;
 
@@ -33,9 +32,9 @@ function ViewAdminList(){
             <h2>All Admin Users</h2>
             <ol className="admin-list" style={{textAlign:'left'}}>
                 {adminList.map((admin) => (
-                    <li>
-                        <h3>Name: <em>{admin.Name}</em></h3>
-                        <h3>Username: <em>{admin.Username}</em></h3>
+                    <li key={admin.UID}>
+                        <p><strong>Name: </strong><em>{admin.Name}</em></p>
+                        <p><strong>Username: </strong><em>{admin.Username}</em></p>
                     </li>
                 ))}
             </ol>
