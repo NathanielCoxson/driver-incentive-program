@@ -18,7 +18,7 @@ function CatalogSettings() {
         setResponseMessage("Saving...");
         setIsLoading(true);
         try {
-            await axiosPrivate.put(`/catalogs/${SponsorName}`, { searches });
+            await axiosPrivate.put(`/catalogs/${SponsorName}`, { searches, conversionRate });
         } catch (err) {
             console.log(err);
             setResponseMessage('Error saving searches, please try again.')
@@ -32,7 +32,8 @@ function CatalogSettings() {
         const fetchSearches = async () => {
             try {
                 const response = await axiosPrivate.get(`/catalogs/${SponsorName}`);
-                setSearches(response.data.searches);
+                setSearches(response?.data?.searches);
+                setConversionRate(response?.data?.ConversionRate)
             } catch (err) {
                 console.log(err);
             }
@@ -92,7 +93,7 @@ function CatalogSettings() {
     };
 
     const handleUpdateConversionRate = async () => {
-
+        console.log(conversionRate);
     };
 
     useEffect(() => console.log(conversionRate), [conversionRate]);
@@ -100,11 +101,6 @@ function CatalogSettings() {
     return (
         <section className="hero catalog-settings">
             <h2>Catalog Settings</h2>
-            <div>
-                <label htmlFor='conversion-rate'>Point Conversion Rate:</label>
-                <input type='number' name="conversion-rate" onChange={e => setConversionRate(e.target.value)}></input>
-                <button className='cta-button' onClick={handleUpdateConversionRate}>Update</button>
-            </div>
             <form onSubmit={handleSubmit}>
                 <div className='catalog-form'>
                     <table>
@@ -213,6 +209,16 @@ function CatalogSettings() {
                             })}
                         </tbody>
                     </table>
+                    <div>
+                        <label htmlFor='conversion-rate'>Point Conversion Rate:</label>
+                        <input 
+                            type='number' 
+                            name="conversion-rate" 
+                            onChange={e => setConversionRate(e.target.value)}
+                            value={conversionRate}
+                            step="0.01"
+                        ></input>
+                    </div>
                     <div className='buttons'>
                         <button type='button' className='cta-button' onClick={handleAddRule}>Add</button>
                         <button type='button' className='cta-button' onClick={toggleRemove}>{removing ? 'Stop Deleting' : 'Start Deleting'}</button>

@@ -803,7 +803,7 @@ async function addCatalogSearchQuery(CID, Search) {
     }
 }
 
-async function updateSearchQuery(SID, CID, Searches) {
+async function updateSearchQuery(SID, CID, Searches, conversionRate) {
     try {
         // Connect to pool
         const pool = await poolPromise;
@@ -811,6 +811,7 @@ async function updateSearchQuery(SID, CID, Searches) {
         try {
             transaction = pool.transaction();
             await transaction.begin();
+
             await new sql.Request(transaction)
                 .input("SID", sql.UniqueIdentifier, SID)
                 .query("DELETE CatalogSearches \
@@ -829,6 +830,11 @@ async function updateSearchQuery(SID, CID, Searches) {
                         INSERT INTO CatalogSearches (CID, CSID, term, media, entity, limit) \
                         VALUES(@CID, NEWID(), @term, @media, @entity, @limit)");
             }
+            await new sql.Request(transaction)
+                .input("ConversionRate", sql.Float, conversionRate)
+                .input("SID", sql.UniqueIdentifier, SID)
+                .query("UPDATE Catalogs SET ConversionRate = @ConversionRate WHERE SID = @SID");
+
             await transaction.commit();
             return true;
         } catch (err) {

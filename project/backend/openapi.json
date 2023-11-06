@@ -900,6 +900,10 @@
                         "limit": 2
                       }
                     ]
+                  },
+                  "conversionRate": {
+                    "type": "float",
+                    "example": 0.01
                   }
                 }
               }
