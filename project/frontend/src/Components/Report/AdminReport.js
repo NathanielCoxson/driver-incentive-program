@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './Report.css';
 import AdminSalesReport from './AdminSalesReport';
 import AdminSponsorsReport from './AdminSponsorsReport';
@@ -10,8 +10,6 @@ function AdminReport() {
         'sponsor-sales': <AdminSalesReport />,
         'sponsors': <AdminSponsorsReport />
     }
-
-    useEffect(() => console.log(type), [type]);
     
     return (
         <section className="hero">
