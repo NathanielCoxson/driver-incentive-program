@@ -56,7 +56,7 @@ catalogs.post('/:SponsorName', async (req, res) => {
 
 catalogs.put('/:SponsorName', async (req, res) => {
     try {
-        if (!req.body?.searches) {
+        if (!req.body?.searches || !req.body?.conversionRate) {
             res.status(400).send();
             return;
         }
@@ -65,7 +65,7 @@ catalogs.put('/:SponsorName', async (req, res) => {
             res.status(404).send();
             return;
         }
-        const result = await req.app.locals.db.updateSearchQuery(sponsor.SID, sponsor.CID, req.body.searches);
+        const result = await req.app.locals.db.updateSearchQuery(sponsor.SID, sponsor.CID, req.body.searches, req.body.conversionRate);
         if (!result) {
             res.status(500).send();
             return;

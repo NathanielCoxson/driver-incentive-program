@@ -8,6 +8,7 @@ function CatalogSettings() {
     const [searches, setSearches] = useState([]);
     const [removing, setRemoving] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [conversionRate, setConversionRate] = useState(0.01);
     const navigate = useNavigate();
     const axiosPrivate = useAxiosPrivate();
     const { SponsorName } = useParams();
@@ -17,7 +18,7 @@ function CatalogSettings() {
         setResponseMessage("Saving...");
         setIsLoading(true);
         try {
-            await axiosPrivate.put(`/catalogs/${SponsorName}`, { searches });
+            await axiosPrivate.put(`/catalogs/${SponsorName}`, { searches, conversionRate });
         } catch (err) {
             console.log(err);
             setResponseMessage('Error saving searches, please try again.')
@@ -31,7 +32,8 @@ function CatalogSettings() {
         const fetchSearches = async () => {
             try {
                 const response = await axiosPrivate.get(`/catalogs/${SponsorName}`);
-                setSearches(response.data.searches);
+                setSearches(response?.data?.searches);
+                setConversionRate(response?.data?.ConversionRate)
             } catch (err) {
                 console.log(err);
             }
@@ -201,6 +203,16 @@ function CatalogSettings() {
                             })}
                         </tbody>
                     </table>
+                    <div>
+                        <label htmlFor='conversion-rate'>Point Conversion Rate:</label>
+                        <input 
+                            type='number' 
+                            name="conversion-rate" 
+                            onChange={e => setConversionRate(e.target.value)}
+                            value={conversionRate}
+                            step="0.01"
+                        ></input>
+                    </div>
                     <div className='buttons'>
                         <button type='button' className='cta-button' onClick={handleAddRule}>Add</button>
                         <button type='button' className='cta-button' onClick={toggleRemove}>{removing ? 'Stop Deleting' : 'Start Deleting'}</button>
