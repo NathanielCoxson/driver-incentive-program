@@ -32,6 +32,11 @@ import SponsorDriverList from '../SponsorDriverList/SponsorDriverList';
 import ViewAdminList from '../Profile/ViewAdminList';
 import SponsorReport from '../Report/SponsorReport';
 import AdminReport from '../Report/AdminReport';
+import AdminProfile from '../Profile/AdminProfile';
+import DriverProfile from '../Profile/DriverProfile';
+import SponsorProfile from '../Profile/SponsorProfile';
+import ViewSponsorList from '../Profile/ViewSponsorList';
+import ViewDriverList from '../Profile/ViewDriverList';
 
 function App() {
   return (
@@ -89,6 +94,8 @@ function App() {
                 <Route path="admin_add_user/add_admin" element={<Register role='admin' />} />
                 <Route path="admin_report" element={<AdminReport />} />
                 <Route path="admin_list" element={<ViewAdminList />} />
+                <Route path="sponsor_list" element={<ViewSponsorList />} />
+                <Route path="driver_list" element={<ViewDriverList />} />
               </Route>
 
               {/* catch all */}

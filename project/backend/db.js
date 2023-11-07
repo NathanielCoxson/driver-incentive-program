@@ -48,6 +48,19 @@ async function getSponsors() {
     }
 }
 
+
+async function getDrivers() {
+    try {
+        // Connect
+        const pool = await poolPromise;
+        // Make request
+        const result = await pool.request()
+            .query("SELECT * FROM Users WHERE Role = 'driver'");
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
 /**
  * Returns the SID of the sponsor with the given name:
  * Response: {
@@ -1413,6 +1426,7 @@ async function getSponsorSalesByName(SponsorName, StartDate, EndDate) {
 // exported as part of the db module.
 module.exports = {
     getSponsors,
+    getDrivers,
     getSponsorByName,
     getUserByUsername,
     getUserByEmail,

@@ -1,13 +1,15 @@
 import React from 'react';
-import useAuth from '../../hooks/useAuth';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import  axios from '../../api/axios';
+import useAuth from '../../hooks/useAuth';
 
-function EditProfile() {
-    const { auth } = useAuth();
+function EditProfile(props) {
+    const auth = useAuth();
+    const location = useLocation();
     const navigate = useNavigate();
     const [responseMessage, setResponseMessage] = useState('');
+    const {user} = location.state;
 
     const passwordRequirementsMessage =
         'Password must be:\n' +
@@ -48,8 +50,8 @@ function EditProfile() {
 
         if (!validateForm(input)) return;
 
-        let user = {
-            Username: auth.Username,
+        let newUser = {
+            Username: user.Username,
             Password: input.password.value,
             Name: input.name.value,
             Email: input.email.value,
@@ -57,14 +59,15 @@ function EditProfile() {
         };
 
         try {
-            await axios.post('/users/edit-profile', user);
-            auth.Password = user.Password
-            auth.Name = user.Name
-            auth.Email = user.Email
-            auth.PhoneNumber = user.PhoneNumber
+            await axios.post('/users/edit-profile', newUser);
+            user.Password = newUser.Password
+            user.Name = newUser.Name
+            user.Email = newUser.Email
+            user.PhoneNumber = newUser.PhoneNumber
             setResponseMessage('Profile successfully updated!');
-            navigate('/dashboard/profile', { replace: true })
+            navigate('/dashboard/profile', { state: { user: user }, replace: true });
         } catch (err) {
+            console.log(err)
             if (!err?.response) {
                 setResponseMessage('No Server Response');
             } else if (err.response?.status === 400) {
@@ -81,7 +84,7 @@ function EditProfile() {
 
     return (
         <section className="hero">
-            <h2>Hello, {auth?.Name}.</h2>
+            <h2>Hello, {user?.Name}.</h2>
             <h2>Edit your profile</h2>
             <div className="profile-info">
                 <form id="editProfile" onSubmit={handleSubmit}>
