@@ -81,7 +81,7 @@ function AdminSalesReport() {
         EndDate.setUTCFullYear(endDateParts[0]);
         EndDate.setUTCMonth(endDateParts[1] - 1);
         EndDate.setUTCDate(Number(endDateParts[2]));
-        EndDate.setUTCHours(11);
+        EndDate.setUTCHours(23);
         EndDate.setUTCMinutes(59);
         EndDate.setUTCSeconds(59);
         EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
