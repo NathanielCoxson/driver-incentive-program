@@ -6,6 +6,7 @@ import AdminProfile from './AdminProfile';
 import { Link, useLocation } from 'react-router-dom';
 
 function Profile() {
+    const {auth} = useAuth();
     const location = useLocation();
     const {user} = location.state;
 
@@ -14,7 +15,9 @@ function Profile() {
             {user?.Role === 'driver' && <DriverProfile driver={user}/>}
             {user?.Role === 'sponsor' && <SponsorProfile sponsor={user}/>}
             {user?.Role === 'admin' && <AdminProfile admin={user}/>}
-            <Link to='/dashboard/edit_profile' state={{ user: user}}>Edit Profile</Link>
+            {(auth?.UID === user?.UID || auth?.Role === 'admin' || (auth?.Role === 'sponsor' && user?.Role === 'driver')) 
+                && <Link to='/dashboard/edit_profile' state={{ user: user}}>Edit Profile</Link>}
+
         </>
     );
 }

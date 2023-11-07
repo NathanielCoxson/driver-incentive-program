@@ -41,6 +41,8 @@ function Sidebar() {
                         <li><Link to="admin_report"> Admin Report</Link></li>
                         <li><Link to="admin_messagebox">Message Box</Link></li>
                         <li><Link to="admin_list">View All Admin</Link></li>
+                        <li><Link to="sponsor_list">View All Sponsors</Link></li>
+                        <li><Link to="driver_list">View All Drivers</Link></li>
                     </>
                 }
             </ul>
