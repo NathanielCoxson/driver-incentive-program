@@ -1,15 +1,13 @@
 import React from 'react';
 import useAuth from '../../hooks/useAuth';
 
-function AdminProfile() {
-    const { auth } = useAuth();
+function AdminProfile(props) {
+    console.log(props)
     return (
         <section className="hero">
-            <h2>Hello, {auth?.Name}.</h2>
-            <h2>Welcome to Your's Profile Dashboard</h2>
-            <h1>My Profile</h1>
+            <h2>{props.admin?.Name}'s Profile</h2>
             <div className="profile-info">
-                <p><strong>Username:</strong> {auth?.Username}</p>
+                <p><strong>Username:</strong> {props.admin?.Username}</p>
                 <p><strong>Phone Number:</strong> (123) 456-7890</p>
             </div>
         </section>

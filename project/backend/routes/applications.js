@@ -245,4 +245,24 @@ applications.get('/admin', async (req, res) => {
     }
 });
 
+applications.get('/sponsors', async (req, res) => {
+    try {
+        const sponsors = await req.app.locals.db.getSponsors();
+        return res.status(200).send(sponsors);
+    } catch (err){
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+applications.get('/drivers', async (req, res) => {
+    try {
+        const drivers = await req.app.locals.db.getDrivers();
+        console.log(drivers);
+        return res.status(200).send(drivers);
+    } catch (err){
+        console.log(err);
+        res.status(500).send();
+    }
+});
 module.exports = applications;
