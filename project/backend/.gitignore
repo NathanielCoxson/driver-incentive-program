@@ -5,4 +5,4 @@
 .env.development.local
 .env.test.local
 .env.production.local
-report.csv
+/backend/report.csv
