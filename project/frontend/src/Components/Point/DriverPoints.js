@@ -6,6 +6,7 @@ import useAuth from '../../hooks/useAuth';
 function DriverPoints() {
 
     const [selectedOrganization, setSelectedOrganization] = useState('');
+    const [transactions, setTransactions] = useState([]);
     const [points, setPoints] = useState(0);
     const { auth } = useAuth();
     const Sponsors = auth?.sponsors;
@@ -36,10 +37,14 @@ function DriverPoints() {
                 };
                 const response = await axios.post('transactions/points', request);
                 setPoints(response ? response.data.points[0].Points : 0);
+
+                //Generate transaction log
+                const tResponse = await axios.post('transactions/entries', request);
+                setTransactions(tResponse ? tResponse.data.transactions : []);
             }
             catch(err){
                 if (process.env.NODE_ENV === 'development');
-                    console.log("Error retrieving points: ",err);
+                    console.log("Error retrieving transactions: ",err);
             }
         }
     };
@@ -70,7 +75,19 @@ function DriverPoints() {
                 )}
 
                 {selectedOrganization && (
-                    <p>You have <strong>{points}</strong> Points for {selectedOrganization}</p>
+                    <div id="points-listing">
+                        <p>You have <strong>{points}</strong> Points for {selectedOrganization}</p>
+                        <div id="scroll-list">
+                            {transactions.length !== 0 && (
+                                <p><strong>Transactions Log:</strong></p>
+                            )}
+                            <ul>
+                            {transactions.map((t) => (
+                                <li key={t.TID}>Date: {t.TransactionDate}&emsp;Amount: {t.TransactionAmount}&emsp;Reason: {t.Reason}</li>
+                            ))}
+                            </ul>
+                        </div>
+                    </div>
                 )}
             </div>
         </section>
