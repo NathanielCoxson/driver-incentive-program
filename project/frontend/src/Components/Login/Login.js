@@ -24,7 +24,8 @@ function Login() {
                 { Username, Password },
                 {
                     headers: { 'Content-Type': 'application/json' },
-                    withCredentials: true
+                    withCredentials: true,
+                    crossDomain: true
                 }
             );
             setAuth(response?.data);
