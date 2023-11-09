@@ -86,7 +86,7 @@ function App() {
                 <Route path="rejection_reason" element={<RejectionReason />} />
                 <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
                 <Route path="sponsor_report" element={<SponsorReport />} />
-                <Route path="view_as" element={< SponsorView/>} />
+                <Route path="sponsor_view_as" element={< SponsorView/>} />
               </Route>
 
               {/* admin */}
@@ -99,7 +99,7 @@ function App() {
                 <Route path="admin_list" element={<ViewAdminList />} />
                 <Route path="sponsor_list" element={<ViewSponsorList />} />
                 <Route path="driver_list" element={<ViewDriverList />} />
-                <Route path="view_as" element={<AdminView />} />
+                <Route path="admin_view_as" element={<AdminView />} />
               </Route>
 
               {/* catch all */}
