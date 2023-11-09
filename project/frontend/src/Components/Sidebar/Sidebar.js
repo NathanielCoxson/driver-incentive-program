@@ -29,6 +29,7 @@ function Sidebar() {
                         <li><Link to="sponsor_add_user">Add User</Link></li>
                         <li><Link to={`sponsors/${auth?.sponsors[0]?.SponsorName}/catalog`}>Sponsor Catalog</Link></li>
                         <li><Link to="sponsor_report"> Sponsor Report</Link></li>
+                        <li><Link to="view_as">View As </Link></li>
                         <li><Link to="sponsor_messagebox">Message Box</Link></li>
                     </>
                 }
@@ -39,10 +40,11 @@ function Sidebar() {
                         <li><Link to="profile" state={{user: auth}}>Admin Profile</Link></li>
                         <li><Link to="admin_add_user">Add User</Link></li>
                         <li><Link to="admin_report"> Admin Report</Link></li>
-                        <li><Link to="admin_messagebox">Message Box</Link></li>
                         <li><Link to="admin_list">View All Admin</Link></li>
                         <li><Link to="sponsor_list">View All Sponsors</Link></li>
                         <li><Link to="driver_list">View All Drivers</Link></li>
+                        <li><Link to="view_as">View As </Link></li>
+                        <li><Link to="admin_messagebox">Message Box</Link></li>
                     </>
                 }
             </ul>

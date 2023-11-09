@@ -37,6 +37,7 @@ import DriverProfile from '../Profile/DriverProfile';
 import SponsorProfile from '../Profile/SponsorProfile';
 import ViewSponsorList from '../Profile/ViewSponsorList';
 import ViewDriverList from '../Profile/ViewDriverList';
+import SwitchView from '../SwitchView/SwitchView';
 
 function App() {
   return (
@@ -84,6 +85,7 @@ function App() {
                 <Route path="rejection_reason" element={<RejectionReason />} />
                 <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
                 <Route path="sponsor_report" element={<SponsorReport />} />
+                <Route path="view_as" element={<SwitchView />} />
               </Route>
 
               {/* admin */}
@@ -96,6 +98,7 @@ function App() {
                 <Route path="admin_list" element={<ViewAdminList />} />
                 <Route path="sponsor_list" element={<ViewSponsorList />} />
                 <Route path="driver_list" element={<ViewDriverList />} />
+                <Route path="view_as" element={<SwitchView />} />
               </Route>
 
               {/* catch all */}
