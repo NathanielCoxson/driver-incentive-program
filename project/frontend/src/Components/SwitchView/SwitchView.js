@@ -12,8 +12,8 @@ function SwitchView() {
 
     return (
         <>
-            {user?.Role === 'sponsor' && < SponsorView sponsor={user}/>}
-            {user?.Role === 'admin' && < AdminView admin={user}/>}
+            {auth?.Role === 'sponsor' && < SponsorView sponsor={user}/>}
+            {auth?.Role === 'admin' && < AdminView admin={user}/>}
 
         </>
     );
