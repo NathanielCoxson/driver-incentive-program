@@ -3,7 +3,7 @@ import './Report.css';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import ReportResults from './ReportResults';
 
-function AdminSalesReport() {
+function SponsorSalesReport() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [allSponsors, setAllSponsors] = useState(false);
@@ -226,4 +226,4 @@ function AdminSalesReport() {
     );
 }
 
-export default AdminSalesReport;
+export default SponsorSalesReport;
