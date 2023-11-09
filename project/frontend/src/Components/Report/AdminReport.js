@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import './Report.css';
-import SponsorSalesReport from './SponsorSalesReport';
-import DriverSalesReport from './DriverSalesReport';
+import Report from './Report';
 
 
 function AdminReport() {
-    const [type, setType] = useState('sponsor-sales');
+    const [type, setType] = useState('driver-sales');
     const reportTypes = {
-        'sponsor-sales': <SponsorSalesReport />,
-        'driver-sales': <DriverSalesReport />
-    }
+        'sponsor-sales': <Report type="sponsor-sales"/>,
+        'driver-sales': <Report type="driver-sales"/>
+    };
     
     return (
         <section className="hero reports-section">

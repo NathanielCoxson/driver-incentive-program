@@ -1336,7 +1336,35 @@
             "schema": {
               "type": "string"
             },
-            "description": "Username of driver"
+            "description": "Username of driver",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
           }
         ],
         "responses": {

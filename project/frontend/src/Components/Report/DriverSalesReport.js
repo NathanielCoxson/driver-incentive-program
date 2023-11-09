@@ -180,6 +180,17 @@ function DriverSalesReport() {
                 </>
             }
 
+            <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
+            <div className="radio-inline">
+                <input type="radio" name="set5" id="allDriverBox" value="option5-1" />
+                <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
+
+                <input type="radio" name="set5" id="individualDriverBox" value="option5-2" />
+                <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
+            </div>
+            <label htmlFor="indDriverText">Driver Username:</label>
+            <input type="text" id="indDriverText" name="indDriverUser" />
+
             <p>Select View Type</p>
             <div className="radio-inline">
                 <input

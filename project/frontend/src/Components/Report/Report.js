@@ -3,7 +3,8 @@ import './Report.css';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import ReportResults from './ReportResults';
 
-function SponsorSalesReport() {
+function Report (props) {
+    const { type } = props;
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [allSponsors, setAllSponsors] = useState(false);
@@ -13,7 +14,7 @@ function SponsorSalesReport() {
     const [results, setResults] = useState([]);
     const axiosPrivate = useAxiosPrivate();
 
-    const handleSponsorSales = async () => {
+    const handleSponsorSalesSubmit = async () => {
         setResponseMessage('');
         let StartDate = new Date();
         let EndDate = new Date();
@@ -65,7 +66,7 @@ function SponsorSalesReport() {
         }
     };
 
-    const handleDownload = async () => {
+    const handleSponsorSalesDownload = async () => {
         let StartDate = new Date();
         let EndDate = new Date();
         const startDateParts = startDate.split('-');
@@ -118,10 +119,17 @@ function SponsorSalesReport() {
         }
     };
 
+    const eventHandlers = {
+        'sponsor-sales': { submit: handleSponsorSalesSubmit, download: handleSponsorSalesDownload },
+        'driver-sales': {}
+    }
+
     return (
         <div className="sponsorSales report-container">
-            <h2>Sales by Sponsor</h2>
+            { type === 'sponsor-sales' && <h2>Sales by Sponsor</h2> }
+            { type === 'driver-sales' && <h2>Sales by Driver</h2> }
 
+            { /* Date range input */ }
             <p>Select Date Range</p>
             <label htmlFor="startdatepicker">Start Date:</label>
             <input
@@ -139,6 +147,7 @@ function SponsorSalesReport() {
                 min={startDate}
             />
 
+            { /* All sponsors or specific sponsor select */ }
             <p>Generate the report for all sponsors or a specific sponsor?</p>
             <div className="radio-inline">
                 <input
@@ -168,6 +177,7 @@ function SponsorSalesReport() {
                 <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
             </div>
 
+            { /* Specific sponsor name input */ }
             {!allSponsors &&
                 <>
                     <label htmlFor="indSponText">Sponsor Username:</label>
@@ -180,6 +190,21 @@ function SponsorSalesReport() {
                 </>
             }
 
+            { /* Driver Username Input */ }
+            {type === 'driver-sales' && <>
+                <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
+                <div className="radio-inline">
+                    <input type="radio" name="set5" id="allDriverBox" value="option5-1" />
+                    <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
+
+                    <input type="radio" name="set5" id="individualDriverBox" value="option5-2" />
+                    <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
+                </div>
+                <label htmlFor="indDriverText">Driver Username:</label>
+                <input type="text" id="indDriverText" name="indDriverUser" />
+            </>}
+
+            { /* View type select */ }
             <p>Select View Type</p>
             <div className="radio-inline">
                 <input
@@ -209,16 +234,18 @@ function SponsorSalesReport() {
                 <label htmlFor="sumView" className="styled-radio">Summary View</label>
             </div>
 
+            { /* Submit and download buttons */ }
             <div className="row">
                 <div className="column-right">
-                    <button className="cta-button" onClick={handleSponsorSales}>View Sponsor Sales Report</button>
+                    <button className="cta-button" onClick={eventHandlers[type].submit}>View Sponsor Sales Report</button>
                 </div>
                 <div className="column-left">
-                    <button className="cta-button" onClick={handleDownload}>Download CSV</button>
+                    <button className="cta-button" onClick={eventHandlers[type].download}>Download CSV</button>
                 </div>
                 {responseMessage.length > 0 && <div className='response-message'>{responseMessage}</div>}
             </div>
 
+            { /* Resuts */ }
             {results.length > 0 &&
                 <ReportResults allSponsors={allSponsors} results={results} />
             }
@@ -226,4 +253,4 @@ function SponsorSalesReport() {
     );
 }
 
-export default SponsorSalesReport;
+export default Report;
