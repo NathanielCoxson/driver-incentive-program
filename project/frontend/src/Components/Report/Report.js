@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Report.css';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 import ReportResults from './ReportResults';
 
-function Report (props) {
+function Report(props) {
     const { type } = props;
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -12,9 +12,12 @@ function Report (props) {
     const [sponsorName, setSponsorName] = useState('');
     const [responseMessage, setResponseMessage] = useState('');
     const [results, setResults] = useState([]);
+    const [allDrivers, setAllDrivers] = useState(false);
+    const [Username, setUsername] = useState('');
     const axiosPrivate = useAxiosPrivate();
 
     const handleSponsorSalesSubmit = async () => {
+        if (!startDate || !endDate || (!allSponsors && !sponsorName)) return;
         setResponseMessage('');
         let StartDate = new Date();
         let EndDate = new Date();
@@ -67,6 +70,7 @@ function Report (props) {
     };
 
     const handleSponsorSalesDownload = async () => {
+        if (!startDate || !endDate || (!allSponsors && !sponsorName)) return;
         let StartDate = new Date();
         let EndDate = new Date();
         const startDateParts = startDate.split('-');
@@ -119,17 +123,27 @@ function Report (props) {
         }
     };
 
+    const handleDriverSalesSubmit = async () => {
+        console.log('Driver submit');
+    };
+
+    const handleDriverSalesDownload = async () => {
+        console.log('Driver download');
+    };
+
     const eventHandlers = {
         'sponsor-sales': { submit: handleSponsorSalesSubmit, download: handleSponsorSalesDownload },
-        'driver-sales': {}
-    }
+        'driver-sales': {submit: handleDriverSalesSubmit, download: handleDriverSalesDownload },
+    };
+
+    useEffect(() => console.log(Username, allDrivers), [Username, allDrivers]);
 
     return (
         <div className="sponsorSales report-container">
-            { type === 'sponsor-sales' && <h2>Sales by Sponsor</h2> }
-            { type === 'driver-sales' && <h2>Sales by Driver</h2> }
+            {type === 'sponsor-sales' && <h2>Sales by Sponsor</h2>}
+            {type === 'driver-sales' && <h2>Sales by Driver</h2>}
 
-            { /* Date range input */ }
+            { /* Date range input */}
             <p>Select Date Range</p>
             <label htmlFor="startdatepicker">Start Date:</label>
             <input
@@ -147,7 +161,7 @@ function Report (props) {
                 min={startDate}
             />
 
-            { /* All sponsors or specific sponsor select */ }
+            { /* All sponsors or specific sponsor select */}
             <p>Generate the report for all sponsors or a specific sponsor?</p>
             <div className="radio-inline">
                 <input
@@ -177,7 +191,7 @@ function Report (props) {
                 <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
             </div>
 
-            { /* Specific sponsor name input */ }
+            { /* Specific sponsor name input */}
             {!allSponsors &&
                 <>
                     <label htmlFor="indSponText">Sponsor Username:</label>
@@ -190,21 +204,43 @@ function Report (props) {
                 </>
             }
 
-            { /* Driver Username Input */ }
+            { /* Driver Username Input */}
             {type === 'driver-sales' && <>
                 <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
                 <div className="radio-inline">
-                    <input type="radio" name="set5" id="allDriverBox" value="option5-1" />
+                    <input
+                        type="radio"
+                        name="set5"
+                        id="allDriverBox"
+                        value="option5-1"
+                        checked={allDrivers}
+                        onChange={e => setAllDrivers(prev => !prev)}
+                    />
                     <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
 
-                    <input type="radio" name="set5" id="individualDriverBox" value="option5-2" />
+                    <input
+                        type="radio"
+                        name="set5"
+                        id="individualDriverBox"
+                        value="option5-2"
+                        checked={!allDrivers}
+                        onChange={e => setAllDrivers(prev => !prev)}
+                    />
                     <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
                 </div>
-                <label htmlFor="indDriverText">Driver Username:</label>
-                <input type="text" id="indDriverText" name="indDriverUser" />
+
+                {!allDrivers && <>
+                    <label htmlFor="indDriverText">Driver Username:</label>
+                    <input 
+                        type="text" 
+                        id="indDriverText" 
+                        name="indDriverUser" 
+                        onChange={e => setUsername(e.target.value)}
+                    />
+                </>}
             </>}
 
-            { /* View type select */ }
+            { /* View type select */}
             <p>Select View Type</p>
             <div className="radio-inline">
                 <input
@@ -234,10 +270,10 @@ function Report (props) {
                 <label htmlFor="sumView" className="styled-radio">Summary View</label>
             </div>
 
-            { /* Submit and download buttons */ }
+            { /* Submit and download buttons */}
             <div className="row">
                 <div className="column-right">
-                    <button className="cta-button" onClick={eventHandlers[type].submit}>View Sponsor Sales Report</button>
+                    <button className="cta-button" onClick={eventHandlers[type].submit}>Generate Report</button>
                 </div>
                 <div className="column-left">
                     <button className="cta-button" onClick={eventHandlers[type].download}>Download CSV</button>
@@ -245,7 +281,7 @@ function Report (props) {
                 {responseMessage.length > 0 && <div className='response-message'>{responseMessage}</div>}
             </div>
 
-            { /* Resuts */ }
+            { /* Resuts */}
             {results.length > 0 &&
                 <ReportResults allSponsors={allSponsors} results={results} />
             }
