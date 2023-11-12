@@ -1,9 +1,9 @@
 import "./Report.css";
-function ReportResults({ allSponsors, results }) {
-
+function ReportResults(props) {
+    const { allSponsors, allDrivers, results, type } = props;
     return (
         <div>
-            {allSponsors &&
+            {(type === 'sponsor-sales' && allSponsors) &&
                 <table className="report-table">
                     <thead>
                         <tr>
@@ -33,7 +33,7 @@ function ReportResults({ allSponsors, results }) {
                     </tbody>
                 </table>
             }
-            {!allSponsors &&
+            {((!allSponsors && type === 'sponsor-sales') || (!allDrivers && type === 'driver-sales')) &&
                 <table className="report-table">
                     <thead>
                         <tr>

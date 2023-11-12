@@ -38,6 +38,7 @@ function Report(props) {
         EndDate.setUTCMinutes(59);
         EndDate.setUTCSeconds(59);
         EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
+        console.log(EndDate);
 
         if (!startDate || !endDate) {
             setResponseMessage('Missing date range.');
@@ -91,40 +92,111 @@ function Report(props) {
         EndDate.setUTCSeconds(59);
         EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
 
-        if (!allSponsors) {
-            try {
-                const response = await axiosPrivate.get(`reports/sponsors/${sponsorName}/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
-                const blob = response.data;
-                const fileURL =
-                    window.URL.createObjectURL(blob);
-                let alink = document.createElement("a");
-                alink.href = fileURL;
-                alink.download = "report.csv";
-                alink.click();
-            } catch (err) {
-                if (process.env.NODE_ENV === 'development') console.log(err);
-                setResponseMessage("Error downloading report.");
-            }
+        // Construct query string
+        let query = [];
+        if (!allSponsors && sponsorName) query.push(`SponsorName=${sponsorName}`);
+        if (!allDrivers && Username) query.push(`Username=${Username}`);
+        if (StartDate && EndDate) query.push(`StartDate=${StartDate}&EndDate=${EndDate}`);
+        let queryString = query.join('&');
+        console.log(queryString);
+
+        // Make request to server
+        try {
+            const response = await axiosPrivate.get(`reports/sales/download?${queryString}`, {responseType: 'blob'});
+            const blob = response.data;
+            const fileURL = window.URL.createObjectURL(blob);
+            let alink = document.createElement("a");
+            alink.href = fileURL;
+            alink.download = "report.csv";
+            alink.click();
+        } catch (err) {
+            if (process.env.NODE_ENV === 'development') console.log(err);
+            setResponseMessage("Error downloading report.");
         }
-        else {
-            try {
-                const response = await axiosPrivate.get(`reports/sponsors/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
-                const blob = response.data;
-                const fileURL =
-                    window.URL.createObjectURL(blob);
-                let alink = document.createElement("a");
-                alink.href = fileURL;
-                alink.download = "report.csv";
-                alink.click();
-            } catch (err) {
-                if (process.env.NODE_ENV === 'development') console.log(err);
-                setResponseMessage("Error downloading report.");
-            }
-        }
+
+        // if (!allSponsors) {
+        //     try {
+        //         const response = await axiosPrivate.get(`reports/sponsors/${sponsorName}/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
+        //         const blob = response.data;
+        //         const fileURL =
+        //             window.URL.createObjectURL(blob);
+        //         let alink = document.createElement("a");
+        //         alink.href = fileURL;
+        //         alink.download = "report.csv";
+        //         alink.click();
+        //     } catch (err) {
+        //         if (process.env.NODE_ENV === 'development') console.log(err);
+        //         setResponseMessage("Error downloading report.");
+        //     }
+        // }
+        // else {
+        //     try {
+        //         const response = await axiosPrivate.get(`reports/sponsors/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
+        //         const blob = response.data;
+        //         const fileURL =
+        //             window.URL.createObjectURL(blob);
+        //         let alink = document.createElement("a");
+        //         alink.href = fileURL;
+        //         alink.download = "report.csv";
+        //         alink.click();
+        //     } catch (err) {
+        //         if (process.env.NODE_ENV === 'development') console.log(err);
+        //         setResponseMessage("Error downloading report.");
+        //     }
+        // }
     };
 
     const handleDriverSalesSubmit = async () => {
-        console.log('Driver submit');
+        if (!startDate || !endDate || (!allDrivers && !Username)) return;
+        setResponseMessage('');
+        let StartDate = new Date();
+        let EndDate = new Date();
+        const startDateParts = startDate.split('-');
+        const endDateParts = endDate.split('-');
+        StartDate.setUTCFullYear(startDateParts[0]);
+        StartDate.setUTCMonth(startDateParts[1] - 1);
+        StartDate.setUTCDate(Number(startDateParts[2]));
+        StartDate.setUTCHours(0);
+        StartDate.setUTCMinutes(0);
+        StartDate.setUTCSeconds(0);
+        StartDate = StartDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        EndDate.setUTCFullYear(endDateParts[0]);
+        EndDate.setUTCMonth(endDateParts[1] - 1);
+        EndDate.setUTCDate(Number(endDateParts[2]));
+        EndDate.setUTCHours(23);
+        EndDate.setUTCMinutes(59);
+        EndDate.setUTCSeconds(59);
+        EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        if (!startDate || !endDate) {
+            setResponseMessage('Missing date range.');
+            return;
+        }
+        if (allDrivers) {
+            try {
+                const response = await axiosPrivate.get(`/reports/sponsors/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
+                setResults(response?.data?.sponsors);
+            } catch (err) {
+                if (process.env.NODE_ENV === 'development') console.log(err);
+                if (!err?.response) setResponseMessage('No Server Response');
+                if (err?.response.status === 404) setResponseMessage('No sales found.')
+            }
+        }
+        else {
+            if (!Username) {
+                setResponseMessage("Please input a driver name.");
+                return;
+            }
+            try {
+                const response = await axiosPrivate.get(`/reports/drivers/${Username}/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
+                setResults(response?.data?.sales);
+            } catch (err) {
+                if (process.env.NODE_ENV === 'development') console.log(err);
+                if (!err?.response) setResponseMessage('No Server Response');
+                if (err?.response.status === 404) setResponseMessage('No sales found.');
+            }
+        }
     };
 
     const handleDriverSalesDownload = async () => {
@@ -135,8 +207,6 @@ function Report(props) {
         'sponsor-sales': { submit: handleSponsorSalesSubmit, download: handleSponsorSalesDownload },
         'driver-sales': {submit: handleDriverSalesSubmit, download: handleDriverSalesDownload },
     };
-
-    useEffect(() => console.log(Username, allDrivers), [Username, allDrivers]);
 
     return (
         <div className="sponsorSales report-container">
@@ -283,7 +353,7 @@ function Report(props) {
 
             { /* Resuts */}
             {results.length > 0 &&
-                <ReportResults allSponsors={allSponsors} results={results} />
+                <ReportResults allSponsors={allSponsors} allDrivers={allDrivers} results={results} type={type} />
             }
         </div>
     );

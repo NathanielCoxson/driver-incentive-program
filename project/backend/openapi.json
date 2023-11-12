@@ -1327,7 +1327,7 @@
         "tags": [
           "reports"
         ],
-        "summary": "Retrieve a list of all",
+        "summary": "Retrieve a list of all of a driver's sales.",
         "description": "Returns a list of sales for the given driver user.",
         "parameters": [
           {
@@ -1403,6 +1403,162 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "reports/drivers/:Username/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrive a driver's sales as a CSV file.",
+        "description": "Returns a list of sales for the given driver user as a CSV file.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/drivers/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a CSV file of sales for all drivers.",
+        "description": "Returns a CSV file of sales for all drivers.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a CSV file of sales results.",
+        "description": "Returns a CSV file of sales from the given query parameters.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }
