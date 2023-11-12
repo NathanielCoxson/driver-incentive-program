@@ -183,43 +183,85 @@ reports.get('/drivers/:Username/sales/download', async (req, res) => {
     }
 });
 
+reports.get('/sales', async (req, res) => {
+    try {
+        const Username = req.query?.Username;
+        const SponsorName = req.query?.SponsorName;
+        const StartDate = req.query?.StartDate;
+        const EndDate = req.query?.EndDate;
+
+        let allSales = [];
+        if (StartDate && EndDate) allSales = await req.app.locals.db.getSponsorSales(StartDate, EndDate);
+        else allSales = await req.app.locals.db.getAllSales();
+
+        // Flatten into single sales array
+        let sales = [];
+        for (let sponsor of allSales) {
+            for (let sale of sponsor?.sales) {
+                sales.push(sale);
+            }
+        }
+
+        // Filter by Username and or SponsorName
+        if (Username) sales = sales.filter(sale => sale.Username === Username);
+        if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
+
+        // Not found
+        if (sales.length === 0) {
+            res.status(404).send();
+            return;
+        }
+
+        // Success
+        res.status(200).send({ sales });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 reports.get('/sales/download', async (req, res) => {
-    const Username = req.query?.Username;
-    const SponsorName = req.query?.SponsorName;
-    const StartDate = req.query?.StartDate;
-    const EndDate = req.query?.EndDate;
+    try {
+        const Username = req.query?.Username;
+        const SponsorName = req.query?.SponsorName;
+        const StartDate = req.query?.StartDate;
+        const EndDate = req.query?.EndDate;
 
-    let allSales = [];
-    if (StartDate && EndDate) allSales = await req.app.locals.db.getSponsorSales(StartDate, EndDate);
-    else allSales = await req.app.locals.db.getAllSales();
+        let allSales = [];
+        if (StartDate && EndDate) allSales = await req.app.locals.db.getSponsorSales(StartDate, EndDate);
+        else allSales = await req.app.locals.db.getAllSales();
 
-    let sales = [];
-    for (let sponsor of allSales) {
-        for (let sale of sponsor?.sales) {
-            sales.push(sale);
+        let sales = [];
+        for (let sponsor of allSales) {
+            for (let sale of sponsor?.sales) {
+                sales.push(sale);
+            }
         }
-    }
-    
-    if (Username) sales = sales.filter(sale => sale.Username === Username);
-    if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
 
-    // Write file contents
-    let data = 'Username,Points,Item Count,Order Date,Sponsor Name\n';
-    const options = {
-        root: path.join("../backend")
-    };
-    for(let i = 0; i < sales.length; i++) {
-        data += `${sales[i].Username},${sales[i].total},${sales[i].items.length},${sales[i].OrderDate},${sales[i].SponsorName}`;
-        if (i < sales.length-1) data += '\n';
-    }
-    fs.writeFile('./report.csv', data, err => {
-        if (err) {
-            console.log(err);
+        if (Username) sales = sales.filter(sale => sale.Username === Username);
+        if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
+
+        // Write file contents
+        let data = 'Username,Points,Item Count,Order Date,Sponsor Name\n';
+        const options = {
+            root: path.join("../backend")
+        };
+        for (let i = 0; i < sales.length; i++) {
+            data += `${sales[i].Username},${sales[i].total},${sales[i].items.length},${sales[i].OrderDate},${sales[i].SponsorName}`;
+            if (i < sales.length - 1) data += '\n';
         }
-        res.sendFile('report.csv', options, err => {
-            if(err) console.log(err)
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err)
+            });
         });
-    });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 module.exports = reports;

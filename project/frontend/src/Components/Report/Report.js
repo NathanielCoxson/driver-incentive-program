@@ -16,13 +16,12 @@ function Report(props) {
     const [Username, setUsername] = useState('');
     const axiosPrivate = useAxiosPrivate();
 
-    const handleSponsorSalesSubmit = async () => {
-        if (!startDate || !endDate || (!allSponsors && !sponsorName)) return;
-        setResponseMessage('');
+    function getDateRange(start, end) {
         let StartDate = new Date();
         let EndDate = new Date();
-        const startDateParts = startDate.split('-');
-        const endDateParts = endDate.split('-');
+        const startDateParts = start.split('-');
+        const endDateParts = end.split('-');
+
         StartDate.setUTCFullYear(startDateParts[0]);
         StartDate.setUTCMonth(startDateParts[1] - 1);
         StartDate.setUTCDate(Number(startDateParts[2]));
@@ -38,59 +37,32 @@ function Report(props) {
         EndDate.setUTCMinutes(59);
         EndDate.setUTCSeconds(59);
         EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
-        console.log(EndDate);
 
+        return { StartDate, EndDate };
+    }
+
+    function validateForm() {
         if (!startDate || !endDate) {
             setResponseMessage('Missing date range.');
-            return;
+            return false;
         }
-        if (allSponsors) {
-            try {
-                const response = await axiosPrivate.get(`/reports/sponsors/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
-                setResults(response?.data?.sponsors);
-            } catch (err) {
-                if (process.env.NODE_ENV === 'development') console.log(err);
-                if (!err?.response) setResponseMessage('No Server Response');
-                if (err?.response.status === 404) setResponseMessage('No sales found.')
-            }
+        if (!allSponsors && !sponsorName) {
+            setResponseMessage('Missing Sponsor Name');
+            return false;
         }
-        else {
-            if (!sponsorName) {
-                setResponseMessage("Please input a sponsor name.");
-                return;
-            }
-            try {
-                const response = await axiosPrivate.get(`/reports/sponsors/${sponsorName}/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
-                setResults(response?.data?.sales);
-            } catch (err) {
-                if (process.env.NODE_ENV === 'development') console.log(err);
-                if (!err?.response) setResponseMessage('No Server Response');
-                if (err?.response.status === 404) setResponseMessage('No sales found.');
-            }
+        if (type === 'driver-sales' && (!allDrivers && !Username)) {
+            setResponseMessage('Missing Driver Username');
+            return false;
         }
-    };
+        return true;
+    }
 
-    const handleSponsorSalesDownload = async () => {
-        if (!startDate || !endDate || (!allSponsors && !sponsorName)) return;
-        let StartDate = new Date();
-        let EndDate = new Date();
-        const startDateParts = startDate.split('-');
-        const endDateParts = endDate.split('-');
-        StartDate.setUTCFullYear(startDateParts[0]);
-        StartDate.setUTCMonth(startDateParts[1] - 1);
-        StartDate.setUTCDate(Number(startDateParts[2]));
-        StartDate.setUTCHours(0);
-        StartDate.setUTCMinutes(0);
-        StartDate.setUTCSeconds(0);
-        StartDate = StartDate.toISOString().slice(0, 19).replace('T', ' ');
+    const handleSalesSubmit = async () => {
+        if (!validateForm()) return;
+        setResponseMessage('');
+        setResults('');
 
-        EndDate.setUTCFullYear(endDateParts[0]);
-        EndDate.setUTCMonth(endDateParts[1] - 1);
-        EndDate.setUTCDate(Number(endDateParts[2]));
-        EndDate.setUTCHours(23);
-        EndDate.setUTCMinutes(59);
-        EndDate.setUTCSeconds(59);
-        EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
+        const { StartDate, EndDate } = getDateRange(startDate, endDate);
 
         // Construct query string
         let query = [];
@@ -98,7 +70,30 @@ function Report(props) {
         if (!allDrivers && Username) query.push(`Username=${Username}`);
         if (StartDate && EndDate) query.push(`StartDate=${StartDate}&EndDate=${EndDate}`);
         let queryString = query.join('&');
-        console.log(queryString);
+
+        // Make request
+        try {
+            const response = await axiosPrivate.get(`/reports/sales?${queryString}`);
+            setResults(response?.data?.sales);
+        } catch (err) {
+            if (process.env.NODE_ENV === 'development') console.log(err);
+            if (!err?.response) setResponseMessage('No Server Response');
+            if (err?.response.status === 404) setResponseMessage('No sales found.');
+        }
+    };
+
+    const handleSalesDownload = async () => {
+        if (!validateForm()) return;
+        setResponseMessage('');
+
+        const { StartDate, EndDate } = getDateRange(startDate, endDate);
+
+        // Construct query string
+        let query = [];
+        if (!allSponsors && sponsorName) query.push(`SponsorName=${sponsorName}`);
+        if (!allDrivers && Username) query.push(`Username=${Username}`);
+        if (StartDate && EndDate) query.push(`StartDate=${StartDate}&EndDate=${EndDate}`);
+        let queryString = query.join('&');
 
         // Make request to server
         try {
@@ -113,37 +108,6 @@ function Report(props) {
             if (process.env.NODE_ENV === 'development') console.log(err);
             setResponseMessage("Error downloading report.");
         }
-
-        // if (!allSponsors) {
-        //     try {
-        //         const response = await axiosPrivate.get(`reports/sponsors/${sponsorName}/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
-        //         const blob = response.data;
-        //         const fileURL =
-        //             window.URL.createObjectURL(blob);
-        //         let alink = document.createElement("a");
-        //         alink.href = fileURL;
-        //         alink.download = "report.csv";
-        //         alink.click();
-        //     } catch (err) {
-        //         if (process.env.NODE_ENV === 'development') console.log(err);
-        //         setResponseMessage("Error downloading report.");
-        //     }
-        // }
-        // else {
-        //     try {
-        //         const response = await axiosPrivate.get(`reports/sponsors/sales/download?StartDate=${StartDate}&EndDate=${EndDate}`, { responseType: 'blob' });
-        //         const blob = response.data;
-        //         const fileURL =
-        //             window.URL.createObjectURL(blob);
-        //         let alink = document.createElement("a");
-        //         alink.href = fileURL;
-        //         alink.download = "report.csv";
-        //         alink.click();
-        //     } catch (err) {
-        //         if (process.env.NODE_ENV === 'development') console.log(err);
-        //         setResponseMessage("Error downloading report.");
-        //     }
-        // }
     };
 
     const handleDriverSalesSubmit = async () => {
@@ -199,15 +163,6 @@ function Report(props) {
         }
     };
 
-    const handleDriverSalesDownload = async () => {
-        console.log('Driver download');
-    };
-
-    const eventHandlers = {
-        'sponsor-sales': { submit: handleSponsorSalesSubmit, download: handleSponsorSalesDownload },
-        'driver-sales': {submit: handleDriverSalesSubmit, download: handleDriverSalesDownload },
-    };
-
     return (
         <div className="sponsorSales report-container">
             {type === 'sponsor-sales' && <h2>Sales by Sponsor</h2>}
@@ -243,6 +198,7 @@ function Report(props) {
                     onChange={e => {
                         setAllSponsors(prev => !prev);
                         setResults([]);
+                        setSponsorName('');
                     }}
                 />
                 <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
@@ -256,6 +212,7 @@ function Report(props) {
                     onChange={e => {
                         setAllSponsors(prev => !prev);
                         setResults([]);
+                        setSponsorName('');
                     }}
                 />
                 <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
@@ -284,7 +241,10 @@ function Report(props) {
                         id="allDriverBox"
                         value="option5-1"
                         checked={allDrivers}
-                        onChange={e => setAllDrivers(prev => !prev)}
+                        onChange={e => {
+                            setAllDrivers(prev => !prev);
+                            setUsername('');
+                        }}
                     />
                     <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
 
@@ -294,7 +254,10 @@ function Report(props) {
                         id="individualDriverBox"
                         value="option5-2"
                         checked={!allDrivers}
-                        onChange={e => setAllDrivers(prev => !prev)}
+                        onChange={e => {
+                            setAllDrivers(prev => !prev);
+                            setUsername('');
+                        }}
                     />
                     <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
                 </div>
@@ -343,18 +306,16 @@ function Report(props) {
             { /* Submit and download buttons */}
             <div className="row">
                 <div className="column-right">
-                    <button className="cta-button" onClick={eventHandlers[type].submit}>Generate Report</button>
+                    <button className="cta-button" onClick={handleSalesSubmit}>Generate Report</button>
                 </div>
                 <div className="column-left">
-                    <button className="cta-button" onClick={eventHandlers[type].download}>Download CSV</button>
+                    <button className="cta-button" onClick={handleSalesDownload}>Download CSV</button>
                 </div>
                 {responseMessage.length > 0 && <div className='response-message'>{responseMessage}</div>}
             </div>
 
             { /* Resuts */}
-            {results.length > 0 &&
-                <ReportResults allSponsors={allSponsors} allDrivers={allDrivers} results={results} type={type} />
-            }
+            {results.length > 0 && <ReportResults results={results} />}
         </div>
     );
 }
