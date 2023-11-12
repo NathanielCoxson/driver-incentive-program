@@ -1170,12 +1170,47 @@
         }
       }
     },
+    "/reports/sponsors/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Get a CSV file of all sponsor sales.",
+        "description": "Returns a CSV file containing the same data that is returned from /reports/sponsors/sales.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from"
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Sales not found."
+          }
+        }
+      }
+    },
     "/reports/sponsors/:SponsorName/sales": {
       "get": {
         "tags": [
           "reports"
         ],
-        "summary": "Get all sponsor sales.",
+        "summary": "Get all sales for the selected sponsor.",
         "description": "Returns a list of sales for the given sponsor.",
         "operationId": "getSponsorSalesByName",
         "parameters": [
@@ -1240,6 +1275,378 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/reports/sponsors/:SponsorName/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Get a CSV file of the selected sponsor's sales.",
+        "description": "Returns the sames data from /reports/sponsors/:SponsorName/sales but as a CSV file.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the sponsor."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from"
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "404": {
+            "description": "Sales not found"
+          }
+        }
+      }
+    },
+    "reports/drivers/:Username/sales": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a list of all of a driver's sales.",
+        "description": "Returns a list of sales for the given driver user.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sales": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "OID": "544F44D9-8D86-4EB8-A2C6-687519C2FD86",
+                          "SID": "8EE59120-A598-4E99-BBA8-AF5C19F3EE29",
+                          "UID": "544F44D9-A598-4E99-BBA8-AF5C19F3EE29",
+                          "Username": "TestDriver",
+                          "SponsorName": "Test Sponsor",
+                          "ShippingAddress": "100 Example Rd.",
+                          "BillingAddress": "100 Example Rd.",
+                          "OrderDate": "2023-10-31T00:17:08.000Z",
+                          "ArrivalDate": null,
+                          "items": [
+                            {
+                              "itemName": "Toy Story 4",
+                              "itemPrice": 99,
+                              "itemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
+                            }
+                          ],
+                          "total": 99
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reports/drivers/:Username/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrive a driver's sales as a CSV file.",
+        "description": "Returns a list of sales for the given driver user as a CSV file.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/drivers/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a CSV file of sales for all drivers.",
+        "description": "Returns a CSV file of sales for all drivers.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/sales": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a list of selected sales.",
+        "description": "Returns a list of sales for the given query parameters.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "sales": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "OID": "544F44D9-8D86-4EB8-A2C6-687519C2FD86",
+                          "SID": "8EE59120-A598-4E99-BBA8-AF5C19F3EE29",
+                          "UID": "544F44D9-A598-4E99-BBA8-AF5C19F3EE29",
+                          "Username": "TestDriver",
+                          "SponsorName": "Test Sponsor",
+                          "ShippingAddress": "100 Example Rd.",
+                          "BillingAddress": "100 Example Rd.",
+                          "OrderDate": "2023-10-31T00:17:08.000Z",
+                          "ArrivalDate": null,
+                          "items": [
+                            {
+                              "itemName": "Toy Story 4",
+                              "itemPrice": 99,
+                              "itemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
+                            }
+                          ],
+                          "total": 99
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No sales found."
+          }
+        }
+      }
+    },
+    "reports/sales/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a CSV file of sales results.",
+        "description": "Returns a CSV file of sales from the given query parameters.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "Username",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Username of driver",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
           }
         }
       }

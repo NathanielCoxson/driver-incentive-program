@@ -179,66 +179,6 @@ function AdminSponsorsReport() {
                         <a href="#" className="cta-button">Download CSV</a>
                     </div>
                 </div>
-            </div>
-
-            <div className="driverSales">
-                <h2>Sales by Driver</h2>
-
-                <p>Select Date Range</p>
-                <label htmlFor="startdatepicker">Start Date:</label>
-                <input type="date" id="startdatepicker" name="startdatepicker" />
-                <label htmlFor="enddatepicker">End Date:</label>
-                <input type="date" id="enddatepicker" name="enddatepicker" />
-
-                <br />
-                <br />
-
-                <p>Generate the report for all sponsors or a specific sponsor?</p>
-                <div className="radio-inline">
-                    <input type="radio" name="set4" id="allSponBox" value="option4-1" />
-                    <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
-
-                    <input type="radio" name="set4" id="individualSponBox" value="option4-2" />
-                    <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
-                </div>
-
-                <label htmlFor="indSponText">Sponsor Username:</label>
-                <input type="text" id="indSponText" name="indSponsorUser" />
-
-                <br />
-                <br />
-
-                <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
-                <div className="radio-inline">
-                    <input type="radio" name="set5" id="allDriverBox" value="option5-1" />
-                    <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
-
-                    <input type="radio" name="set5" id="individualDriverBox" value="option5-2" />
-                    <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
-                </div>
-                <label htmlFor="indDriverText">Driver Username:</label>
-                <input type="text" id="indDriverText" name="indDriverUser" />
-
-                <br />
-                <br />
-
-                <p>Select View Type</p>
-                <div className="radio-inline">
-                    <input type="radio" name="set6" id="detView" value="option6-1" />
-                    <label htmlFor="detView" className="styled-radio">Detailed View</label>
-
-                    <input type="radio" name="set6" id="sumView" value="option6-2" />
-                    <label htmlFor="sumView" className="styled-radio">Summary View</label>
-                </div>
-
-                <div className="row">
-                    <div className="column-right">
-                        <a href="#" className="cta-button">View Driver Sales Report</a>
-                    </div>
-                    <div className="column-left">
-                        <a href="#" className="cta-button">Download CSV</a>
-                    </div>
-                </div>
             </div> */}
 
             <div className="sponsorSales">
