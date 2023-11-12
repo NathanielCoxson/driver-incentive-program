@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './Report.css';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
-import ReportResults from './ReportResults';
 
-function Report(props) {
-    const { type } = props;
+function SalesReport() {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [allSponsors, setAllSponsors] = useState(false);
@@ -50,7 +48,7 @@ function Report(props) {
             setResponseMessage('Missing Sponsor Name');
             return false;
         }
-        if (type === 'driver-sales' && (!allDrivers && !Username)) {
+        if (!allDrivers && !Username) {
             setResponseMessage('Missing Driver Username');
             return false;
         }
@@ -110,63 +108,9 @@ function Report(props) {
         }
     };
 
-    const handleDriverSalesSubmit = async () => {
-        if (!startDate || !endDate || (!allDrivers && !Username)) return;
-        setResponseMessage('');
-        let StartDate = new Date();
-        let EndDate = new Date();
-        const startDateParts = startDate.split('-');
-        const endDateParts = endDate.split('-');
-        StartDate.setUTCFullYear(startDateParts[0]);
-        StartDate.setUTCMonth(startDateParts[1] - 1);
-        StartDate.setUTCDate(Number(startDateParts[2]));
-        StartDate.setUTCHours(0);
-        StartDate.setUTCMinutes(0);
-        StartDate.setUTCSeconds(0);
-        StartDate = StartDate.toISOString().slice(0, 19).replace('T', ' ');
-
-        EndDate.setUTCFullYear(endDateParts[0]);
-        EndDate.setUTCMonth(endDateParts[1] - 1);
-        EndDate.setUTCDate(Number(endDateParts[2]));
-        EndDate.setUTCHours(23);
-        EndDate.setUTCMinutes(59);
-        EndDate.setUTCSeconds(59);
-        EndDate = EndDate.toISOString().slice(0, 19).replace('T', ' ');
-
-        if (!startDate || !endDate) {
-            setResponseMessage('Missing date range.');
-            return;
-        }
-        if (allDrivers) {
-            try {
-                const response = await axiosPrivate.get(`/reports/sponsors/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
-                setResults(response?.data?.sponsors);
-            } catch (err) {
-                if (process.env.NODE_ENV === 'development') console.log(err);
-                if (!err?.response) setResponseMessage('No Server Response');
-                if (err?.response.status === 404) setResponseMessage('No sales found.')
-            }
-        }
-        else {
-            if (!Username) {
-                setResponseMessage("Please input a driver name.");
-                return;
-            }
-            try {
-                const response = await axiosPrivate.get(`/reports/drivers/${Username}/sales?StartDate=${StartDate}&EndDate=${EndDate}`);
-                setResults(response?.data?.sales);
-            } catch (err) {
-                if (process.env.NODE_ENV === 'development') console.log(err);
-                if (!err?.response) setResponseMessage('No Server Response');
-                if (err?.response.status === 404) setResponseMessage('No sales found.');
-            }
-        }
-    };
-
     return (
         <div className="sponsorSales report-container">
-            {type === 'sponsor-sales' && <h2>Sales by Sponsor</h2>}
-            {type === 'driver-sales' && <h2>Sales by Driver</h2>}
+            <h2>Sales Report</h2>
 
             { /* Date range input */}
             <p>Select Date Range</p>
@@ -232,45 +176,43 @@ function Report(props) {
             }
 
             { /* Driver Username Input */}
-            {type === 'driver-sales' && <>
-                <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
-                <div className="radio-inline">
-                    <input
-                        type="radio"
-                        name="set5"
-                        id="allDriverBox"
-                        value="option5-1"
-                        checked={allDrivers}
-                        onChange={e => {
-                            setAllDrivers(prev => !prev);
-                            setUsername('');
-                        }}
-                    />
-                    <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
+            <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
+            <div className="radio-inline">
+                <input
+                    type="radio"
+                    name="set5"
+                    id="allDriverBox"
+                    value="option5-1"
+                    checked={allDrivers}
+                    onChange={e => {
+                        setAllDrivers(prev => !prev);
+                        setUsername('');
+                    }}
+                />
+                <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
 
-                    <input
-                        type="radio"
-                        name="set5"
-                        id="individualDriverBox"
-                        value="option5-2"
-                        checked={!allDrivers}
-                        onChange={e => {
-                            setAllDrivers(prev => !prev);
-                            setUsername('');
-                        }}
-                    />
-                    <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
-                </div>
+                <input
+                    type="radio"
+                    name="set5"
+                    id="individualDriverBox"
+                    value="option5-2"
+                    checked={!allDrivers}
+                    onChange={e => {
+                        setAllDrivers(prev => !prev);
+                        setUsername('');
+                    }}
+                />
+                <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
+            </div>
 
-                {!allDrivers && <>
-                    <label htmlFor="indDriverText">Driver Username:</label>
-                    <input 
-                        type="text" 
-                        id="indDriverText" 
-                        name="indDriverUser" 
-                        onChange={e => setUsername(e.target.value)}
-                    />
-                </>}
+            {!allDrivers && <>
+                <label htmlFor="indDriverText">Driver Username:</label>
+                <input
+                    type="text"
+                    id="indDriverText"
+                    name="indDriverUser"
+                    onChange={e => setUsername(e.target.value)}
+                />
             </>}
 
             { /* View type select */}
@@ -315,9 +257,34 @@ function Report(props) {
             </div>
 
             { /* Resuts */}
-            {results.length > 0 && <ReportResults results={results} />}
+            {results.length > 0 && <>
+                <table className="report-table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Points</th>
+                            <th>Item Count</th>
+                            <th>Order Date</th>
+                            <th>Sponsor Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {results.map(result => {
+                            return (
+                                <tr key={result.OID}>
+                                    <td>{result.Username}</td>
+                                    <td>{result.total}</td>
+                                    <td>{result.items?.length}</td>
+                                    <td>{result.OrderDate}</td>
+                                    <td>{result.SponsorName}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </>}
         </div>
     );
 }
 
-export default Report;
+export default SalesReport;
