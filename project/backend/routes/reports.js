@@ -285,7 +285,7 @@ reports.get('/invoices/download', async (req, res) => {
         if (Username) sales = sales.filter(sale => sale.Username === Username);
         if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
 
-        // TODO Change CSV output to match invoices rather than sales.
+        // TODO Write lines to the invoice CSV file where each line represents an item in an order.
         // Write file contents
         let data = 'Username,Sponsor Name,Item Name,Points,Total\n';
         const options = {
