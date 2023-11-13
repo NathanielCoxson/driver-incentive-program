@@ -1307,6 +1307,7 @@ async function getAllAdmin() {
 
 /**
  * Returns a list of all sponsor objects including a list of each of their sales.
+ * Sorted by date range.
  */
 async function getSponsorSales(StartDate, EndDate) {
     try {
@@ -1319,7 +1320,9 @@ async function getSponsorSales(StartDate, EndDate) {
             await transaction.begin();
 
             let sponsors = await new sql.Request(transaction)
-                .query("SELECT * FROM Sponsors");
+                .query("SELECT SponsorName, Sponsors.SID, Catalogs.ConversionRate \
+                        FROM Sponsors \
+                        JOIN Catalogs ON Catalogs.SID = Sponsors.SID");
             if (!sponsors) throw new Error("Error retrieving sponsors.");
 
             for (let sponsor of sponsors.recordset) {
@@ -1349,7 +1352,12 @@ async function getSponsorSales(StartDate, EndDate) {
                     let items = await new sql.Request(transaction)
                         .input("OID", sql.UniqueIdentifier, order.OID)
                         .query("SELECT * FROM OrderLines WHERE OID = @OID");
-                    sales.push({ ...order, items: items.recordset, total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) });
+                    sales.push({ 
+                        ...order, 
+                        items: items.recordset, 
+                        total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0),
+                        ConversionRate: sponsor.ConversionRate,
+                    });
                 }
                 result.push({ SponsorName: sponsor.SponsorName, sales });
             }
@@ -1380,7 +1388,9 @@ async function getAllSales() {
             await transaction.begin();
 
             let sponsors = await new sql.Request(transaction)
-                .query("SELECT * FROM Sponsors");
+                .query("SELECT SponsorName, Sponsors.SID, Catalogs.ConversionRate \
+                        FROM Sponsors \
+                        JOIN Catalogs ON Catalogs.SID = Sponsors.SID");
             if (!sponsors) throw new Error("Error retrieving sponsors.");
 
             for (let sponsor of sponsors.recordset) {
@@ -1397,18 +1407,25 @@ async function getAllSales() {
                                 OrderDate, \
                                 ArrivalDate, \
                                 Users.Username \
+                                Catalogs.ConversionRate \
                             FROM Orders \
                             JOIN Sponsors ON Orders.SID = Sponsors.SID \
+                            JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
                             JOIN Users ON Users.UID = Orders.UID \
                             WHERE Sponsors.SID = @SID");
                 if (!orders) throw new Error("Error retrieving orders.");
                 orders = orders.recordset;
+                console.log(orders);
 
                 for (let order of orders) {
                     let items = await new sql.Request(transaction)
                         .input("OID", sql.UniqueIdentifier, order.OID)
                         .query("SELECT * FROM OrderLines WHERE OID = @OID");
-                    sales.push({ ...order, items: items.recordset, total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) });
+                    sales.push({ 
+                        ...order, 
+                        items: items.recordset, 
+                        total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) 
+                    });
                 }
                 result.push({ SponsorName: sponsor.SponsorName, sales });
             }
@@ -1418,7 +1435,6 @@ async function getAllSales() {
             await transaction.rollback();
             throw err;
         }
-
         return result;
     } catch (err) {
         console.log(err);
@@ -1437,8 +1453,12 @@ async function getSponsorSalesByName(SponsorName, StartDate, EndDate) {
 
             let sponsor = await new sql.Request(transaction)
                 .input("SponsorName", sql.VarChar(50), SponsorName)
-                .query("SELECT * FROM Sponsors WHERE SponsorName = @SponsorName");
+                .query("SELECT * \
+                        FROM Sponsors \
+                        JOIN Catalogs ON Catalogs.SID = Sponsors.SID \
+                        WHERE SponsorName = @SponsorName");
             sponsor = sponsor.recordset[0];
+            let ConversionRate = sponsor.ConversionRate;
             if (!sponsor) throw new Error("Error retrieving sponsor.");
 
             let sales = [];
@@ -1467,7 +1487,12 @@ async function getSponsorSalesByName(SponsorName, StartDate, EndDate) {
                 let items = await new sql.Request(transaction)
                     .input("OID", sql.UniqueIdentifier, order.OID)
                     .query("SELECT * FROM OrderLines WHERE OID = @OID");
-                sales.push({ ...order, items: items.recordset, total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0) });
+                sales.push({ 
+                    ...order, 
+                    items: items.recordset, 
+                    total: items.recordset.reduce((acc, curr) => acc += curr.ItemCost, 0),
+                    ConversionRate: ConversionRate,
+                });
             }
 
             await transaction.commit();

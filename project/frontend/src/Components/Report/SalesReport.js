@@ -13,6 +13,7 @@ function SalesReport({ type }) {
     const [allDrivers, setAllDrivers] = useState(false);
     const [Username, setUsername] = useState('');
     const [sponsorInvoiceResults, setSponsorInvoiceResults] = useState([]);
+    const [conversionRate, setConversionRate] = useState(0.01);
     const axiosPrivate = useAxiosPrivate();
 
     function getDateRange(start, end) {
@@ -74,12 +75,13 @@ function SalesReport({ type }) {
 
         // Make request
         try {
-            const response = await axiosPrivate.get(`/reports/sales?${queryString}`);
+            let response = await axiosPrivate.get(`/reports/sales?${queryString}`);
             setResults(response?.data?.sales);
         } catch (err) {
             if (process.env.NODE_ENV === 'development') console.log(err);
             if (!err?.response) setResponseMessage('No Server Response');
             if (err?.response.status === 404) setResponseMessage('No sales found.');
+            if (err?.response.status === 500) setResponseMessage('Sever Error');
         }
     };
 
@@ -140,8 +142,8 @@ function SalesReport({ type }) {
     }, [type]);
 
     useEffect(() => {
-        console.log(sponsorInvoiceResults);
-    }, [sponsorInvoiceResults])
+        console.log(results);
+    }, [results])
 
     return (
         <div className="sales-report-container report-container">
