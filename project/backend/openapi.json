@@ -292,7 +292,7 @@
         }
       }
     },
-    "/users/{Username}": {
+    "/users/:Username": {
       "get": {
         "tags": [
           "users"
@@ -482,7 +482,7 @@
         }
       }
     },
-    "/sponsors/{SponsorName}": {
+    "/sponsors/:SponsorName": {
       "get": {
         "tags": [
           "sponsors"
@@ -517,6 +517,14 @@
                         "SID": {
                           "type": "string",
                           "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
+                        },
+                        "CID": {
+                          "type": "string",
+                          "example": "2F005544-62B3-4E95-BA6F-664CA466183C"
+                        },
+                        "conversionRate": {
+                          "type": "float",
+                          "example": 0.01
                         }
                       }
                     }
@@ -655,7 +663,7 @@
         }
       }
     },
-    "/applications/users/{Username}": {
+    "/applications/users/:Username": {
       "get": {
         "tags": [
           "applications"

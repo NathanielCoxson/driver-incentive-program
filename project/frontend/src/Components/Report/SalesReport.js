@@ -12,7 +12,7 @@ function SalesReport({ type }) {
     const [results, setResults] = useState([]);
     const [allDrivers, setAllDrivers] = useState(false);
     const [Username, setUsername] = useState('');
-    const [sponsors, setSponsors] = useState([]);
+    const [sponsorInvoiceResults, setSponsorInvoiceResults] = useState([]);
     const axiosPrivate = useAxiosPrivate();
 
     function getDateRange(start, end) {
@@ -40,7 +40,7 @@ function SalesReport({ type }) {
         return { StartDate, EndDate };
     }
 
-    useEffect(() => setSponsors([]), []);
+    useEffect(() => setSponsorInvoiceResults([]), []);
 
     function validateForm() {
         if (!startDate || !endDate) {
@@ -76,7 +76,6 @@ function SalesReport({ type }) {
         try {
             const response = await axiosPrivate.get(`/reports/sales?${queryString}`);
             setResults(response?.data?.sales);
-            console.log(response.data.sales);
         } catch (err) {
             if (process.env.NODE_ENV === 'development') console.log(err);
             if (!err?.response) setResponseMessage('No Server Response');
@@ -132,10 +131,17 @@ function SalesReport({ type }) {
             }
             sponsors.set(sponsor[0], Array.from(drivers, ([Username, sales]) => ({ Username, sales })));
         }
-        setSponsors(Array.from(sponsors, ([SponsorName, drivers]) => ({SponsorName, drivers})));
-    }, [results, type])
+        setSponsorInvoiceResults(Array.from(sponsors, ([SponsorName, drivers]) => ({SponsorName, drivers})));
+    }, [results, type]);
 
-    useEffect(() => console.log(sponsors), [sponsors]);
+    useEffect(() => {
+        setResults([]);
+        setSponsorInvoiceResults([]);
+    }, [type]);
+
+    useEffect(() => {
+        console.log(sponsorInvoiceResults);
+    }, [sponsorInvoiceResults])
 
     return (
         <div className="sales-report-container report-container">
@@ -317,17 +323,21 @@ function SalesReport({ type }) {
                     </tbody>
                 </table>
             </>}
-            {[sponsors.length > 0 && type === 'invoice'] && <div className='invoice-container'>
+            {[sponsorInvoiceResults.length > 0 && type === 'invoice'] && <div className='invoice-container'>
                 <ul>
-                {sponsors.map(sponsor => {
+                {sponsorInvoiceResults.map(sponsor => {
                     return (<>
-                        <li>{sponsor.SponsorName}</li>
+                        <li key={sponsor.SponsorName + '-invoice-results'}>{sponsor.SponsorName}</li>
                         <ul>
                             {sponsor.drivers.map(driver => {
                                 return (<>
-                                    <li>{driver.Username}</li>
+                                    <li key={driver.Username + '-invoice-lines'}>{driver.Username}</li>
                                     <ul>
-                                        {driver.sales.map(sale => <li>{sale.OID}</li>)}
+                                        {driver.sales.map(sale => {
+                                            return (<li key={sale.OID + '-invoice-result'}>
+                                                {sale.items.length} {sale.total}
+                                            </li>)
+                                        })}
                                     </ul>
                                 </>)
                             })}
