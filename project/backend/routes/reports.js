@@ -285,24 +285,25 @@ reports.get('/invoices/download', async (req, res) => {
         if (Username) sales = sales.filter(sale => sale.Username === Username);
         if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
 
-        // TODO Change CSV output to match invoices rather than sales reports.
+        // TODO Change CSV output to match invoices rather than sales.
         // Write file contents
-        let data = 'Username,Points,Item Count,Order Date,Sponsor Name\n';
+        let data = 'Username,Sponsor Name,Item Name,Points,Total\n';
         const options = {
             root: path.join("../backend")
         };
-        for (let i = 0; i < sales.length; i++) {
-            data += `${sales[i].Username},${sales[i].total},${sales[i].items.length},${sales[i].OrderDate},${sales[i].SponsorName}`;
-            if (i < sales.length - 1) data += '\n';
-        }
-        fs.writeFile('./report.csv', data, err => {
-            if (err) {
-                console.log(err);
-            }
-            res.sendFile('report.csv', options, err => {
-                if (err) console.log(err)
-            });
-        });
+        // for (let i = 0; i < sales.length; i++) {
+        //     data += `${sales[i].Username},${sales[i].total},${sales[i].items.length},${sales[i].OrderDate},${sales[i].SponsorName}`;
+        //     if (i < sales.length - 1) data += '\n';
+        // }
+        // fs.writeFile('./report.csv', data, err => {
+        //     if (err) {
+        //         console.log(err);
+        //     }
+        //     res.sendFile('report.csv', options, err => {
+        //         if (err) console.log(err)
+        //     });
+        // });
+        res.status(200).send({ sales });
     } catch (err) {
         console.log(err);
         res.status(500).send();

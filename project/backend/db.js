@@ -1406,7 +1406,7 @@ async function getAllSales() {
                                 BillingAddress, \
                                 OrderDate, \
                                 ArrivalDate, \
-                                Users.Username \
+                                Users.Username, \
                                 Catalogs.ConversionRate \
                             FROM Orders \
                             JOIN Sponsors ON Orders.SID = Sponsors.SID \
