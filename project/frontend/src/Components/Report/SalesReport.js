@@ -13,7 +13,6 @@ function SalesReport({ type }) {
     const [allDrivers, setAllDrivers] = useState(false);
     const [Username, setUsername] = useState('');
     const [sponsorInvoiceResults, setSponsorInvoiceResults] = useState([]);
-    const [conversionRate, setConversionRate] = useState(0.01);
     const axiosPrivate = useAxiosPrivate();
 
     function getDateRange(start, end) {
@@ -141,9 +140,7 @@ function SalesReport({ type }) {
         setSponsorInvoiceResults([]);
     }, [type]);
 
-    useEffect(() => {
-        console.log(results);
-    }, [results])
+    useEffect(() => console.log(sponsorInvoiceResults), [sponsorInvoiceResults])
 
     return (
         <div className="sales-report-container report-container">
@@ -325,27 +322,50 @@ function SalesReport({ type }) {
                     </tbody>
                 </table>
             </>}
-            {[sponsorInvoiceResults.length > 0 && type === 'invoice'] && <div className='invoice-container'>
+            {(sponsorInvoiceResults.length > 0 && type === 'invoice') && <div className='invoice-container'>
                 <ul>
-                {sponsorInvoiceResults.map(sponsor => {
-                    return (<>
-                        <li key={sponsor.SponsorName + '-invoice-results'}>{sponsor.SponsorName}</li>
-                        <ul>
-                            {sponsor.drivers.map(driver => {
-                                return (<>
-                                    <li key={driver.Username + '-invoice-lines'}>{driver.Username}</li>
-                                    <ul>
-                                        {driver.sales.map(sale => {
-                                            return (<li key={sale.OID + '-invoice-result'}>
-                                                {sale.items.length} {sale.total}
-                                            </li>)
-                                        })}
-                                    </ul>
-                                </>)
-                            })}
-                        </ul>
-                    </>)
-                })}
+                    {sponsorInvoiceResults.map(sponsor => {
+                        return (<>
+                            <li key={sponsor.SponsorName + '-invoice-results'}>{sponsor.SponsorName} Total: ${sponsor.drivers.reduce((acc, driver) => {
+                                return driver.sales.reduce((acc, sale) => {
+                                    return acc + sale.total * sale.ConversionRate}
+                                , 0)
+                            }, 0)}</li>
+                            <ul>
+                                {sponsor.drivers.map(driver => {
+                                    return (<>
+                                        <li key={driver.Username + '-invoice-lines'}>{driver.Username} Total: ${driver.sales.reduce((acc, curr) => {
+                                            return acc + curr.total * curr.ConversionRate
+                                        }, 0)}
+                                        </li>
+                                        <ul>
+                                            {driver.sales.map(sale => {
+                                                return (<>
+                                                    <li key={sale.OID + '-invoice-result'}>
+                                                        Item Count: {sale.items.length}, {sale.total} Points, ${parseFloat(sale.ConversionRate * sale.total).toFixed(2)}
+                                                    </li>
+                                                    <ul>
+                                                        {sale.items.map(item => {
+                                                            return (<li key={sale.OID + 'item-' + item.Itemname}>
+                                                                Name: {item.ItemName}, Points: {item.ItemCost}, ${parseFloat(item.ItemCost * sale.ConversionRate).toFixed(2)}
+                                                            </li>)
+                                                        })}
+                                                    </ul>
+                                                </>)
+                                            })}
+                                        </ul>
+                                    </>)
+                                })}
+                            </ul>
+                        </>)
+                    })}
+                    <li>Total: ${
+                        sponsorInvoiceResults.reduce((acc, sponsor) => {
+                            return acc + sponsor.drivers.reduce((acc, driver) => {
+                                return acc + driver.sales.reduce((acc, sale) => acc + sale.total * sale.ConversionRate, 0)
+                            }, 0)
+                        }, 0)
+                    }</li>
                 </ul>
             </div>}
         </div>
