@@ -1659,6 +1659,49 @@
           }
         }
       }
+    },
+    "reports/invoices/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a CSV file of invoice results.",
+        "description": "Returns a CSV file of invoice results from the given query parameters.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {

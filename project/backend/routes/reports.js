@@ -264,4 +264,49 @@ reports.get('/sales/download', async (req, res) => {
     }
 });
 
+reports.get('/invoices/download', async (req, res) => {
+    try {
+        const Username = req.query?.Username;
+        const SponsorName = req.query?.SponsorName;
+        const StartDate = req.query?.StartDate;
+        const EndDate = req.query?.EndDate;
+
+        let allSales = [];
+        if (StartDate && EndDate) allSales = await req.app.locals.db.getSponsorSales(StartDate, EndDate);
+        else allSales = await req.app.locals.db.getAllSales();
+
+        let sales = [];
+        for (let sponsor of allSales) {
+            for (let sale of sponsor?.sales) {
+                sales.push(sale);
+            }
+        }
+
+        if (Username) sales = sales.filter(sale => sale.Username === Username);
+        if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
+
+        // TODO Change CSV output to match invoices rather than sales reports.
+        // Write file contents
+        let data = 'Username,Points,Item Count,Order Date,Sponsor Name\n';
+        const options = {
+            root: path.join("../backend")
+        };
+        for (let i = 0; i < sales.length; i++) {
+            data += `${sales[i].Username},${sales[i].total},${sales[i].items.length},${sales[i].OrderDate},${sales[i].SponsorName}`;
+            if (i < sales.length - 1) data += '\n';
+        }
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err)
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 module.exports = reports;
