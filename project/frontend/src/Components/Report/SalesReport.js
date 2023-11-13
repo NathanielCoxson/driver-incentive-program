@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Report.css';
 import useAxiosPrivate from '../../hooks/useAxiosPrivate';
 
-function SalesReport() {
+function SalesReport({ type }) {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [allSponsors, setAllSponsors] = useState(false);
@@ -12,6 +12,7 @@ function SalesReport() {
     const [results, setResults] = useState([]);
     const [allDrivers, setAllDrivers] = useState(false);
     const [Username, setUsername] = useState('');
+    const [sponsors, setSponsors] = useState([]);
     const axiosPrivate = useAxiosPrivate();
 
     function getDateRange(start, end) {
@@ -39,6 +40,8 @@ function SalesReport() {
         return { StartDate, EndDate };
     }
 
+    useEffect(() => setSponsors([]), []);
+
     function validateForm() {
         if (!startDate || !endDate) {
             setResponseMessage('Missing date range.');
@@ -48,7 +51,7 @@ function SalesReport() {
             setResponseMessage('Missing Sponsor Name');
             return false;
         }
-        if (!allDrivers && !Username) {
+        if (type === 'sales' && !allDrivers && !Username) {
             setResponseMessage('Missing Driver Username');
             return false;
         }
@@ -73,6 +76,7 @@ function SalesReport() {
         try {
             const response = await axiosPrivate.get(`/reports/sales?${queryString}`);
             setResults(response?.data?.sales);
+            console.log(response.data.sales);
         } catch (err) {
             if (process.env.NODE_ENV === 'development') console.log(err);
             if (!err?.response) setResponseMessage('No Server Response');
@@ -108,9 +112,35 @@ function SalesReport() {
         }
     };
 
+    useEffect(() => {
+        if (type !== 'invoice') return;
+
+        let sponsors = new Map();
+        let drivers = new Map();
+        for (let sale of results) {
+            if (sponsors.has(sale.SponsorName)) sponsors.set(sale.SponsorName, [...sponsors.get(sale.SponsorName), sale]);
+            else sponsors.set(sale.SponsorName, [sale]);
+
+            if (drivers.has(sale.Username)) drivers.set(sale.Username, [...drivers.get(sale.Username), sale]);
+            else drivers.set(sale.Username, [sale]);
+        }
+        for (let sponsor of sponsors) {
+            let drivers = new Map();
+            for (let sale of sponsor[1]) {
+                if (drivers.has(sale.Username)) drivers.set(sale.Username, [...drivers.get(sale.Username), sale]);
+                else drivers.set(sale.Username, [sale]);
+            }
+            sponsors.set(sponsor[0], Array.from(drivers, ([Username, sales]) => ({ Username, sales })));
+        }
+        setSponsors(Array.from(sponsors, ([SponsorName, drivers]) => ({SponsorName, drivers})));
+    }, [results, type])
+
+    useEffect(() => console.log(sponsors), [sponsors]);
+
     return (
-        <div className="sponsorSales report-container">
-            <h2>Sales Report</h2>
+        <div className="sales-report-container report-container">
+            {type === 'sales' && <h2>Sales Report</h2>}
+            {type === 'invoice' && <h2>Sponsor Invoice</h2>}
 
             { /* Date range input */}
             <p>Select Date Range</p>
@@ -176,75 +206,79 @@ function SalesReport() {
             }
 
             { /* Driver Username Input */}
-            <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
-            <div className="radio-inline">
-                <input
-                    type="radio"
-                    name="set5"
-                    id="allDriverBox"
-                    value="option5-1"
-                    checked={allDrivers}
-                    onChange={e => {
-                        setAllDrivers(prev => !prev);
-                        setUsername('');
-                    }}
-                />
-                <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
+            {type === 'sales' && <>
+                <p>Generate the report for all drivers associated with this sponsor or a specific driver?</p>
+                <div className="radio-inline">
+                    <input
+                        type="radio"
+                        name="set5"
+                        id="allDriverBox"
+                        value="option5-1"
+                        checked={allDrivers}
+                        onChange={e => {
+                            setAllDrivers(prev => !prev);
+                            setUsername('');
+                        }}
+                    />
+                    <label htmlFor="allDriverBox" className="styled-radio">All Drivers</label>
 
-                <input
-                    type="radio"
-                    name="set5"
-                    id="individualDriverBox"
-                    value="option5-2"
-                    checked={!allDrivers}
-                    onChange={e => {
-                        setAllDrivers(prev => !prev);
-                        setUsername('');
-                    }}
-                />
-                <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
-            </div>
+                    <input
+                        type="radio"
+                        name="set5"
+                        id="individualDriverBox"
+                        value="option5-2"
+                        checked={!allDrivers}
+                        onChange={e => {
+                            setAllDrivers(prev => !prev);
+                            setUsername('');
+                        }}
+                    />
+                    <label htmlFor="individualDriverBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
+                </div>
 
-            {!allDrivers && <>
-                <label htmlFor="indDriverText">Driver Username:</label>
-                <input
-                    type="text"
-                    id="indDriverText"
-                    name="indDriverUser"
-                    onChange={e => setUsername(e.target.value)}
-                />
+                {!allDrivers && <>
+                    <label htmlFor="indDriverText">Driver Username:</label>
+                    <input
+                        type="text"
+                        id="indDriverText"
+                        name="indDriverUser"
+                        onChange={e => setUsername(e.target.value)}
+                    />
+                </>}
             </>}
-
+            
             { /* View type select */}
-            <p>Select View Type</p>
-            <div className="radio-inline">
-                <input
-                    type="radio"
-                    name="set8"
-                    id="detView"
-                    value="option8-1"
-                    checked={detailedView}
-                    onChange={e => {
-                        setDetailedView(prev => !prev);
-                        setResults([]);
-                    }}
-                />
-                <label htmlFor="detView" className="styled-radio">Detailed View</label>
+            {type === 'sales' && <>
+                <p>Select View Type</p>
+                <div className="radio-inline">
+                    <input
+                        type="radio"
+                        name="set8"
+                        id="detView"
+                        value="option8-1"
+                        checked={detailedView}
+                        onChange={e => {
+                            setDetailedView(prev => !prev);
+                            setResults([]);
+                        }}
+                    />
+                    <label htmlFor="detView" className="styled-radio">Detailed View</label>
 
-                <input
-                    type="radio"
-                    name="set8"
-                    id="sumView"
-                    value="option8-2"
-                    checked={!detailedView}
-                    onChange={e => {
-                        setDetailedView(prev => !prev);
-                        setResults([]);
-                    }}
-                />
-                <label htmlFor="sumView" className="styled-radio">Summary View</label>
-            </div>
-
+                    <input
+                        type="radio"
+                        name="set8"
+                        id="sumView"
+                        value="option8-2"
+                        checked={!detailedView}
+                        onChange={e => {
+                            setDetailedView(prev => !prev);
+                            setResults([]);
+                        }}
+                    />
+                    <label htmlFor="sumView" className="styled-radio">Summary View</label>
+                </div>
+            </>}
+            
             { /* Submit and download buttons */}
             <div className="row">
                 <div className="column-right">
@@ -257,7 +291,7 @@ function SalesReport() {
             </div>
 
             { /* Resuts */}
-            {results.length > 0 && <>
+            {(results.length > 0 && type === 'sales') && <>
                 <table className="report-table">
                     <thead>
                         <tr>
@@ -283,6 +317,25 @@ function SalesReport() {
                     </tbody>
                 </table>
             </>}
+            {[sponsors.length > 0 && type === 'invoice'] && <div className='invoice-container'>
+                <ul>
+                {sponsors.map(sponsor => {
+                    return (<>
+                        <li>{sponsor.SponsorName}</li>
+                        <ul>
+                            {sponsor.drivers.map(driver => {
+                                return (<>
+                                    <li>{driver.Username}</li>
+                                    <ul>
+                                        {driver.sales.map(sale => <li>{sale.OID}</li>)}
+                                    </ul>
+                                </>)
+                            })}
+                        </ul>
+                    </>)
+                })}
+                </ul>
+            </div>}
         </div>
     );
 }
