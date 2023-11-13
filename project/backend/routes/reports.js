@@ -285,25 +285,31 @@ reports.get('/invoices/download', async (req, res) => {
         if (Username) sales = sales.filter(sale => sale.Username === Username);
         if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
 
-        // TODO Write lines to the invoice CSV file where each line represents an item in an order.
         // Write file contents
         let data = 'Username,Sponsor Name,Item Name,Points,Total\n';
+        sales.forEach((sale, i) => {
+            let Username = sale.Username;
+            let SponsorName = sale.SponsorName;
+            let ConversionRate = sale.ConversionRate;
+            sale.items.forEach((item, j) => {
+                let row = `${Username},${SponsorName},${item.ItemName},${item.ItemCost},${parseFloat(item.ItemCost * ConversionRate).toFixed(2)}`;
+                if (i < sales.length - 1 || j < sale.items.length - 1) row += '\n';
+                data += row;
+            });
+        });
+
+        // Send file
         const options = {
             root: path.join("../backend")
         };
-        // for (let i = 0; i < sales.length; i++) {
-        //     data += `${sales[i].Username},${sales[i].total},${sales[i].items.length},${sales[i].OrderDate},${sales[i].SponsorName}`;
-        //     if (i < sales.length - 1) data += '\n';
-        // }
-        // fs.writeFile('./report.csv', data, err => {
-        //     if (err) {
-        //         console.log(err);
-        //     }
-        //     res.sendFile('report.csv', options, err => {
-        //         if (err) console.log(err)
-        //     });
-        // });
-        res.status(200).send({ sales });
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err)
+            });
+        });
     } catch (err) {
         console.log(err);
         res.status(500).send();

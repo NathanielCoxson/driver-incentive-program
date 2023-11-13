@@ -98,17 +98,33 @@ function SalesReport({ type }) {
         let queryString = query.join('&');
 
         // Make request to server
-        try {
-            const response = await axiosPrivate.get(`reports/sales/download?${queryString}`, {responseType: 'blob'});
-            const blob = response.data;
-            const fileURL = window.URL.createObjectURL(blob);
-            let alink = document.createElement("a");
-            alink.href = fileURL;
-            alink.download = "report.csv";
-            alink.click();
-        } catch (err) {
-            if (process.env.NODE_ENV === 'development') console.log(err);
-            setResponseMessage("Error downloading report.");
+        if (type === 'sales') {
+            try {
+                const response = await axiosPrivate.get(`reports/sales/download?${queryString}`, {responseType: 'blob'});
+                const blob = response.data;
+                const fileURL = window.URL.createObjectURL(blob);
+                let alink = document.createElement("a");
+                alink.href = fileURL;
+                alink.download = "report.csv";
+                alink.click();
+            } catch (err) {
+                if (process.env.NODE_ENV === 'development') console.log(err);
+                setResponseMessage("Error downloading report.");
+            }
+        }
+        else if (type === 'invoice') {
+            try {
+                const response = await axiosPrivate.get(`reports/invoices/download?${queryString}`, {responseType: 'blob'});
+                const blob = response.data;
+                const fileURL = window.URL.createObjectURL(blob);
+                let alink = document.createElement("a");
+                alink.href = fileURL;
+                alink.download = "report.csv";
+                alink.click();
+            } catch (err) {
+                if (process.env.NODE_ENV === 'development') console.log(err);
+                setResponseMessage("Error downloading report.");
+            }
         }
     };
 
@@ -139,8 +155,6 @@ function SalesReport({ type }) {
         setResults([]);
         setSponsorInvoiceResults([]);
     }, [type]);
-
-    useEffect(() => console.log(sponsorInvoiceResults), [sponsorInvoiceResults])
 
     return (
         <div className="sales-report-container report-container">
@@ -345,8 +359,8 @@ function SalesReport({ type }) {
                                                         Item Count: {sale.items.length}, {sale.total} Points, ${parseFloat(sale.ConversionRate * sale.total).toFixed(2)}
                                                     </li>
                                                     <ul>
-                                                        {sale.items.map(item => {
-                                                            return (<li key={sale.OID + 'item-' + item.Itemname}>
+                                                        {sale.items.map((item, i) => {
+                                                            return (<li key={sale.OID + `-item${i}-` + item.Itemname}>
                                                                 Name: {item.ItemName}, Points: {item.ItemCost}, ${parseFloat(item.ItemCost * sale.ConversionRate).toFixed(2)}
                                                             </li>)
                                                         })}
