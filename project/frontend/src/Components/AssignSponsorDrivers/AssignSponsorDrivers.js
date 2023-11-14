@@ -28,7 +28,6 @@ function AssignSponsorDrivers() {
             try {
                 const response = await axios.get("applications/sponsors");
                 isMounted && setSponsorList(response.data);
-                console.log(response.data);
             } catch (err) {
                 console.error("Error fetching data:", err);
                 navigate('/dashboard', { state: { from: location }, replace: true });
@@ -55,12 +54,9 @@ function AssignSponsorDrivers() {
         event.preventDefault();
 
         const input = event.target;
-        console.log("Submitted Driver:", input.driverSelect.value)
-        console.log("Submitted Organization:", input.organizationSelect.value)
 
         try {
             await axios.post('applications/assign_driver', {DriverName: selectedDriver, SponsorName: selectedOrganization});
-            console.log('Successfully submitted form')
         } catch (err){
             console.error('Error submitting form: ', err);
         }
