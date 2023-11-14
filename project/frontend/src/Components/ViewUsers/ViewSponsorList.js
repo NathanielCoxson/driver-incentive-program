@@ -32,6 +32,7 @@ function ViewSponsorList(){
                 {sponsorList.map((sponsor) => (
                     <li key={sponsor.UID}>
                         <p><strong>Name: </strong><em>{sponsor.SponsorName}</em></p>
+                        <Link to="/dashboard/sponsor_driver_list" state={{sponsor: sponsor.SponsorName}}>List of Drivers</Link>
                     </li>
                 ))}
             </ol>

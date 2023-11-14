@@ -6,10 +6,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 function SponsorDriverList(){
-    const {auth} = useAuth();
     const [driverList, setDrivers] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
+    const {sponsor} = location.state;
 
     useEffect(() => {
         let isMounted = true;
@@ -17,9 +17,8 @@ function SponsorDriverList(){
         const fetchSponsorDrivers = async () => {
             // Make the request
             try {
-                const response = await axios.get("applications/drivers/" + auth?.sponsors[0]?.SponsorName);
+                const response = await axios.get("applications/drivers/" + sponsor);
                 isMounted && setDrivers(response.data);
-                console.log(driverList);
             } catch (err) {
                 console.error("Error fetching data:", err);
                 navigate('/dashboard', { state: { from: location }, replace: true });
