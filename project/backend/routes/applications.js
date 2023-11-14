@@ -265,4 +265,35 @@ applications.get('/drivers', async (req, res) => {
         res.status(500).send();
     }
 });
+
+applications.post('/assign_driver', async (req, res) => {
+    try {
+        const body = req.body;
+        console.log(body);
+
+        //Get user for UID
+        const user = await req.app.locals.db.getUserByUsername(body.DriverName);
+        if(!user){
+            res.status(404).send('User was not found');
+            return;
+        }
+
+        //Get sponsor for SID
+        const sponsor = await req.app.locals.db.getSponsorByName(body.SponsorName);
+        if(!sponsor){
+            res.status(404).send('Sponsor was not found');
+            return;
+        }
+
+        // Add user to sponsor
+        await req.app.locals.db.addSponsorsUsers(user.UID, sponsor.SID);
+
+        // If successful, send success code
+        res.status(201).send();
+
+    } catch (err){
+        console.log(err);
+        res.status(500).send();
+    }
+})
 module.exports = applications;
