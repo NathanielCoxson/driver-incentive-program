@@ -292,7 +292,7 @@
         }
       }
     },
-    "/users/{Username}": {
+    "/users/:Username": {
       "get": {
         "tags": [
           "users"
@@ -482,7 +482,7 @@
         }
       }
     },
-    "/sponsors/{SponsorName}": {
+    "/sponsors/:SponsorName": {
       "get": {
         "tags": [
           "sponsors"
@@ -517,6 +517,14 @@
                         "SID": {
                           "type": "string",
                           "example": "63C8C6E2-3F73-4EE9-9819-31EF1FD12C7A"
+                        },
+                        "CID": {
+                          "type": "string",
+                          "example": "2F005544-62B3-4E95-BA6F-664CA466183C"
+                        },
+                        "conversionRate": {
+                          "type": "float",
+                          "example": 0.01
                         }
                       }
                     }
@@ -655,7 +663,7 @@
         }
       }
     },
-    "/applications/users/{Username}": {
+    "/applications/users/:Username": {
       "get": {
         "tags": [
           "applications"
@@ -1579,12 +1587,13 @@
                           "ArrivalDate": null,
                           "items": [
                             {
-                              "itemName": "Toy Story 4",
-                              "itemPrice": 99,
-                              "itemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
+                              "ItemName": "Toy Story 4",
+                              "ItemCost": 99,
+                              "ItemDescription": "Pixar Animation Studios proudly presents the adventure of a lifetime! When Woody, Buzz and the gang join Bonnie on a road trip with her new craft-project-turned-toy, Forky, the innocent little spork’s hilarious antics launch Woody on a wild quest filled with unexpected new characters—and one long-lost friend! Toy Story 4 is a soaring masterpiece stuffed with spectacular animation, humor and heart."
                             }
                           ],
-                          "total": 99
+                          "total": 99,
+                          "ConversionRate": 0.01
                         }
                       ]
                     }
@@ -1616,6 +1625,49 @@
             "description": "Username of driver",
             "required": false
           },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Start date to query from",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "End date to query to",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional name of sponsor to retrieve sales from."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/invoices/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve a CSV file of invoice results.",
+        "description": "Returns a CSV file of invoice results from the given query parameters.",
+        "parameters": [
           {
             "in": "query",
             "name": "StartDate",

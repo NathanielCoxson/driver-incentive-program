@@ -264,4 +264,56 @@ reports.get('/sales/download', async (req, res) => {
     }
 });
 
+reports.get('/invoices/download', async (req, res) => {
+    try {
+        const Username = req.query?.Username;
+        const SponsorName = req.query?.SponsorName;
+        const StartDate = req.query?.StartDate;
+        const EndDate = req.query?.EndDate;
+
+        let allSales = [];
+        if (StartDate && EndDate) allSales = await req.app.locals.db.getSponsorSales(StartDate, EndDate);
+        else allSales = await req.app.locals.db.getAllSales();
+
+        let sales = [];
+        for (let sponsor of allSales) {
+            for (let sale of sponsor?.sales) {
+                sales.push(sale);
+            }
+        }
+
+        if (Username) sales = sales.filter(sale => sale.Username === Username);
+        if (SponsorName) sales = sales.filter(sale => sale.SponsorName === SponsorName);
+
+        // Write file contents
+        let data = 'Username,Sponsor Name,Item Name,Points,Total\n';
+        sales.forEach((sale, i) => {
+            let Username = sale.Username;
+            let SponsorName = sale.SponsorName;
+            let ConversionRate = sale.ConversionRate;
+            sale.items.forEach((item, j) => {
+                let row = `${Username},${SponsorName},${item.ItemName},${item.ItemCost},${parseFloat(item.ItemCost * ConversionRate).toFixed(2)}`;
+                if (i < sales.length - 1 || j < sale.items.length - 1) row += '\n';
+                data += row;
+            });
+        });
+
+        // Send file
+        const options = {
+            root: path.join("../backend")
+        };
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err)
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 module.exports = reports;

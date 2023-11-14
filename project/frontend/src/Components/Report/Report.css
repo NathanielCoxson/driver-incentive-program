@@ -105,3 +105,15 @@ h1 {
 .report-container td:last-child {
     border: unset;
 }
+
+div.invoice-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    text-align: left;
+    align-items: left;
+}
+
+.invoice-container ul {
+    list-style: none;
+}
