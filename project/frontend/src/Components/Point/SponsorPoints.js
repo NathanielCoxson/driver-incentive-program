@@ -1,15 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import  axios from '../../api/axios';
+import useAuth from '../../hooks/useAuth';
 import './SponsorPoints.css';
 
 function SponsorPoints() {
-    const [drivers, setDrivers] = useState([
+    const { auth } = useAuth();
+    /* const [drivers, setDrivers] = useState([
         { name: 'Driver 1', points: 100, reason: '' },
         { name: 'Driver 2', points: 75, reason: '' },
         { name: 'Driver 3', points: 120, reason: '' },
-    ]);
+    ]); */
+    const [drivers, setDrivers] = useState([]);
     const [selectedDriver, setSelectedDriver] = useState('');
     const [pointsChange, setPointsChange] = useState('');
     const [reason, setReason] = useState('');
+
+    useEffect(() => {
+        const updateDrivers = async() => {
+            try {
+                const response = await axios.get("applications/drivers/" + auth?.sponsors[0]?.SponsorName);
+                if(response){
+                    const apps = [];
+                    for (const res of response.data){
+                        const request = {
+                            SponsorName: auth?.sponsors[0]?.SponsorName,
+                            Username: res.Username,
+                        };
+                        let pointsResponse = null;
+                        let p = 0;
+                        try{
+                            pointsResponse = await axios.post("transactions/points", request);
+                            p = pointsResponse.data.points[0].Points;
+                        }
+                        catch(err){
+                            if(err.response.status === 404)
+                                p = 0;
+                        }
+                        const curDriver = {
+                            name: res.Name,
+                            username: res.Username,
+                            points: p? p : 0
+                        };
+                        apps.push(curDriver);
+                    }
+                    setDrivers(apps);
+                }
+            } catch (err) {
+                console.error("Error fetching drivers: ", err);
+            }
+        };
+        updateDrivers();
+    }, [drivers, auth?.sponsors]);
 
     const handlePointsChange = (action) => {
         const updatedDrivers = [...drivers];
