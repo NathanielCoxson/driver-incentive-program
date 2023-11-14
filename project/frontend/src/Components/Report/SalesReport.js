@@ -276,10 +276,7 @@ function SalesReport({ type }) {
                         id="detView"
                         value="option8-1"
                         checked={detailedView}
-                        onChange={e => {
-                            setDetailedView(prev => !prev);
-                            setResults([]);
-                        }}
+                        onChange={e => setDetailedView(prev => !prev)}
                     />
                     <label htmlFor="detView" className="styled-radio">Detailed View</label>
 
@@ -289,10 +286,7 @@ function SalesReport({ type }) {
                         id="sumView"
                         value="option8-2"
                         checked={!detailedView}
-                        onChange={e => {
-                            setDetailedView(prev => !prev);
-                            setResults([]);
-                        }}
+                        onChange={e => setDetailedView(prev => !prev)}
                     />
                     <label htmlFor="sumView" className="styled-radio">Summary View</label>
                 </div>
@@ -310,29 +304,57 @@ function SalesReport({ type }) {
             </div>
 
             { /* Resuts */}
-            {(results.length > 0 && type === 'sales') && <>
+            {(results.length > 0 && type === 'sales' && !detailedView) && <>
                 <table className="report-table">
                     <thead>
                         <tr>
-                            <th>Username</th>
-                            <th>Points</th>
-                            <th>Item Count</th>
+                            <th>Sponsor</th>
+                            <th>Driver</th>
                             <th>Order Date</th>
-                            <th>Sponsor Name</th>
+                            <th>Item Count</th>
+                            <th>Points</th>
                         </tr>
                     </thead>
                     <tbody>
                         {results.map(result => {
                             return (
                                 <tr key={result.OID}>
-                                    <td>{result.Username}</td>
-                                    <td>{result.total}</td>
-                                    <td>{result.items?.length}</td>
-                                    <td>{result.OrderDate}</td>
                                     <td>{result.SponsorName}</td>
+                                    <td>{result.Username}</td>
+                                    <td>{result.OrderDate}</td>
+                                    <td>{result.items?.length}</td>
+                                    <td>{result.total}</td>
                                 </tr>
                             );
                         })}
+                    </tbody>
+                </table>
+            </>}
+            {(results.length > 0 && type === 'sales' && detailedView) && <>
+                <table className="report-table">
+                    <thead>
+                        <tr>
+                            <th>Sponsor</th>
+                            <th>Driver</th>
+                            <th>Order Date</th>
+                            <th>Item Name</th>
+                            <th>Points</th>
+                            <th>Total (USD)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {results.map(result => result.items.map(item => {
+                            return (
+                                <tr key={item.OLID}>
+                                    <td>{result.SponsorName}</td>
+                                    <td>{result.Username}</td>
+                                    <td>{result.OrderDate}</td>
+                                    <td>{item.ItemName}</td>
+                                    <td>{item.ItemCost}</td>
+                                    <td>{parseFloat(item.ItemCost * result.ConversionRate).toFixed(2)}</td>
+                                </tr>
+                            );
+                        }))}
                     </tbody>
                 </table>
             </>}
