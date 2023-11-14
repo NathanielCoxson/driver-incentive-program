@@ -30,7 +30,7 @@ function ViewSponsorList(){
             <h2>All Admin Users</h2>
             <ol className="list" style={{textAlign:'left'}}>
                 {sponsorList.map((sponsor) => (
-                    <li key={sponsor.UID}>
+                    <li key={sponsor.SID}>
                         <p><strong>Name: </strong><em>{sponsor.SponsorName}</em></p>
                         <Link to="/dashboard/sponsor_driver_list" state={{sponsor: sponsor.SponsorName}}>List of Drivers</Link>
                     </li>

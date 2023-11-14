@@ -23,7 +23,6 @@ function Sidebar() {
                     <>
                         <li><Link to=".">Sponsor Home</Link></li>
                         <li><Link to="profile" state={{user: auth}}>Sponsor Profile</Link></li>
-                        <li><Link to="sponsor_organization">Sponsor Organization</Link></li>
                         <li><Link to="sponsor_points">Sponsor Point</Link></li>
                         <li><Link to="sponsor_driver_list" state={{sponsor: auth?.sponsors[0]?.SponsorName}}>List of Drivers</Link></li>
                         <li><Link to="sponsor_add_user">Add User</Link></li>
