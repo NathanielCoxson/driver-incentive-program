@@ -1,6 +1,6 @@
 const db = require('../db');
 const request = require('supertest');
-const baseUrl = process.env.BASE_URL || "http://localhost:3000/api";
+const baseUrl = process.env.BASE_URL || "http://localhost:3001/api";
 
 describe('GET /api/about', () => {
     it ('should return 200', async () => {
