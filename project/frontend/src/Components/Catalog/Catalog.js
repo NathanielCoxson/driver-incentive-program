@@ -15,6 +15,8 @@ function Catalog() {
     const [responseMessage, setResponseMessage] = useState('');
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [drivers, setDrivers] = useState([{name: "dave", UID:"1"}, {name:"christian", UID: "2"}]);
+    const [selectedDriver, setSelectedDriver] = useState('');
 
     useEffect(() => {
         const getItems = async () => {
@@ -113,6 +115,15 @@ function Catalog() {
             {
                 cart.length > 0 &&
                 <section className='cart-section'>
+                    <label>Purchasing as:</label>
+                    <select value={selectedDriver} onChange={(e) => setSelectedDriver(e.target.value)} className="driver-dropdown">
+                    <option value="">Select a Driver</option>
+                    {drivers.map((driver) => (
+                        <option key={driver.name} value={driver.UID}>
+                            {driver.name}
+                        </option>
+                    ))}
+                    </select>
                     <ul className='cart'>
                         {cart.map(item => {
                             return (
