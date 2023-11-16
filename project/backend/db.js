@@ -907,10 +907,10 @@ async function getSponsorsDrivers(SID) {
         // Make request
         const result = await pool.request()
             .input('SID', sql.UniqueIdentifier, SID)
-            .query("SELECT Users.UID, Users.Name, Users.Role, Users.Username, Email\
-                    FROM Users \
-                    INNER JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID \
-                    WHERE SponsorsUsers.SID = @SID AND Users.Role = 'driver'");
+            .query("SELECT Users.UID, Users.Name, Users.Role, Users.Username, Email, ISNULL(SUM(Transactions.TransactionAmount), 0) as Points\
+                    FROM Users INNER JOIN SponsorsUsers ON Users.UID = SponsorsUsers.UID LEFT JOIN Transactions ON Users.UID = Transactions.UID AND SponsorsUsers.SID = Transactions.SID\
+                    WHERE SponsorsUsers.SID = @SID AND Users.Role = 'driver'\
+                    GROUP BY Users.UID, Users.Name, Users.Role, Users.Username, Email");
         return result.recordset;
     } catch (err) {
         console.log(err);
