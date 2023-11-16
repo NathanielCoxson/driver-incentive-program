@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import  axios from '../../api/axios';
 import useAuth from '../../hooks/useAuth';
 import './SponsorPoints.css';
@@ -14,46 +14,62 @@ function SponsorPoints() {
     const [selectedDriver, setSelectedDriver] = useState('');
     const [pointsChange, setPointsChange] = useState('');
     const [reason, setReason] = useState('');
+    const [driverErr, setDriverErr] = useState(false);
+    const [pointsErr, setPointsErr] = useState(false);
+    const [reasonErr, setReasonErr] = useState(false);
+    const [success, setSuccess] = useState('');
+    const SponsorName = auth?.sponsors[0]?.SponsorName;
+    const SID = auth?.sponsors[0]?.SID;
 
+    const updateDrivers = useCallback( async() => {
+        try {
+            const response = await axios.get("applications/drivers/" + SponsorName);
+            if(response){
+                const d = response.data.map((res) => {
+                    const curDriver = {
+                        name: res.Name,
+                        username: res.Username,
+                        UID: res.UID,
+                        points: res.Points
+                    };
+                    return curDriver;
+                });
+                setDrivers(d);
+            }
+        } catch (err) {
+            console.error("Error fetching drivers: ", err);
+        }
+    }, [auth?.sponsors]);
+    
     useEffect(() => {
+        updateDrivers();
+    }, [updateDrivers]);
+
+/*     useEffect(() => {
         const updateDrivers = async() => {
             try {
-                const response = await axios.get("applications/drivers/" + auth?.sponsors[0]?.SponsorName);
+                const response = await axios.get("applications/drivers/" + SponsorName);
                 if(response){
-                    const apps = [];
-                    for (const res of response.data){
-                        const request = {
-                            SponsorName: auth?.sponsors[0]?.SponsorName,
-                            Username: res.Username,
-                        };
-                        let pointsResponse = null;
-                        let p = 0;
-                        try{
-                            pointsResponse = await axios.post("transactions/points", request);
-                            p = pointsResponse.data.points[0].Points;
-                        }
-                        catch(err){
-                            if(err.response.status === 404)
-                                p = 0;
-                        }
+                    const d = response.data.map((res) => {
                         const curDriver = {
                             name: res.Name,
                             username: res.Username,
-                            points: p? p : 0
+                            UID: res.UID,
+                            points: res.Points
                         };
-                        apps.push(curDriver);
-                    }
-                    setDrivers(apps);
+                        return curDriver;
+                    });
+                    setDrivers(d);
                 }
             } catch (err) {
                 console.error("Error fetching drivers: ", err);
             }
         };
         updateDrivers();
-    }, [drivers, auth?.sponsors]);
+    }, [auth?.sponsors]); */
 
-    const handlePointsChange = (action) => {
-        const updatedDrivers = [...drivers];
+    const handlePointsChange = async() => {
+/*         const updatedDrivers = [...drivers];
         const driverIndex = drivers.findIndex((driver) => driver.name === selectedDriver);
         const [pointsAction, pointsValue] = pointsChange.split(',');
 
@@ -69,7 +85,37 @@ function SponsorPoints() {
             setPointsChange('');
             setReason('');
             setDrivers(updatedDrivers);
+        } */
+
+        const points = parseInt(pointsChange);
+        if(!(selectedDriver === '') && !(isNaN(points)) && !(reason === '')){
+            try{
+                const tDate = new Date();
+                const transaction = {
+                    UID: selectedDriver,
+                    SID: SID,
+                    TransactionDate: (tDate).toISOString().slice(0, 19).replace('T', ' '),
+                    TransactionAmount: points,
+                    Reason: reason
+                }
+                const response = await axios.post("transactions", transaction);
+                updateDrivers();
+                setSelectedDriver('');
+                setPointsChange('');
+                setReason('');
+                setSuccess('success');
+            }
+            catch(err){
+                console.log("Error adding transaction: ", err);
+                setSuccess('fail');
+            }
         }
+        else{
+            setSuccess('fail');
+        }
+        setDriverErr(selectedDriver === '');
+        setPointsErr(isNaN(points));
+        setReasonErr(reason === '');
     };
 
     return (
@@ -96,7 +142,7 @@ function SponsorPoints() {
                 <select value={selectedDriver} onChange={(e) => setSelectedDriver(e.target.value)} className="driver-dropdown">
                     <option value="">Select a Driver</option>
                     {drivers.map((driver) => (
-                        <option key={driver.name} value={driver.name}>
+                        <option key={driver.name} value={driver.UID}>
                             {driver.name}
                         </option>
                     ))}
@@ -105,7 +151,7 @@ function SponsorPoints() {
                     type="text"
                     value={pointsChange}
                     onChange={(e) => {
-                        if (/^\d+$/.test(e.target.value) || e.target.value === '') {
+                        if (/^\-?$|^\-?[\d]+$/.test(e.target.value) || e.target.value === '') {
                             setPointsChange(e.target.value);
                         }
                     }}
@@ -117,8 +163,28 @@ function SponsorPoints() {
                     onChange={(e) => setReason(e.target.value)}
                     placeholder="Enter reason"
                 />
-                <button onClick={() => handlePointsChange('add')} className="cta-button">Add</button>
-                <button onClick={() => handlePointsChange('reduce')} className="cta-button">Reduce</button>
+                <button onClick={() => handlePointsChange()} className="cta-button">Post</button>
+
+                {success === 'success' && (
+                    <p><strong>Point adjustment successful.</strong></p>
+                )}
+
+                {success === 'fail' && (
+                    <p><strong>Point adjustment unsuccessful. Some problem occured.</strong></p>
+                )}
+
+                {driverErr && (
+                    <p>Please select a driver.</p>
+                )}
+
+                {pointsErr && (
+                    <p>Please enter a valid point value.</p>
+                )}
+
+                {reasonErr && (
+                    <p>Please enter a reason.</p>
+                )}
+
             </div>
         </section>
     );
