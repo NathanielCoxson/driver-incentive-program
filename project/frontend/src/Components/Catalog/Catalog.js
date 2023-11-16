@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import './Catalog.css';
 import useAuth from '../../hooks/useAuth';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -115,15 +115,19 @@ function Catalog() {
             {
                 cart.length > 0 &&
                 <section className='cart-section'>
-                    <label>Purchasing as:</label>
-                    <select value={selectedDriver} onChange={(e) => setSelectedDriver(e.target.value)} className="driver-dropdown">
-                    <option value="">Select a Driver</option>
-                    {drivers.map((driver) => (
-                        <option key={driver.name} value={driver.UID}>
-                            {driver.name}
-                        </option>
-                    ))}
-                    </select>
+                    {auth?.Role === 'sponsor' && (
+                        <div className="driver-select">
+                            <label>Purchasing as:</label>
+                            <select value={selectedDriver} onChange={(e) => setSelectedDriver(e.target.value)} className="driver-dropdown">
+                                <option value="">Select a Driver</option>
+                                {drivers.map((driver) => (
+                                <option key={driver.name} value={driver.UID}>
+                                    {driver.name}
+                                </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                     <ul className='cart'>
                         {cart.map(item => {
                             return (
