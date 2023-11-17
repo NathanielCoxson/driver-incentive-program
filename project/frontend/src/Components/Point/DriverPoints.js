@@ -43,7 +43,11 @@ function DriverPoints() {
                 setTransactions(tResponse ? tResponse.data.transactions : []);
             }
             catch(err){
-                if (process.env.NODE_ENV === 'development');
+                if (err.response?.status === 404) {
+                    setPoints(0);
+                    setTransactions([]);
+                }
+                else if (process.env.NODE_ENV === 'development')
                     console.log("Error retrieving transactions: ",err);
             }
         }
@@ -77,16 +81,18 @@ function DriverPoints() {
                 {selectedOrganization && (
                     <div id="points-listing">
                         <p>You have <strong>{points}</strong> Points for {selectedOrganization}</p>
-                        <div id="scroll-list">
-                            {transactions.length !== 0 && (
-                                <p><strong>Transactions Log:</strong></p>
-                            )}
-                            <ul>
-                            {transactions.map((t) => (
-                                <li key={t.TID}>Date: {t.TransactionDate}&emsp;Amount: {t.TransactionAmount}&emsp;Reason: {t.Reason}</li>
-                            ))}
-                            </ul>
-                        </div>
+                        {transactions.length > 0 && (
+                            <div id="scroll-list">
+                                {transactions.length !== 0 && (
+                                    <p><strong>Transactions Log:</strong></p>
+                                )}
+                                <ul>
+                                {transactions.map((t) => (
+                                    <li key={t.TID}>Date: {t.TransactionDate}&emsp;Amount: {t.TransactionAmount}&emsp;Reason: {t.Reason}</li>
+                                ))}
+                                </ul>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

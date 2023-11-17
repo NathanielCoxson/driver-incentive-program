@@ -23,7 +23,7 @@ function SponsorPoints() {
 
     const updateDrivers = useCallback( async() => {
         try {
-            const response = await axios.get("applications/drivers/" + SponsorName);
+            const response = await axios.get(`applications/drivers/${SponsorName}`);
             if(response){
                 const d = response.data.map((res) => {
                     const curDriver = {
@@ -37,7 +37,7 @@ function SponsorPoints() {
                 setDrivers(d);
             }
         } catch (err) {
-            console.error("Error fetching drivers: ", err);
+            if (process.env.NODE_ENV === 'development') console.error("Error fetching drivers: ", err);
         }
     }, [auth?.sponsors]);
     
@@ -45,48 +45,7 @@ function SponsorPoints() {
         updateDrivers();
     }, [updateDrivers]);
 
-/*     useEffect(() => {
-        const updateDrivers = async() => {
-            try {
-                const response = await axios.get("applications/drivers/" + SponsorName);
-                if(response){
-                    const d = response.data.map((res) => {
-                        const curDriver = {
-                            name: res.Name,
-                            username: res.Username,
-                            UID: res.UID,
-                            points: res.Points
-                        };
-                        return curDriver;
-                    });
-                    setDrivers(d);
-                }
-            } catch (err) {
-                console.error("Error fetching drivers: ", err);
-            }
-        };
-        updateDrivers();
-    }, [auth?.sponsors]); */
-
     const handlePointsChange = async() => {
-/*         const updatedDrivers = [...drivers];
-        const driverIndex = drivers.findIndex((driver) => driver.name === selectedDriver);
-        const [pointsAction, pointsValue] = pointsChange.split(',');
-
-        if (!isNaN(pointsValue) && driverIndex !== -1) {
-            if (action === 'add') {
-                updatedDrivers[driverIndex].points += parseInt(pointsValue, 10);
-            } else if (action === 'reduce') {
-                updatedDrivers[driverIndex].points -= parseInt(pointsValue, 10);
-            }
-
-            updatedDrivers[driverIndex].reason = reason; // Store the reason
-
-            setPointsChange('');
-            setReason('');
-            setDrivers(updatedDrivers);
-        } */
-
         const points = parseInt(pointsChange);
         if(!(selectedDriver === '') && !(isNaN(points)) && !(reason === '')){
             try{
@@ -106,7 +65,7 @@ function SponsorPoints() {
                 setSuccess('success');
             }
             catch(err){
-                console.log("Error adding transaction: ", err);
+                if (process.env.NODE_ENV === 'development') console.log("Error adding transaction: ", err);
                 setSuccess('fail');
             }
         }
