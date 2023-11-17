@@ -213,7 +213,6 @@ applications.get('/drivers/:SponsorName', async (req, res) => {
         
         // Query for sponsor
         const sponsor = await req.app.locals.db.getSponsorByName(req.params.SponsorName);
-        console.log("Sponsor: ", sponsor);
 
         if(sponsor){
             // Query for drivers
