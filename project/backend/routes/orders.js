@@ -8,10 +8,7 @@ const validation = require('../middlewares/validation');
  */
 orders.post('/users/:Username', validation.validateToken, async (req, res) => {
     try {
-        if (req.User.Username !== req.params.Username) {
-            res.status(403).send();
-            return;
-        }
+        console.log(req);
         if (!req.body.SponsorName || !req.body.items) {
             res.status(400).send();
             return;
@@ -27,6 +24,11 @@ orders.post('/users/:Username', validation.validateToken, async (req, res) => {
         const sponsor = sponsors.find(s => s.SponsorName === req.body.SponsorName);
         if (!sponsor) {
             res.status(404).send();
+            return;
+        }
+        if (req.User.Username !== req.params.Username &&
+            !(req.User.Role === 'sponsor' && req.User.SID === sponsor.SID)) {
+            res.status(403).send();
             return;
         }
 

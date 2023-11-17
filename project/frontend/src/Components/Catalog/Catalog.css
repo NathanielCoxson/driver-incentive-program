@@ -42,3 +42,7 @@ div.cart-item-text {
 .cart-section .response-message {
     color: white;
 }
+
+.driver-select label {
+    color: white;
+}

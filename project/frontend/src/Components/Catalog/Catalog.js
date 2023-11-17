@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import './Catalog.css';
 import useAuth from '../../hooks/useAuth';
 import { Link, useParams, useNavigate } from 'react-router-dom';
@@ -15,6 +15,8 @@ function Catalog() {
     const [responseMessage, setResponseMessage] = useState('');
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [drivers, setDrivers] = useState([]);
+    const [selectedDriver, setSelectedDriver] = useState('');
 
     useEffect(() => {
         const getItems = async () => {
@@ -35,6 +37,27 @@ function Catalog() {
                 if (process.env.NODE_ENV === 'development') console.log(err);
             }
         }
+        const updateDrivers = async() => {
+            try {
+                const response = await axios.get(`applications/drivers/${SponsorName}`);
+                if(response){
+                    const d = response.data.map((res) => {
+                        const curDriver = {
+                            name: res.Name,
+                            username: res.Username,
+                            UID: res.UID,
+                            points: res.Points
+                        };
+                        return curDriver;
+                    });
+                    setDrivers(d);
+                }
+            }
+            catch (err) {
+                if (process.env.NODE_ENV === 'development') console.log(err);
+            }
+        }
+        if(auth?.Role === 'sponsor') updateDrivers();
         getItems();
     }, [SponsorName, cart]);
 
@@ -62,12 +85,17 @@ function Catalog() {
             }   
         });
         try {
-            await axiosPrivate.post(`/orders/users/${auth?.Username}`, { items, SponsorName });
+            const username = (auth?.Role === 'sponsor') ? selectedDriver : auth?.Username;
+            console.log(username);
+            await axiosPrivate.post(`/orders/users/${username}`, { items, SponsorName });
             setCart([]);
             localStorage.setItem('cart', JSON.stringify([]));
         } catch (err) {
             if (process.env.NODE_ENV === 'development') console.log(err);
-            if (!err?.response) {
+            if(auth?.Role === 'sponsor' && selectedDriver === ''){
+                setResponseMessage('Please select a driver.')
+            }
+            else if (!err?.response) {
                 setResponseMessage('No Server Response');
             }
             else if (err.response?.status === 401) {
@@ -113,6 +141,19 @@ function Catalog() {
             {
                 cart.length > 0 &&
                 <section className='cart-section'>
+                    {auth?.Role === 'sponsor' && (
+                        <div className="driver-select">
+                            <label>Purchasing as:</label>
+                            <select value={selectedDriver} onChange={(e) => setSelectedDriver(e.target.value)} className="driver-dropdown">
+                                <option value="">Select a Driver</option>
+                                {drivers.map((driver) => (
+                                <option key={driver.name} value={driver.username}>
+                                    {driver.name}
+                                </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                     <ul className='cart'>
                         {cart.map(item => {
                             return (
