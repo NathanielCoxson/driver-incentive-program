@@ -56,6 +56,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/password-reset" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/logout" element={<Logout />} />
 
         {/* private */}
         <Route element={<PersistLogin />}>
@@ -69,7 +70,6 @@ function App() {
               <Route path="edit_profile" element={<EditProfile />} />
               <Route path="sponsor_driver_list" element={<SponsorDriverList />} />
               <Route path="message_box" element={< MsgBox/>} />
-              <Route path="logout" element={<Logout />} />
 
               <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
 
