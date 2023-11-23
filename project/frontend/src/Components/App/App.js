@@ -80,6 +80,7 @@ function App() {
                 <Route path="purchase" element={<Purchase />} />
                 <Route path="orders" element={<Orders />} />
                 <Route path="/logout" element={<Logout />} />
+                <Route path="/password-reset" element={<ResetPassword />} />
                 
               </Route>
 
@@ -95,6 +96,7 @@ function App() {
                 <Route path="sponsor_report" element={<SponsorReport />} />
                 <Route path="sponsor_view_as" element={< SponsorView/>} />
                 <Route path="/logout" element={<Logout />} />
+                <Route path="/password-reset" element={<ResetPassword />} />
               </Route>
 
               {/* admin */}
@@ -110,6 +112,7 @@ function App() {
                 <Route path="assign_drivers" element={<AssignSponsorDrivers />} />
                 <Route path="admin_view_as" element={<AdminView />} />
                 <Route path="/logout" element={<Logout />} />
+                <Route path="/password-reset" element={<ResetPassword />} />
               </Route>
 
               {/* catch all */}
