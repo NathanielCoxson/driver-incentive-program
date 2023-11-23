@@ -129,7 +129,6 @@ applications.delete('/users/:Username', async (req, res) => {
 
         // Delete applications with provided ids.
         else if (req.body.IDs) {
-            console.log(req.body.IDs);
             for (let id of req.body.IDs) {
                 await req.app.locals.db.deleteApplication(id, req.params.Username);
             }
@@ -217,7 +216,6 @@ applications.get('/drivers/:SponsorName', async (req, res) => {
         if(sponsor){
             // Query for drivers
             const result = await req.app.locals.db.getSponsorsDrivers(sponsor.SID);
-            console.log(result);
 
             if (result.length === 0) {
                 res.status(404).send();
@@ -257,7 +255,6 @@ applications.get('/sponsors', async (req, res) => {
 applications.get('/drivers', async (req, res) => {
     try {
         const drivers = await req.app.locals.db.getDrivers();
-        console.log(drivers);
         return res.status(200).send(drivers);
     } catch (err){
         console.log(err);
@@ -268,7 +265,6 @@ applications.get('/drivers', async (req, res) => {
 applications.post('/assign_driver', async (req, res) => {
     try {
         const body = req.body;
-        console.log(body);
 
         //Get user for UID
         const user = await req.app.locals.db.getUserByUsername(body.DriverName);
