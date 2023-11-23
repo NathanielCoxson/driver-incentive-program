@@ -15,7 +15,7 @@ function Sidebar() {
                         <li><Link to="sponsor_organization">Driver's Sponsor Organization</Link></li>
                         <li><Link to={`sponsors/${auth?.sponsors[0]?.SponsorName}/catalog`}>Driver Catalog</Link></li>
                         <li><Link to="orders">Orders</Link></li>   
-                        <li><Link to="driver_messagebox">Message Box</Link></li>
+                        <li><Link to="message_box">Message Box</Link></li>
                     </>
                 }
 
@@ -29,7 +29,7 @@ function Sidebar() {
                         <li><Link to={`sponsors/${auth?.sponsors[0]?.SponsorName}/catalog`}>Sponsor Catalog</Link></li>
                         <li><Link to="sponsor_report"> Sponsor Report</Link></li>
                         <li><Link to="sponsor_view_as">View As </Link></li>
-                        <li><Link to="sponsor_messagebox">Message Box</Link></li>
+                        <li><Link to="message_box">Message Box</Link></li>
                     </>
                 }
 
@@ -44,7 +44,7 @@ function Sidebar() {
                         <li><Link to="sponsor_list">View All Sponsors</Link></li>
                         <li><Link to="driver_list">View All Drivers</Link></li>
                         <li><Link to="admin_view_as">View As </Link></li>
-                        <li><Link to="admin_messagebox">Message Box</Link></li>
+                        <li><Link to="message_box">Message Box</Link></li>
                     </>
                 }
             </ul>

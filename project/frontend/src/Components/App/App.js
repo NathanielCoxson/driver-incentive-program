@@ -40,6 +40,7 @@ import ViewDriverList from '../ViewUsers/ViewDriverList';
 import AssignSponsorDrivers from '../AssignSponsorDrivers/AssignSponsorDrivers';
 import SponsorView from '../SwitchView/SponsorView ';
 import AdminView from '../SwitchView/AdminView';
+import MsgBox from '../MsgBox/MsgBox';
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
               <Route path="join_sponsor_organization" element={<JoinSponsorOrganization />} />
               <Route path="edit_profile" element={<EditProfile />} />
               <Route path="sponsor_driver_list" element={<SponsorDriverList />} />
+              <Route path="message_box" element={< MsgBox/>} />
 
               <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
 
