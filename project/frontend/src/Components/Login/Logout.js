@@ -5,7 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import useRefreshToken from '../../hooks/uesRefreshToken';
 import { useCallback, useEffect, useState } from 'react';
 
-function Home() {
+function Logout() {
     const logout = useLogout();
     const { auth, persist } = useAuth();
     const [loggedIn, setLoggedIn] =  useState(auth?.Username ? true : false);
@@ -45,4 +45,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Logout;

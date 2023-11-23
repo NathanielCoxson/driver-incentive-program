@@ -41,6 +41,8 @@ import AssignSponsorDrivers from '../AssignSponsorDrivers/AssignSponsorDrivers';
 import SponsorView from '../SwitchView/SponsorView ';
 import AdminView from '../SwitchView/AdminView';
 import MsgBox from '../MsgBox/MsgBox';
+import Logout from '../Login/Logout';
+
 
 function App() {
   return (
@@ -54,6 +56,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/password-reset" element={<ResetPassword />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
+        <Route path="/logout" element={<Logout />} />
 
         {/* private */}
         <Route element={<PersistLogin />}>
