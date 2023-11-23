@@ -28,9 +28,20 @@ function MsgBox() {
             )}
 
             {auth?.Role === 'sponsor' && (
-                // Add content for sponsor role if needed
                 <div>
-                    Here is sponsor content.
+                    <h1>Messages</h1><br />
+                    <form>
+                        <label htmlFor="recipientEmail">To:</label>
+                        <select id="recipientEmail" name="recipientEmail" required>
+                            <option>All Drivers</option>
+                            <option>IT Help</option>
+                        </select>
+                        <br /><br />
+                        <label htmlFor="message">Message:</label>
+                        <textarea id="message" name="message" rows="10" required></textarea>
+                        <br />
+                        <button className="cta-button" type="submit">Send Message</button>
+                    </form>
                 </div>
             )}
 
