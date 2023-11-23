@@ -127,7 +127,7 @@ function Login() {
                         <span>Need an account? </span>
                         <Link to='/register'>Signup</Link>
                     </div>
-                    <Link to='/password-reset'>Forgot Password?</Link>
+                    <Link to='/password_reset'>Forgot Password?</Link>
                 </div>
             </section>
         </main>)
