@@ -447,6 +447,20 @@ async function resetUserPassword(Email, Password) {
             .query('UPDATE Users \
                     SET Password = @Password, PasswordResetToken = NULL, PasswordResetExpiration = NULL \
                     WHERE Email = @Email');
+        if (result.rowsAffected === 0) throw new Error('Failed to update password');
+        
+        // Get user
+        let user = await pool.request()
+            .input('Email', sql.VarChar(300), Email)
+            .query('SELECT UID FROM Users WHERE Email = @Email');
+        user = user.recordset[0];
+        
+        // Add record for password changes audit log
+        const PWC = {
+            UID: user.UID,
+            ChangeType: 'reset'
+        }
+        await createPWC(PWC);
     } catch (err) {
         console.log(err);
     }
@@ -759,7 +773,6 @@ async function createPWC(PWC) {
         // Make request
         const result = await pool.request()
             .input('UID', sql.UniqueIdentifier, PWC.UID)
-            .input('PWCDate', sql.DateTime, PWC.PWCDate)
             .input('ChangeType', sql.VarChar(50), PWC.ChangeType)
             .query("\
                 INSERT INTO PWChanges(\
@@ -770,7 +783,7 @@ async function createPWC(PWC) {
                 VALUES(\
                     NEWID(),\
                     @UID,\
-                    @PWCDate,\
+                    SYSDATETIME(),\
                     @ChangeType)");
         return;
     } catch (err) {
