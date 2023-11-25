@@ -1702,6 +1702,44 @@
           }
         }
       }
+    },
+    "reports/audit/applications": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve application audit log data.",
+        "description": "Returns a list of applications.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applications": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "AID": "346A87B9-8883-4A4E-9455-34A7C9173D96",
+                          "UID": "1CFBE766-621C-4CF8-B126-49B1B3586D24",
+                          "SID": "A0F9460E-2FEB-4FC2-A3BA-42C627EB352D",
+                          "Username": "TestUser",
+                          "SponsorName": "Test Sponsor",
+                          "ApplicationDate": "2023-11-13 14:46:26.450",
+                          "ApplicationStatus": "Pending",
+                          "Reason": "Testing"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

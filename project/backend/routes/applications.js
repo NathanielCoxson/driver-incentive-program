@@ -191,7 +191,7 @@ applications.post('/process', async(req, res) => {
         }
 
         //Remove application after processing
-        await req.app.locals.db.deleteApplication(body.AID, app.Username);
+        // await req.app.locals.db.deleteApplication(body.AID, app.Username);
 
         // If successful, send success code
         res.status(201).send();

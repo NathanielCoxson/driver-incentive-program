@@ -76,7 +76,7 @@ function App() {
                 <Route path="shoppingcart" element={<ShoppingCart />} />
                 <Route path="purchase" element={<Purchase />} />
                 <Route path="orders" element={<Orders />} />
-                <Route path="/logout" element={<Logout />} />
+                <Route path="logout" element={<Logout />} />
                 
               </Route>
 
@@ -91,7 +91,7 @@ function App() {
                 <Route path="sponsors/:SponsorName/catalog/settings" element={<CatalogSettings />} />
                 <Route path="sponsor_report" element={<SponsorReport />} />
                 <Route path="sponsor_view_as" element={< SponsorView/>} />
-                <Route path="/logout" element={<Logout />} />
+                <Route path="logout" element={<Logout />} />
               </Route>
 
               {/* admin */}
@@ -106,7 +106,7 @@ function App() {
                 <Route path="driver_list" element={<ViewDriverList />} />
                 <Route path="assign_drivers" element={<AssignSponsorDrivers />} />
                 <Route path="admin_view_as" element={<AdminView />} />
-                <Route path="/logout" element={<Logout />} />
+                <Route path="logout" element={<Logout />} />
               </Route>
 
               {/* catch all */}
