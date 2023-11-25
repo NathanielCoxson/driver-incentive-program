@@ -316,4 +316,99 @@ reports.get('/invoices/download', async (req, res) => {
     }
 });
 
+/**
+ * Returns a list of applications from the audit log.
+ */
+reports.get('/audit/applications', async (req, res) => {
+    try {
+        const applications = await req.app.locals.db.getAllApplications(req.query.StartDate, req.query.EndDate);
+        res.status(200).send({ applications });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * Returns applications audit log list as a CSV file.
+ */
+reports.get('/audit/applications/download', async (req, res) => {
+    try {
+        const SponsorName = req.query.SponsorName;
+
+        let applications = await req.app.locals.db.getAllApplications(req.query.StartDate, req.query.EndDate);
+        if (SponsorName) applications = applications.filter(app => app.SponsorName === SponsorName);
+
+        if (applications.length === 0) {
+            res.status(404).send();
+            return;
+        }
+
+        // Write file contents
+        let data = 'Username,Sponsor Name,Application Date,Application Status,Reason\n';
+        applications.forEach((app, i) => {
+            data += `${app.Username},${app.SponsorName},${app.ApplicationDate},${app.ApplicationStatus},${app.Reason}`;
+            if (i < applications.length - 1) data += '\n';
+        });
+
+        // Send file
+        const options = {
+            root: path.join("../backend")
+        };
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err)
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+/**
+ * Returns a list of point changes from the audit log.
+ */
+reports.get('/audit/points', async (req, res) => {
+
+});
+
+/**
+ * Returns point changes audit log as a CSV file.
+ */
+reports.get('/audit/points/download', async (req, res) => {
+
+});
+
+/**
+ * Returns a list of password changes from the audit log.
+ */
+reports.get('/audit/passwordChanges', async (req, res) => {
+
+});
+
+/**
+ * Returns password changes audit log as a CSV file.
+ */
+reports.get('/audit/passwordChanges/download', async (req, res) => {
+
+});
+
+/**
+ * Returns a list of login attempts from the audit log.
+ */
+reports.get('/audit/logins', async (req, res) => {
+
+});
+
+/**
+ * Returns login attempts audit log as a CSV file.
+ */
+reports.get('/audit/logins/download', async (req, res) => {
+
+});
+
 module.exports = reports;

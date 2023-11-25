@@ -305,7 +305,7 @@ function SalesReport({ type, getDateRange }) {
                     </tbody>
                 </table>
             </>}
-            {(results.length > 0 && type === 'sales' && detailedView) && <>
+            {(results.length > 0 && type === 'sales' && detailedView) &&
                 <table className="report-table">
                     <thead>
                         <tr>
@@ -332,7 +332,7 @@ function SalesReport({ type, getDateRange }) {
                         }))}
                     </tbody>
                 </table>
-            </>}
+            }
             {(sponsorInvoiceResults.length > 0 && type === 'invoice') && <div className='invoice-container'>
                 <ul>
                     {sponsorInvoiceResults.map(sponsor => {

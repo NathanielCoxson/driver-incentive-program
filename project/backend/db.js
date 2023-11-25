@@ -1519,6 +1519,49 @@ async function getSponsorSalesByName(SponsorName, StartDate, EndDate) {
     }
 }
 
+async function getAllApplications(StartDate, EndDate) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        let result;
+        if (StartDate && EndDate) {
+            result = await pool.request()
+            .input("StartDate", sql.DateTime, StartDate)
+            .input("EndDate", sql.DateTime, EndDate)
+            .query("\
+                SELECT \
+                    Users.Username,\
+                    Sponsors.SponsorName,\
+                    ApplicationDate,\
+                    ApplicationStatus,\
+                    Reason \
+                FROM Applications \
+                JOIN Users ON Users.UID = Applications.UID \
+                JOIN Sponsors ON Sponsors.SID = Applications.SID\
+                WHERE Applications.ApplicationDate >= @StartDate AND Applications.ApplicationDate <= @EndDate\
+            ");
+        }
+        else {
+            result = await pool.request()
+            .query("\
+                SELECT \
+                    Users.Username,\
+                    Sponsors.SponsorName,\
+                    ApplicationDate,\
+                    ApplicationStatus,\
+                    Reason \
+                FROM Applications \
+                JOIN Users ON Users.UID = Applications.UID \
+                JOIN Sponsors ON Sponsors.SID = Applications.SID\
+            ");
+        }
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 // Write query functions here so that they are 
 // exported as part of the db module.
 module.exports = {
@@ -1566,5 +1609,6 @@ module.exports = {
     getAllAdmin,
     getSponsorSales,
     getAllSales,
-    getSponsorSalesByName
+    getSponsorSalesByName,
+    getAllApplications
 }
