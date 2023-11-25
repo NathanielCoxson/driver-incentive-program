@@ -6,7 +6,7 @@ import useAuth from '../../hooks/useAuth';
 function SponsorOrganization() {
     const { auth } = useAuth();
     const sponsors = auth?.sponsors;
-
+    // TODO Add option for drivers to leave a sponsor organization
     return (
         <section className="hero">
             <h2>Welcome to Your Sponsor Organization Dashboard</h2>

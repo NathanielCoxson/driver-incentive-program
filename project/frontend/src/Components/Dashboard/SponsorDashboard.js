@@ -22,7 +22,7 @@ function SponsorDashboard() {
                             status: res.ApplicationStatus
                         };
                         return curApp;
-                    });
+                    }).filter(app => app.status === 'Pending');
                     setJoinRequests(apps);
                 }
             }
