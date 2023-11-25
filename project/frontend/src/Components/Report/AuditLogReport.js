@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function AuditLogReport({ getDateRange }) {
@@ -37,7 +37,6 @@ function AuditLogReport({ getDateRange }) {
             default: 
                 break;
         }
-        if (results.length === 0) setResponseMessage('No results found');
     };
 
     const handleDownload = async (event) => {
@@ -67,6 +66,7 @@ function AuditLogReport({ getDateRange }) {
             const response = await axiosPrivate.get(`/reports/audit/applications?${queryString}`);
             let applications = response?.data?.applications;
             if (!allSponsors) applications = applications.filter(app => app.SponsorName === sponsorName);
+            if (applications.length === 0) setResponseMessage('No results found');
             setResults(applications);
         } catch (err) {
             if (process.env.NODE_ENV === 'development') console.log(err);
@@ -96,6 +96,11 @@ function AuditLogReport({ getDateRange }) {
             setResponseMessage("Error downloading report.");
         }
     }
+
+    useEffect(() => {
+        setResults([]);
+        setResponseMessage('');
+    }, [category]);
 
     return (
         <div className="audit-log-report-container report-container">
