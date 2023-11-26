@@ -1722,9 +1722,6 @@
                       "type": "array",
                       "example": [
                         {
-                          "AID": "346A87B9-8883-4A4E-9455-34A7C9173D96",
-                          "UID": "1CFBE766-621C-4CF8-B126-49B1B3586D24",
-                          "SID": "A0F9460E-2FEB-4FC2-A3BA-42C627EB352D",
                           "Username": "TestUser",
                           "SponsorName": "Test Sponsor",
                           "ApplicationDate": "2023-11-13 14:46:26.450",
@@ -1755,7 +1752,7 @@
         }
       }
     },
-    "reports/audit/points": {
+    "reports/audit/pointChanges": {
       "get": {
         "tags": [
           "reports"
@@ -1774,9 +1771,6 @@
                       "type": "array",
                       "example": [
                         {
-                          "TID": "346A87B9-8883-4A4E-9455-34A7C9173D96",
-                          "UID": "1CFBE766-621C-4CF8-B126-49B1B3586D24",
-                          "SID": "A0F9460E-2FEB-4FC2-A3BA-42C627EB352D",
                           "Username": "TestUser",
                           "SponsorName": "Test Sponsor",
                           "TransactionDate": "2023-11-13 14:46:26.450",
@@ -1793,7 +1787,7 @@
         }
       }
     },
-    "reports/audit/points/download": {
+    "reports/audit/pointChanges/download": {
       "get": {
         "tags": [
           "reports"
@@ -1855,7 +1849,7 @@
         }
       }
     },
-    "reports/audit/logins": {
+    "reports/audit/loginAttempts": {
       "get": {
         "tags": [
           "reports"
@@ -1889,7 +1883,7 @@
         }
       }
     },
-    "reports/audit/logins/download": {
+    "reports/audit/loginAttempts/download": {
       "get": {
         "tags": [
           "reports"

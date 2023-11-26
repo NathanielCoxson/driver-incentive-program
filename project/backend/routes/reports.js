@@ -321,8 +321,13 @@ reports.get('/invoices/download', async (req, res) => {
  */
 reports.get('/audit/applications', async (req, res) => {
     try {
-        const applications = await req.app.locals.db.getAllApplications(req.query.StartDate, req.query.EndDate);
-        res.status(200).send({ applications });
+        const SponsorName = req.query.SponsorName;
+        
+        let results = await req.app.locals.db.getAllApplications(req.query.StartDate, req.query.EndDate);
+
+        if (SponsorName) results = results.filter(result => result.SponsorName === SponsorName);
+
+        res.status(200).send({ results });
     } catch (err) {
         console.log(err);
         res.status(500).send();
@@ -336,19 +341,19 @@ reports.get('/audit/applications/download', async (req, res) => {
     try {
         const SponsorName = req.query.SponsorName;
 
-        let applications = await req.app.locals.db.getAllApplications(req.query.StartDate, req.query.EndDate);
-        if (SponsorName) applications = applications.filter(app => app.SponsorName === SponsorName);
+        let results = await req.app.locals.db.getAllApplications(req.query.StartDate, req.query.EndDate);
+        if (SponsorName) results = results.filter(result => result.SponsorName === SponsorName);
 
-        if (applications.length === 0) {
+        if (results.length === 0) {
             res.status(404).send();
             return;
         }
 
         // Write file contents
         let data = 'Username,Sponsor Name,Application Date,Application Status,Reason\n';
-        applications.forEach((app, i) => {
-            data += `${app.Username},${app.SponsorName},${app.ApplicationDate},${app.ApplicationStatus},${app.Reason}`;
-            if (i < applications.length - 1) data += '\n';
+        results.forEach((result, i) => {
+            data += `${result.Username},${result.SponsorName},${result.ApplicationDate},${result.ApplicationStatus},${result.Reason}`;
+            if (i < results.length - 1) data += '\n';
         });
 
         // Send file
@@ -360,7 +365,7 @@ reports.get('/audit/applications/download', async (req, res) => {
                 console.log(err);
             }
             res.sendFile('report.csv', options, err => {
-                if (err) console.log(err)
+                if (err) console.log(err);
             });
         });
     } catch (err) {
@@ -372,15 +377,59 @@ reports.get('/audit/applications/download', async (req, res) => {
 /**
  * Returns a list of point changes from the audit log.
  */
-reports.get('/audit/points', async (req, res) => {
+reports.get('/audit/pointChanges', async (req, res) => {
+    try {
+        const SponsorName = req.query.SponsorName;
+        
+        let results = await req.app.locals.db.getAllTransactions(req.query.StartDate, req.query.EndDate);
 
+        if (SponsorName) results = results.filter(result => result.SponsorName === SponsorName);
+
+        res.status(200).send({ results });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 /**
  * Returns point changes audit log as a CSV file.
  */
-reports.get('/audit/points/download', async (req, res) => {
+reports.get('/audit/pointChanges/download', async (req, res) => {
+    try {
+        const SponsorName = req.query.SponsorName;
 
+        let results = await req.app.locals.db.getAllTransactions(req.query.StartDate, req.query.EndDate);
+        if (SponsorName) results = results.filter(result => result.SponsorName === SponsorName);
+
+        if (results.length === 0) {
+            res.status(404).send();
+            return;
+        }
+
+        // Write file contents
+        let data = 'Username,Sponsor Name,Transaction Date,Transaction Amount,Reason\n';
+        results.forEach((result, i) => {
+            data += `${result.Username},${result.SponsorName},${result.TransactionDate},${result.TransactionAmount},${result.Reason}`;
+            if (i < results.length - 1) data += '\n';
+        });
+
+        // Send file
+        const options = {
+            root: path.join("../backend")
+        };
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err);
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 /**
@@ -400,14 +449,14 @@ reports.get('/audit/passwordChanges/download', async (req, res) => {
 /**
  * Returns a list of login attempts from the audit log.
  */
-reports.get('/audit/logins', async (req, res) => {
+reports.get('/audit/loginAttempts', async (req, res) => {
 
 });
 
 /**
  * Returns login attempts audit log as a CSV file.
  */
-reports.get('/audit/logins/download', async (req, res) => {
+reports.get('/audit/loginAttempts/download', async (req, res) => {
 
 });
 

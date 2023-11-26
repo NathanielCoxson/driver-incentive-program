@@ -30,13 +30,14 @@ function AuditLogReport({ getDateRange }) {
 
         const { StartDate, EndDate } = getDateRange(startDate, endDate);
         
-        switch (category) {
-            case 'applications': 
-                await getApplications(StartDate, EndDate);
-                break;
-            default: 
-                break;
-        }
+        // Construct query string
+        let query = [];
+        if (StartDate) query.push(`StartDate=${StartDate}`);
+        if (EndDate) query.push(`EndDate=${EndDate}`);
+        if (!allSponsors) query.push(`SponsorName=${sponsorName}`);
+        let queryString = query.join('&');
+
+        await getReport(category, queryString);
     };
 
     const handleDownload = async (event) => {
@@ -46,45 +47,33 @@ function AuditLogReport({ getDateRange }) {
 
         const { StartDate, EndDate } = getDateRange(startDate, endDate);
 
-        switch (category) {
-            case 'applications':
-                await downloadApplications(StartDate, EndDate);
-                break;
-            default:
-                break;
-        }
-    }
-
-    async function getApplications(startDate, endDate) {
         // Construct query string
         let query = [];
-        if (startDate) query.push(`StartDate=${startDate}`);
-        if (endDate) query.push(`EndDate=${endDate}`);
+        if (StartDate) query.push(`StartDate=${StartDate}`);
+        if (EndDate) query.push(`EndDate=${EndDate}`);
+        if (!allSponsors) query.push(`SponsorName=${sponsorName}`);
         let queryString = query.join('&');
 
+        await downloadReport(category, queryString);
+    }
+
+    async function getReport(category, query) {
         try {
-            const response = await axiosPrivate.get(`/reports/audit/applications?${queryString}`);
-            let applications = response?.data?.applications;
-            if (!allSponsors) applications = applications.filter(app => app.SponsorName === sponsorName);
-            if (applications.length === 0) setResponseMessage('No results found');
-            setResults(applications);
+            const response = await axiosPrivate.get(`/reports/audit/${category}?${query}`);
+            let results = response?.data?.results;
+            if (results.length === 0) setResponseMessage('No results found');
+            setResults(results);
         } catch (err) {
             if (process.env.NODE_ENV === 'development') console.log(err);
             if (!err?.response) setResponseMessage('No Server Response');
-            if (err?.response.status === 404) setResponseMessage('No data found.');
-            if (err?.response.status === 500) setResponseMessage('Sever Error');
+            if (err?.response?.status === 404) setResponseMessage('No data found.');
+            if (err?.response?.status === 500) setResponseMessage('Sever Error');
         }
     }
 
-    async function downloadApplications(startDate, endDate) {
-        // Construct query string
-        let query = [];
-        if (startDate) query.push(`StartDate=${startDate}`);
-        if (endDate) query.push(`EndDate=${endDate}`);
-        let queryString = query.join('&');
-
+    async function downloadReport(category, query) {
         try {
-            const response = await axiosPrivate.get(`reports/audit/applications/download?${queryString}`, {responseType: 'blob'});
+            const response = await axiosPrivate.get(`reports/audit/${category}/download?${query}`, {responseType: 'blob'});
             const blob = response.data;
             const fileURL = window.URL.createObjectURL(blob);
             let alink = document.createElement("a");
@@ -185,22 +174,22 @@ function AuditLogReport({ getDateRange }) {
                 <input 
                     type="radio" 
                     name="set2" 
-                    id="points" 
-                    value="points"
+                    id="pointChanges" 
+                    value="pointChanges"
                     onChange={(e) => setCategory(e.target.value)}
-                    checked={category === 'points'}
+                    checked={category === 'pointChanges'}
                 />
                 <label htmlFor="pointChanges" className="styled-radio">Point Changes</label>
 
                 <input 
                     type="radio" 
                     name="set2" 
-                    id="pwordChanges" 
-                    value="pwordChanges"
+                    id="passwordChanges" 
+                    value="passwordChanges"
                     onChange={(e) => setCategory(e.target.value)}
-                    checked={category === 'pwordChanges'}
+                    checked={category === 'passwordChanges'}
                 />
-                <label htmlFor="pwordChanges" className="styled-radio">Password Changes</label>
+                <label htmlFor="passwordChanges" className="styled-radio">Password Changes</label>
 
                 <input 
                     type="radio" 
