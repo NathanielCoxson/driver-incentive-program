@@ -1702,6 +1702,529 @@
           }
         }
       }
+    },
+    "reports/audit/applications": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve application audit log data.",
+        "description": "Returns a list of applications.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applications": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "Username": "TestUser",
+                          "SponsorName": "Test Sponsor",
+                          "ApplicationDate": "2023-11-13 14:46:26.450",
+                          "ApplicationStatus": "Pending",
+                          "Reason": "Testing"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reports/audit/applications/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve application audit log data as a CSV file.",
+        "description": "Returns a list of applications as a CSV file.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/audit/pointChanges": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve point changes audit log data.",
+        "description": "Returns a list of point changes.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applications": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "Username": "TestUser",
+                          "SponsorName": "Test Sponsor",
+                          "TransactionDate": "2023-11-13 14:46:26.450",
+                          "TransactionAmount": "Pending",
+                          "Reason": "Testing"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reports/audit/pointChanges/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve point changes audit log data as a CSV file.",
+        "description": "Returns a list of point changes as a CSV file.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/audit/passwordChanges": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve password changes audit log data.",
+        "description": "Returns a list of password changes.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applications": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "Username": "TestUser",
+                          "Date": "2023-11-24 00:07:54.723",
+                          "ChangeType": "Password reset"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reports/audit/passwordChanges/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve password changes audit log data as a CSV file.",
+        "description": "Returns a list of password changes as a CSV file.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/audit/loginAttempts": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve login attempts audit log data.",
+        "description": "Returns a list of login attempts.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applications": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "Username": "TestDriver",
+                          "Date": "2023-11-24 00:07:54.723",
+                          "Success": "true"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reports/audit/loginAttempts/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve login attempts audit log data as a CSV file.",
+        "description": "Returns a list of login attempts as a CSV file.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization to search for."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "reports/:SponsorName/driverPoints": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve the points for a sponsor's users.",
+        "description": "Returns a list of drivers and their point totals.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          },
+          {
+            "in": "query",
+            "name": "DriverName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the driver to search for."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "applications": {
+                      "type": "array",
+                      "example": [
+                        {
+                          "Username": "TestDriver",
+                          "TotalPoints": 100,
+                          "PointChanges": [
+                            {
+                              "Username": "TestUser",
+                              "SponsorName": "Test Sponsor",
+                              "TransactionDate": "2023-11-13 14:46:26.450",
+                              "TransactionAmount": "Pending",
+                              "Reason": "Testing"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "reports/:SponsorName/driverPoints/download": {
+      "get": {
+        "tags": [
+          "reports"
+        ],
+        "summary": "Retrieve the point transactions for a sponsor's users as a CSV file.",
+        "description": "Returns a list of drivers and their point transactions as a CSV file.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "SponsorName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the sponsor organization."
+          },
+          {
+            "in": "query",
+            "name": "StartDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The start date to search from."
+          },
+          {
+            "in": "query",
+            "name": "EndDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The end date to search to."
+          },
+          {
+            "in": "query",
+            "name": "DriverName",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the driver to search for."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {

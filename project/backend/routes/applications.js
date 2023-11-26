@@ -190,9 +190,6 @@ applications.post('/process', async(req, res) => {
             await req.app.locals.db.addSponsorsUsers(user.UID, sponsor.SID);
         }
 
-        //Remove application after processing
-        await req.app.locals.db.deleteApplication(body.AID, app.Username);
-
         // If successful, send success code
         res.status(201).send();
     } catch (err) {

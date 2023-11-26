@@ -22,7 +22,7 @@ function SponsorDashboard() {
                             status: res.ApplicationStatus
                         };
                         return curApp;
-                    });
+                    }).filter(app => app.status === 'Pending');
                     setJoinRequests(apps);
                 }
             }
@@ -33,7 +33,7 @@ function SponsorDashboard() {
         };
         setApps();
         },
-        [SponsorName, joinRequests]);
+        [SponsorName]);
 
     const acceptOrRejectRequest = async (driverName,AID, accepted) => {
         const updatedRequests = joinRequests.map((request) => {

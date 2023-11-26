@@ -106,7 +106,7 @@ h1 {
     border: unset;
 }
 
-div.invoice-container {
+div.report-list {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -114,6 +114,10 @@ div.invoice-container {
     align-items: left;
 }
 
-.invoice-container ul {
+.report-list ul {
     list-style: none;
+}
+
+.point-tracking li {
+    padding: 1em 0;
 }
