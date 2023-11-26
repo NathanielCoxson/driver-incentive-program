@@ -497,14 +497,61 @@ reports.get('/audit/passwordChanges/download', async (req, res) => {
  * Returns a list of login attempts from the audit log.
  */
 reports.get('/audit/loginAttempts', async (req, res) => {
+    try {
+        const SponsorName = req.query.SponsorName;
 
+        // If sponsor name is given, only return login attempts for users of that sponsor organization.
+        let results;
+        if (SponsorName) results = await req.app.locals.db.getAllLoginAttemptsBySponsor(req.query.StartDate, req.query.EndDate, SponsorName);
+        else results = await req.app.locals.db.getAllLoginAttempts(req.query.StartDate, req.query.EndDate);
+
+        res.status(200).send({ results });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 /**
  * Returns login attempts audit log as a CSV file.
  */
 reports.get('/audit/loginAttempts/download', async (req, res) => {
+    try {
+        const SponsorName = req.query.SponsorName;
 
+        // If sponsor name is given, only return login attempts for users of that sponsor organization.
+        let results;
+        if (SponsorName) results = await req.app.locals.db.getAllLoginAttemptsBySponsor(req.query.StartDate, req.query.EndDate, SponsorName);
+        else results = await req.app.locals.db.getAllLoginAttempts(req.query.StartDate, req.query.EndDate);
+
+        if (results.length === 0) {
+            res.status(404).send();
+            return;
+        }
+
+        // Write file contents
+        let data = 'Username,Date,Success\n';
+        results.forEach((result, i) => {
+            data += `${result.Username},${result.Date},${result.Success}`;
+            if (i < results.length - 1) data += '\n';
+        });
+
+        // Send file
+        const options = {
+            root: path.join("../backend")
+        };
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err);
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 module.exports = reports;
