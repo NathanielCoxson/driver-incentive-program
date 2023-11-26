@@ -33,7 +33,7 @@ function SponsorDashboard() {
         };
         setApps();
         },
-        [SponsorName, joinRequests]);
+        [SponsorName]);
 
     const acceptOrRejectRequest = async (driverName,AID, accepted) => {
         const updatedRequests = joinRequests.map((request) => {
