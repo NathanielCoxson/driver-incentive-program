@@ -497,6 +497,4 @@ users.post('/edit-profile', async (req, res) => {
     }
 });
 
-// TODO add endpoint to leave a sponsor organization
-
 module.exports = users;
