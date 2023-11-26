@@ -572,9 +572,13 @@ reports.get('/:SponsorName/driverPoints', async (req, res) => {
         results = Array.from(results, ([Username, pointChanges]) => ({Username, pointChanges}));
 
         // Re-map point change objects so they don't all include username and sponsor name.
-        for (let result of results) {
-            if (result.pointChanges?.length > 0) {
-                result.pointChanges = result.pointChanges.map(change => {
+        for (let i = 0; i < results.length; i++) {
+            results[i] = {
+                ...results[i],
+                TotalPoints: results[i].pointChanges.reduce((acc, curr) => acc += curr.TransactionAmount, 0)
+            }
+            if (results[i].pointChanges?.length > 0) {
+                results[i].pointChanges = results[i].pointChanges.map(change => {
                     return {
                         Date: change.TransactionDate,
                         TransactionAmount: change.TransactionAmount,

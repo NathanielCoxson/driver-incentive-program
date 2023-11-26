@@ -190,6 +190,7 @@ function PointTrackingReport({ getDateRange, view, SponsorName }) {
                                     </tbody>
                                 </table>
                             </li>
+                            <li key={driver.Username+'-point-total'}>{driver.Username} Total Points: {driver.TotalPoints}</li>
                         </>)
                     })}
                 </ul>
