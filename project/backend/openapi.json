@@ -1820,9 +1820,8 @@
                       "type": "array",
                       "example": [
                         {
-                          "PWCID": "346A87B9-8883-4A4E-9455-34A7C9173D96",
-                          "UID": "1CFBE766-621C-4CF8-B126-49B1B3586D24",
-                          "PWCDate": "2023-11-24 00:07:54.723",
+                          "Username": "TestUser",
+                          "Date": "2023-11-24 00:07:54.723",
                           "ChangeType": "Password reset"
                         }
                       ]
@@ -1868,7 +1867,6 @@
                       "type": "array",
                       "example": [
                         {
-                          "LID": "346A87B9-8883-4A4E-9455-34A7C9173D96",
                           "Username": "TestDriver",
                           "LoginDate": "2023-11-24 00:07:54.723",
                           "Success": "true"

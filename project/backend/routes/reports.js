@@ -436,14 +436,61 @@ reports.get('/audit/pointChanges/download', async (req, res) => {
  * Returns a list of password changes from the audit log.
  */
 reports.get('/audit/passwordChanges', async (req, res) => {
+    try {
+        const SponsorName = req.query.SponsorName;
 
+        // If sponsor name is given, only return password changes for users of that sponsor organization.
+        let results;
+        if (SponsorName) results = await req.app.locals.db.getAllPWChangesBySponsor(req.query.StartDate, req.query.EndDate, SponsorName);
+        else results = await req.app.locals.db.getAllPWChanges(req.query.StartDate, req.query.EndDate);
+
+        res.status(200).send({ results });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 /**
  * Returns password changes audit log as a CSV file.
  */
 reports.get('/audit/passwordChanges/download', async (req, res) => {
+    try {
+        const SponsorName = req.query.SponsorName;
 
+        // If sponsor name is given, only return password changes for users of that sponsor organization.
+        let results;
+        if (SponsorName) results = await req.app.locals.db.getAllPWChangesBySponsor(req.query.StartDate, req.query.EndDate, SponsorName);
+        else results = await req.app.locals.db.getAllPWChanges(req.query.StartDate, req.query.EndDate);
+
+        if (results.length === 0) {
+            res.status(404).send();
+            return;
+        }
+
+        // Write file contents
+        let data = 'Username,Date,ChangeType\n';
+        results.forEach((result, i) => {
+            data += `${result.Username},${result.Date},${result.ChangeType}`;
+            if (i < results.length - 1) data += '\n';
+        });
+
+        // Send file
+        const options = {
+            root: path.join("../backend")
+        };
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err);
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
 });
 
 /**

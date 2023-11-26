@@ -1519,6 +1519,12 @@ async function getSponsorSalesByName(SponsorName, StartDate, EndDate) {
     }
 }
 
+/**
+ * Returns a list of applications between the given dates.
+ * @param {String} StartDate 
+ * @param {String} EndDate 
+ * @returns {Array} a list of applications
+ */
 async function getAllApplications(StartDate, EndDate) {
     try {
         // Connect to pool
@@ -1562,6 +1568,12 @@ async function getAllApplications(StartDate, EndDate) {
     }
 }
 
+/**
+ * Returns a list of point transactions within the given date range.
+ * @param {String} StartDate 
+ * @param {String} EndDate 
+ * @returns {Array} a list of point transactions
+ */
 async function getAllTransactions(StartDate, EndDate) {
     try {
         // Connect to pool
@@ -1597,6 +1609,100 @@ async function getAllTransactions(StartDate, EndDate) {
                 FROM Transactions \
                 JOIN Users ON Users.UID = Transactions.UID \
                 JOIN Sponsors ON Sponsors.SID = Transactions.SID\
+            ");
+        }
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Returns a list of password changes within the given date range.
+ * @param {String} StartDate 
+ * @param {String} EndDate 
+ * @returns {Array} a list of password changes 
+ */
+async function getAllPWChanges(StartDate, EndDate) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        let result;
+        if (StartDate && EndDate) {
+            result = await pool.request()
+            .input("StartDate", sql.DateTime, StartDate)
+            .input("EndDate", sql.DateTime, EndDate)
+            .query("\
+                SELECT \
+                    Users.Username, \
+                    PWChanges.PWCDate AS Date, \
+                    PWChanges.ChangeType \
+                FROM PWChanges \
+                JOIN Users ON Users.UID = PWChanges.UID \
+                WHERE PWChanges.PWCDate >= @StartDate AND PWChanges.PWCDate <= @EndDate\
+            ");
+        }
+        else {
+            result = await pool.request()
+            .query("\
+                SELECT \
+                    Users.Username, \
+                    PWChanges.PWCDate AS Date, \
+                    PWChanges.ChangeType \
+                FROM PWChanges \
+                JOIN Users ON Users.UID = PWChanges.UID\
+            ");
+        }
+        return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+/**
+ * Returns a list of password changes within the given date range for users associated with
+ * the given sponsor.
+ * @param {String} StartDate 
+ * @param {String} EndDate 
+ * @param {String} SponsorName 
+ * @returns {Array} a list of password changes
+ */
+async function getAllPWChangesBySponsor(StartDate, EndDate, SponsorName) {
+    try {
+        // Connect to pool
+        const pool = await poolPromise;
+        // Make request
+        let result;
+        if (StartDate && EndDate) {
+            result = await pool.request()
+            .input("StartDate", sql.DateTime, StartDate)
+            .input("EndDate", sql.DateTime, EndDate)
+            .input("SponsorName", sql.VarChar(50), SponsorName)
+            .query("\
+                SELECT \
+                    Users.Username, \
+                    PWChanges.PWCDate AS Date, \
+                    PWChanges.ChangeType \
+                FROM PWChanges \
+                JOIN Users ON Users.UID = PWChanges.UID \
+                JOIN SponsorsUsers ON SponsorsUsers.UID = PWChanges.UID \
+                JOIN Sponsors ON Sponsors.SID = SponsorsUsers.SID \
+                WHERE PWChanges.PWCDate >= @StartDate AND PWChanges.PWCDate <= @EndDate AND Sponsors.SponsorName = @SponsorName\
+            ");
+        }
+        else {
+            result = await pool.request()
+            .query("\
+                SELECT \
+                    Users.Username, \
+                    PWChanges.PWCDate AS Date, \
+                    PWChanges.ChangeType \
+                FROM PWChanges \
+                JOIN Users ON Users.UID = PWChanges.UID \
+                JOIN SponsorsUsers ON SponsorsUsers.UID = PWChanges.UID \
+                JOIN Sponsors ON Sponsors.SID = SponsorsUsers.SID \
+                WHERE PWChanges.PWCDate >= @StartDate AND PWChanges.PWCDate <= @EndDate AND Sponsors.SponsorName = @SponsorName\
             ");
         }
         return result.recordset;
@@ -1654,5 +1760,7 @@ module.exports = {
     getAllSales,
     getSponsorSalesByName,
     getAllApplications,
-    getAllTransactions
+    getAllTransactions,
+    getAllPWChanges,
+    getAllPWChangesBySponsor
 }
