@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-function AuditLogReport({ getDateRange }) {
+function AuditLogReport({ getDateRange, view, SponsorName }) {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [allSponsors, setAllSponsors] = useState(false);
@@ -91,6 +91,13 @@ function AuditLogReport({ getDateRange }) {
         setResponseMessage('');
     }, [category]);
 
+    useEffect(() => {
+        if (view === 'sponsor' && SponsorName) {
+            setSponsorName(SponsorName);
+            setAllSponsors(false);
+        }
+    }, [view, SponsorName]);
+
     return (
         <div className="audit-log-report-container report-container">
             <h2>Audit Log</h2>
@@ -114,50 +121,52 @@ function AuditLogReport({ getDateRange }) {
             />
 
             { /* All sponsors or specific sponsor select */}
-            <p>Generate the report for all sponsors or a specific sponsor?</p>
-            <div className="radio-inline">
-                <input
-                    type="radio"
-                    name="set7"
-                    id="allSponBox"
-                    value="option7-1"
-                    checked={allSponsors}
-                    onChange={e => {
-                        setAllSponsors(prev => !prev);
-                        setResults([]);
-                        setSponsorName('');
-                    }}
-                />
-                <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
-
-                <input
-                    type="radio"
-                    name="set7"
-                    id="individualSponBox"
-                    value="option7-2"
-                    checked={!allSponsors}
-                    onChange={e => {
-                        setAllSponsors(prev => !prev);
-                        setResults([]);
-                        setSponsorName('');
-                    }}
-                />
-                <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
-            </div>
-
-            { /* Specific sponsor name input */}
-            {!allSponsors &&
-                <>
-                    <label htmlFor="indSponText">Sponsor Username:</label>
+            {view !== 'sponsor' && <>
+                <p>Generate the report for all sponsors or a specific sponsor?</p>
+                <div className="radio-inline">
                     <input
-                        type="text"
-                        id="indSponText"
-                        name="indSponsorUser"
-                        onChange={e => setSponsorName(e.target.value)}
+                        type="radio"
+                        name="set7"
+                        id="allSponBox"
+                        value="option7-1"
+                        checked={allSponsors}
+                        onChange={e => {
+                            setAllSponsors(prev => !prev);
+                            setResults([]);
+                            setSponsorName('');
+                        }}
                     />
-                </>
-            }
+                    <label htmlFor="allSponBox" className="styled-radio">All Sponsors</label>
 
+                    <input
+                        type="radio"
+                        name="set7"
+                        id="individualSponBox"
+                        value="option7-2"
+                        checked={!allSponsors}
+                        onChange={e => {
+                            setAllSponsors(prev => !prev);
+                            setResults([]);
+                            setSponsorName('');
+                        }}
+                    />
+                    <label htmlFor="individualSponBox" className="styled-radio">Individual Sponsor&nbsp;&nbsp;</label>
+                </div>
+
+                { /* Specific sponsor name input */}
+                {!allSponsors &&
+                    <>
+                        <label htmlFor="indSponText">Sponsor Username:</label>
+                        <input
+                            type="text"
+                            id="indSponText"
+                            name="indSponsorUser"
+                            onChange={e => setSponsorName(e.target.value)}
+                        />
+                    </>
+                }
+            </>}
+            
             { /* Category Selection */ }
             <p>Select Audit Log Category</p>
             <div className="radio-inline">
