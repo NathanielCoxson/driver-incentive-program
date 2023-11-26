@@ -333,7 +333,7 @@ function SalesReport({ type, getDateRange }) {
                     </tbody>
                 </table>
             }
-            {(sponsorInvoiceResults.length > 0 && type === 'invoice') && <div className='invoice-container'>
+            {(sponsorInvoiceResults.length > 0 && type === 'invoice') && <div className='report-list invoice-container'>
                 <ul>
                     {sponsorInvoiceResults.map(sponsor => {
                         return (<>

@@ -230,7 +230,7 @@ function AuditLogReport({ getDateRange, view, SponsorName }) {
             {results.length > 0 && <table>
                 <thead>
                     <tr>
-                        {Object.keys(results[0]).map(key => <th key={key+'Header'}>{key}</th>)}
+                        {Object.keys(results[0]).map(key => <th key={key+'+-header'}>{key}</th>)}
                     </tr>
                 </thead>
                 <tbody>

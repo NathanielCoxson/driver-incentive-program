@@ -6,11 +6,11 @@ import useAuth from '../../hooks/useAuth';
 
 
 function SponsorReport() {
-    const [type, setType] = useState('sales');
+    const [type, setType] = useState('point-tracking');
     const [SponsorName, setSponsorName] = useState('');
     const { auth } = useAuth();
     const reportTypes = {
-        'point-tracking': <PointTrackingReport getDateRange={getDateRange} />,
+        'point-tracking': <PointTrackingReport getDateRange={getDateRange} view='sponsor' SponsorName={SponsorName} />,
         'audit-log': <AuditLogReport getDateRange={getDateRange} view='sponsor' SponsorName={SponsorName} />,
     };
     

@@ -554,4 +554,107 @@ reports.get('/audit/loginAttempts/download', async (req, res) => {
     }
 });
 
+reports.get('/:SponsorName/driverPoints', async (req, res) => {
+    try {
+        const DriverName = req.query.DriverName;
+
+        let transactions = await req.app.locals.db.getAllTransactions(req.query.StartDate, req.query.EndDate);
+        transactions = transactions.filter(transaction => transaction.SponsorName === req.params.SponsorName);
+        if (DriverName) transactions = transactions.filter(transaction => transaction.Username === DriverName);
+        
+        // Put transactions into a hash map with username as key and list of transactions as values
+        let results = new Map();
+        for (let transaction of transactions) {
+            if (results.has(transaction.Username)) results.set(transaction.Username, [...results.get(transaction.Username), transaction]);
+            else results.set(transaction.Username, [transaction]);
+        }
+        // Convert map to an array of objects
+        results = Array.from(results, ([Username, pointChanges]) => ({Username, pointChanges}));
+
+        // Re-map point change objects so they don't all include username and sponsor name.
+        for (let result of results) {
+            if (result.pointChanges?.length > 0) {
+                result.pointChanges = result.pointChanges.map(change => {
+                    return {
+                        Date: change.TransactionDate,
+                        TransactionAmount: change.TransactionAmount,
+                        Reason: change.Reason,
+                        SponsorName: change.SponsorName
+                    }
+                })
+            }
+        }
+
+        res.status(200).send({ results });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
+reports.get('/:SponsorName/driverPoints/download', async (req, res) => {
+    try {
+        const DriverName = req.query.DriverName;
+
+        let transactions = await req.app.locals.db.getAllTransactions(req.query.StartDate, req.query.EndDate);
+        transactions = transactions.filter(transaction => transaction.SponsorName === req.params.SponsorName);
+        if (DriverName) transactions = transactions.filter(transaction => transaction.Username === DriverName);
+        
+        // Put transactions into a hash map with username as key and list of transactions as values
+        let results = new Map();
+        for (let transaction of transactions) {
+            if (results.has(transaction.Username)) results.set(transaction.Username, [...results.get(transaction.Username), transaction]);
+            else results.set(transaction.Username, [transaction]);
+        }
+        // Convert map to an array of objects
+        results = Array.from(results, ([Username, pointChanges]) => ({Username, pointChanges}));
+
+        // Re-map point change objects so they don't all include username and sponsor name.
+        for (let result of results) {
+            if (result.pointChanges?.length > 0) {
+                result.pointChanges = result.pointChanges.map(change => {
+                    return {
+                        Date: change.TransactionDate,
+                        TransactionAmount: change.TransactionAmount,
+                        Reason: change.Reason,
+                        SponsorName: change.SponsorName
+                    }
+                })
+            }
+        }
+
+        if (results.length === 0) {
+            res.status(404).send();
+            return;
+        }
+
+        // Write file contents
+        let data = 'Username,Date,TransactionAmount,Reason,SponsorName\n';
+        results.forEach((driver, i) => {
+            let pointChanges = driver.pointChanges;
+            for (let j = 0; j < pointChanges.length; j++) {
+                data += `${driver.Username},${pointChanges[j].Date},${pointChanges[j].TransactionAmount},${pointChanges[j].Reason},${pointChanges[j].SponsorName}`;
+                if (j < pointChanges.length - 1) data += '\n';
+            }  
+            if (i < results.length - 1) data += '\n';
+        })
+
+        // Send file
+        const options = {
+            root: path.join("../backend")
+        };
+        fs.writeFile('./report.csv', data, err => {
+            if (err) {
+                console.log(err);
+            }
+            res.sendFile('report.csv', options, err => {
+                if (err) console.log(err);
+            });
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(500).send();
+    }
+});
+
 module.exports = reports;

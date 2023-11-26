@@ -1,99 +1,200 @@
-import React from 'react';
-import './Report.css';
+import { useEffect, useState } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-function PointTrackingReport() {
+function PointTrackingReport({ getDateRange, view, SponsorName }) {
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [allDrivers, setAllDrivers] = useState(false);
+    const [driverName, setDriverName] = useState('');
+    const [results, setResults] = useState([]);
+    const [responseMessage, setResponseMessage] = useState('');
+    const axiosPrivate = useAxiosPrivate();
+
+    function validateForm() {
+        if (!startDate || !endDate) {
+            setResponseMessage('Missing date range.');
+            return false;
+        }
+        if (!allDrivers && !driverName) {
+            setResponseMessage('Missing Sponsor Name');
+            return false;
+        }
+        return true;
+    }
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!validateForm()) return;
+        setResponseMessage('');
+
+        const { StartDate, EndDate } = getDateRange(startDate, endDate);
+        
+        // Construct query string
+        let query = [];
+        if (StartDate) query.push(`StartDate=${StartDate}`);
+        if (EndDate) query.push(`EndDate=${EndDate}`);
+        if (!allDrivers) query.push(`DriverName=${driverName}`);
+        let queryString = query.join('&');
+
+        try {
+            const response = await axiosPrivate.get(`/reports/${SponsorName}/driverPoints?${queryString}`);
+            let results = response?.data?.results;
+            if (results.length === 0) setResponseMessage('No results found');
+            setResults(results);
+        } catch (err) {
+            if (process.env.NODE_ENV === 'development') console.log(err);
+            if (!err?.response) setResponseMessage('No Server Response');
+            if (err?.response?.status === 404) setResponseMessage('No data found.');
+            if (err?.response?.status === 500) setResponseMessage('Sever Error');
+        }
+    };
+
+    const handleDownload = async (event) => {
+        event.preventDefault();
+        if (!validateForm()) return;
+        setResponseMessage('');
+
+        const { StartDate, EndDate } = getDateRange(startDate, endDate);
+
+        // Construct query string
+        let query = [];
+        if (StartDate) query.push(`StartDate=${StartDate}`);
+        if (EndDate) query.push(`EndDate=${EndDate}`);
+        if (!allDrivers) query.push(`DriverName=${driverName}`);
+        let queryString = query.join('&');
+
+        try {
+            const response = await axiosPrivate.get(`/reports/${SponsorName}/driverPoints/download?${queryString}`, {responseType: 'blob'});
+            const blob = response.data;
+            const fileURL = window.URL.createObjectURL(blob);
+            let alink = document.createElement("a");
+            alink.href = fileURL;
+            alink.download = "report.csv";
+            alink.click();
+        } catch (err) {
+            if (process.env.NODE_ENV === 'development') console.log(err);
+            setResponseMessage("Error downloading report.");
+        }
+    }
+
+    useEffect(() => {
+        if (view === 'sponsor' && SponsorName) {
+            setDriverName(SponsorName);
+            setAllDrivers(false);
+        }
+    }, [view, SponsorName]);
+
     return (
-        <main>
-            <section className="hero">
-                <h1>Reports</h1>
-                <br />
+        <div className="point-tracking-report-container report-container">
+            <h2>Driver Point Tracking</h2>
 
-                <div className="auditLog">
-                    <h2>Audit Log</h2>
+            { /* Date range input */ }
+            <p>Select Date Range</p>
+            <label htmlFor="startdatepicker">Start Date:</label>
+            <input
+                type="date"
+                id="startdatepicker"
+                name="startdatepicker"
+                onChange={(e) => setStartDate(e.target.value)}
+            />
+            <label htmlFor="enddatepicker">End Date:</label>
+            <input
+                type="date"
+                id="enddatepicker"
+                name="enddatepicker"
+                onChange={(e) => setEndDate(e.target.value)}
+                min={startDate}
+            />
 
-                    <p>Select Date Range</p>
-                    <label for="startdatepicker">Start Date:</label>
-                    <input type="date" id="startdatepicker" name="startdatepicker" />
-                    <label for="enddatepicker">End Date:</label>
-                    <input type="date" id="enddatepicker" name="enddatepicker" />
+            { /* All drivers or specific driver select */}
+            <p>Generate the report for all drivers or a specific driver?</p>
+            <div className="radio-inline">
+                <input
+                    type="radio"
+                    name="set7"
+                    id="allSponBox"
+                    value="option7-1"
+                    checked={allDrivers}
+                    onChange={e => {
+                        setAllDrivers(prev => !prev);
+                        setResults([]);
+                        setDriverName('');
+                    }}
+                />
+                <label htmlFor="allSponBox" className="styled-radio">All Drivers</label>
 
-                    <br />
-                    <br />
+                <input
+                    type="radio"
+                    name="set7"
+                    id="individualSponBox"
+                    value="option7-2"
+                    checked={!allDrivers}
+                    onChange={e => {
+                        setAllDrivers(prev => !prev);
+                        setResults([]);
+                        setDriverName('');
+                    }}
+                />
+                <label htmlFor="individualSponBox" className="styled-radio">Individual Driver&nbsp;&nbsp;</label>
+            </div>
 
-                    <p>Select Audit Log Category</p>
-                    <div className="radio-inline">
-                        <input type="radio" name="set2" id="driverApps" value="option2-1" />
-                        <label for="driverApps">Driver Applications</label>
+            { /* Specific sponsor name input */}
+            {!allDrivers &&
+                <>
+                    <label htmlFor="indSponText">Driver Username:</label>
+                    <input
+                        type="text"
+                        id="indSponText"
+                        name="indSponsorUser"
+                        onChange={e => setDriverName(e.target.value)}
+                    />
+                </>
+            }
 
-                        <input type="radio" name="set2" id="pointChanges" value="option2-2" />
-                        <label for="pointChanges">Point Changes</label>
-
-                        <input type="radio" name="set2" id="pwordChanges" value="option2-3" />
-                        <label for="pwordChanges">Password Changes</label>
-
-                        <input type="radio" name="set2" id="loginAttempts" value="option2-4" />
-                        <label for="loginAttempts">Login Attempts</label>
-                    </div>
-                    
-                    <div className="row">
-                        <div className="column-right">
-                            <a href="#" className="cta-button">
-                                View Audit Log
-                            </a>
-                        </div>
-                        <div className="column-left">
-                            <a href="#" className="cta-button">
-                                Download CSV
-                            </a>
-                        </div>
-                    </div>
+            { /* Submit and download buttons */ }
+            <div className="row">
+                <div className="column-right">
+                    <button className="cta-button" onClick={handleSubmit}>
+                        View Audit Log
+                    </button>
                 </div>
-
-                <br />
-                <br />
-                <br />
-
-                <div className="driverPointTracking">
-                    <h2>Driver Point Tracking</h2>
-
-                    <p>Select Date Range</p>
-                    <label for="startdatepicker">Start Date:</label>
-                    <input type="date" id="startdatepicker" name="startdatepicker" />
-                    <label for="enddatepicker">End Date:</label>
-                    <input type="date" id="enddatepicker" name="enddatepicker" />
-
-                    <br />
-                    <br />
-                    <p>Generate the report for all drivers in your organization or a specific driver?</p>
-
-                    <div className="radio-inline">
-                        <input type="radio" name="set1" id="allDrivers" value="option1-1" />
-                        <label for="allDrivers">All Drivers</label>
-
-                        <input type="radio" name="set1" id="indDriver" value="option1-2" />
-                        <label for="indDriver">Individual Driver&nbsp;&nbsp;</label>
-                    </div>
-
-                    <label for="driverUsername">Driver Username:</label>
-                    <input type="text" id="driverUsername" name="driverUsername" />
-
-                    <br />
-
-                    <div className="row">
-                        <div className="column-right">
-                            <a href="#" className="cta-button">
-                                View Driver Point Logs
-                            </a>
-                        </div>
-                        <div className="column-left">
-                            <a href="#" className="cta-button">
-                                Download CSV
-                            </a>
-                        </div>
-                    </div>
+                <div className="column-left">
+                    <button className="cta-button" onClick={handleDownload}>
+                        Download CSV
+                    </button>
                 </div>
-            </section>
-        </main>
+                {responseMessage.length > 0 && <div className='response-message'>{responseMessage}</div>}
+            </div>
+
+            { /* Results table */ }
+            {results.length > 0 && <div className="report-list point-tracking">
+                <ul>
+                    {results.map(driver => {
+                        return (<>
+                            <li key={driver.Username+'-point-tracking'}>{driver.Username} Point History:</li>
+                            <li key={driver.Username+'-point-trackig-table-container'}>
+                                <table key={driver.Username+'-point-trackig-table'}>
+                                    <thead>
+                                        <tr>
+                                            {Object.keys(driver.pointChanges[0]).map(key => <th key={key + '-header'}>{key}</th>)}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {driver.pointChanges.map((result, i) => {
+                                            return (
+                                                <tr key={'result-' + i}>
+                                                    {Object.keys(result).map((key, i) => <td key={key + '-value-' + i}>{result[key]}</td>)}
+                                                </tr>
+                                            )
+                                        })}
+                                    </tbody>
+                                </table>
+                            </li>
+                        </>)
+                    })}
+                </ul>
+            </div>}
+        </div>
     );
 }
 
