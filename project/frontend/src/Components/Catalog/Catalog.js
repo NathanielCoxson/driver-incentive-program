@@ -170,7 +170,7 @@ function Catalog() {
                     </ul>
                     <div className="response-message" id="responseMessage">{responseMessage}</div>
                     {isLoading && <span className='loader'></span>}
-                    <button className='cta-button' onClick={handlePurchase}>Purchase</button>
+                    <button className='cta-button' onClick={handlePurchase} disabled={auth?.view != auth?.Role}>Purchase</button>
                 </section>
             }
 
