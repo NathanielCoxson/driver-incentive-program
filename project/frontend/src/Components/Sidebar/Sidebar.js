@@ -7,7 +7,7 @@ function Sidebar() {
     return (
         <div className="sidebar">
             <ul>
-                {auth?.Role === 'driver' &&
+                {(auth?.view === 'driver') &&
                     <>
                         <li><Link to=".">Driver Home</Link></li>
                         <li><Link to="profile" state={{user: auth}}>Driver Profile</Link></li>
@@ -16,11 +16,10 @@ function Sidebar() {
                         <li><Link to={`sponsors/${auth?.sponsors[0]?.SponsorName}/catalog`}>Driver Catalog</Link></li>
                         <li><Link to="orders">Orders</Link></li>   
                         <li><Link to="message_box">Message Box</Link></li>
-                        <li><Link to="logout"> Logout</Link></li>
                     </>
                 }
 
-                {auth?.Role === 'sponsor' &&
+                {(auth?.view === 'sponsor') &&
                     <>
                         <li><Link to=".">Sponsor Home</Link></li>
                         <li><Link to="profile" state={{user: auth}}>Sponsor Profile</Link></li>
@@ -29,13 +28,11 @@ function Sidebar() {
                         <li><Link to="sponsor_add_user">Add User</Link></li>
                         <li><Link to={`sponsors/${auth?.sponsors[0]?.SponsorName}/catalog`}>Sponsor Catalog</Link></li>
                         <li><Link to="sponsor_report"> Sponsor Report</Link></li>
-                        <li><Link to="sponsor_view_as">View As </Link></li>
                         <li><Link to="message_box">Message Box</Link></li>
-                        <li><Link to="logout"> Logout</Link></li>
                     </>
                 }
 
-                {auth?.Role === 'admin' &&
+                {auth?.view === 'admin' &&
                     <>
                         <li><Link to=".">Admin Home</Link></li>
                         <li><Link to="profile" state={{user: auth}}>Admin Profile</Link></li>
@@ -45,11 +42,22 @@ function Sidebar() {
                         <li><Link to="admin_list">View All Admin</Link></li>
                         <li><Link to="sponsor_list">View All Sponsors</Link></li>
                         <li><Link to="driver_list">View All Drivers</Link></li>
-                        <li><Link to="admin_view_as">View As </Link></li>
                         <li><Link to="message_box">Message Box</Link></li>
-                        <li><Link to="logout"> Logout</Link></li>
                     </>
                 }
+
+
+                {auth?.Role === 'admin' &&
+                    <>
+                        <li><Link to="admin_view_as">View As </Link></li>
+                    </>
+                }
+                {auth?.Role === 'sponsor' &&
+                    <>
+                        <li><Link to="sponsor_view_as">View As </Link></li>
+                    </>
+                }
+                <li><Link to="logout"> Logout</Link></li>
             </ul>
         </div>
     );

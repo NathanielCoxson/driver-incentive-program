@@ -6,12 +6,13 @@ import useAuth from "../../hooks/useAuth";
 function Dashboard() {
     // Pull auth object
     const { auth } = useAuth();
+    console.log(auth);
 
     return (
         <>
-            {auth?.Role === 'admin' && <AdminDashboard />}
-            {auth?.Role === 'sponsor' && <SponsorDashboard />}
-            {auth?.Role === 'driver' && <DriverDashboard />}
+            {auth?.view === 'admin' && <AdminDashboard />}
+            {auth?.view === 'sponsor' && <SponsorDashboard />}
+            {auth?.view === 'driver' && <DriverDashboard />}
         </>
     );
 }

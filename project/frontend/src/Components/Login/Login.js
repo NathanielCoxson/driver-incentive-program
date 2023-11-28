@@ -28,7 +28,10 @@ function Login() {
                     crossDomain: true
                 }
             );
-            setAuth(response?.data);
+
+            let auth = response?.data
+            auth.view = response.data.Role
+            setAuth(auth);
             setUsername('');
             setPassword('');
             if (from === '/') navigate('/dashboard', { replace: true });
