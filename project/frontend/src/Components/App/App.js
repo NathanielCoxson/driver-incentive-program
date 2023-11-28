@@ -70,7 +70,7 @@ function App() {
               <Route path="sponsors/:SponsorName/catalog" element={<Catalog />} />
 
               {/* driver */}
-              <Route element={<RequireAuth allowedRoles={['driver', 'admin']} />}>
+              <Route element={<RequireAuth allowedRoles={['driver', 'sponsor', 'admin']} />}>
                 <Route path="driver_points" element={<DriverPoints />} />
                 <Route path="view_sponsor_organization" element={<ViewSponsorOrganization />} />
                 <Route path="shoppingcart" element={<ShoppingCart />} />

@@ -59,39 +59,91 @@ function SponsorDashboard() {
 
     return (
         <section className="hero">
-            <h2>Welcome to Your Dashboard</h2>
-            <p>Welcome to your sponsor dashboard. Here you can access various features and information.</p>
-            <Link to="/dashboard" className="cta-button">
-                Explore
-            </Link>
+            {(auth?.view != auth?.Role) ? 
+            <>
+            {/* Default for view as */}
+                <p style={{color: 'yellow'}}>{auth?.view} view</p>
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Welcome to your sponsor dashboard. Here you can access various features and information.</p>
+                <Link to="/dashboard" className="cta-button">
+                    Explore
+                </Link>
 
-            <div className="join-request-section">
-                <h3>Join Requests</h3>
-                {joinRequests.map((request, index) => (
-                    <div key={index} className="join-request">
+                <div className="join-request-section">
+                    <h3>Join Requests</h3>
+                    <div key='1' className="join-request">
                         <p>
-                            <strong>Driver:</strong> {request.driverName}
+                            <strong>Driver:</strong> John Smith
                         </p>
                         <p>
-                            <strong>Reason:</strong> {request.requestReason}
+                            <strong>Reason:</strong> I'd like to earn rewards
                         </p>
-                        {request.status === 'Accept' ? (
-                            <p>Accepted</p>
-                        ) : request.status === 'Reject' ? (
-                            <p>Rejected</p>
-                        ) : (
-                            <>
-                                <button onClick={() => acceptOrRejectRequest(request.driverName, request.AID, 'Accept')} className="cta-button">
-                                    Accept
-                                </button>
-                                <button onClick={() => acceptOrRejectRequest(request.driverName, request.AID, 'Reject')} className="cta-button">
-                                    Reject
-                                </button>
-                            </>
-                        )}
+                        <>
+                            <button className="cta-button">
+                                Accept
+                            </button>
+                            <button className="cta-button">
+                                Reject
+                            </button>
+                        </>
                     </div>
-                ))}
-            </div>
+                    <div key='2' className="join-request">
+                        <p>
+                            <strong>Driver:</strong> Jane Scott
+                        </p>
+                        <p>
+                            <strong>Reason:</strong> I'm a great driver!
+                        </p>
+                        <>
+                            <button className="cta-button">
+                                Accept
+                            </button>
+                            <button className="cta-button">
+                                Reject
+                            </button>
+                        </>
+                    </div>
+                </div>
+            </>
+
+            :
+
+            <>
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Welcome to your sponsor dashboard. Here you can access various features and information.</p>
+                <Link to="/dashboard" className="cta-button">
+                    Explore
+                </Link>
+
+                <div className="join-request-section">
+                    <h3>Join Requests</h3>
+                    {joinRequests.map((request, index) => (
+                        <div key={index} className="join-request">
+                            <p>
+                                <strong>Driver:</strong> {request.driverName}
+                            </p>
+                            <p>
+                                <strong>Reason:</strong> {request.requestReason}
+                            </p>
+                            {request.status === 'Accept' ? (
+                                <p>Accepted</p>
+                            ) : request.status === 'Reject' ? (
+                                <p>Rejected</p>
+                            ) : (
+                                <>
+                                    <button onClick={() => acceptOrRejectRequest(request.driverName, request.AID, 'Accept')} className="cta-button">
+                                        Accept
+                                    </button>
+                                    <button onClick={() => acceptOrRejectRequest(request.driverName, request.AID, 'Reject')} className="cta-button">
+                                        Reject
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </>
+            }
         </section>
     );
 }
